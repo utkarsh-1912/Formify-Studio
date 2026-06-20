@@ -54,7 +54,7 @@ export default function ErrorPage({
       {/* Header */}
       <header className="max-w-6xl w-full mx-auto px-4 py-4 sm:px-6 sm:py-6 flex justify-between items-center z-10">
         <div className="flex items-center space-x-3">
-          <img src="/logo-long.png" alt="Formify Logo" className="h-7 sm:h-8 dark:invert" />
+          <img src="/logo-long.png" alt="Formify Logo" className="h-7 sm:h-8" />
         </div>
       </header>
 

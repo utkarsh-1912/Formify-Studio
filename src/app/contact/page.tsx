@@ -54,7 +54,7 @@ export default function ContactPage() {
           <span>Back to Home</span>
         </button>
         <div className="flex items-center space-x-3">
-          <img src="/logo-long.png" alt="Formify Logo" className="h-7 sm:h-8 dark:invert" />
+          <img src="/logo-long.png" alt="Formify Logo" className="h-7 sm:h-8" />
         </div>
       </header>
 

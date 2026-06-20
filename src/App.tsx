@@ -326,7 +326,7 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
           </button>
           
           <div className="flex items-center space-x-2 sm:space-x-3.5 min-w-0">
-            <img src="/logo.png" alt="Formify Logo" className="h-6 sm:h-8 flex-shrink-0 dark:invert" />
+            <img src="/logo.png" alt="Formify Logo" className="h-6 sm:h-8 flex-shrink-0" />
             <span className={`hidden xs:inline-block text-[9px] sm:text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded border ${themeTokens.border} ${themeTokens.inputBg} ${themeTokens.textSecondary} flex-shrink-0`}>
               v{APP_VERSION}
             </span>

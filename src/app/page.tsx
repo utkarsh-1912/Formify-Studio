@@ -192,7 +192,7 @@ export default function LandingPage() {
       <header className="w-full px-4 sm:px-8 md:px-12 py-4 flex justify-between items-center z-20 border-b border-slate-200 dark:border-slate-900 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md sticky top-0 shadow-sm">
         <div className="flex items-center space-x-10">
           <Link href="/" className="flex items-center focus:outline-none">
-            <img src="/logo-long.png" alt="Formify Logo" className="h-8 md:h-9 object-contain dark:invert" />
+            <img src="/logo-long.png" alt="Formify Logo" className="h-8 md:h-9 object-contain" />
           </Link>
           <nav className="hidden lg:flex items-center space-x-8 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
             <a href="#workspace-hub" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Workspace Hub</a>
