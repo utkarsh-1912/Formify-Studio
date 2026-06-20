@@ -94,6 +94,7 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
   // Share URL state
   const [shareCopied, setShareCopied] = useState(false);
   const [justPushed, setJustPushed] = useState(false);
+  const [mobileActiveTab, setMobileActiveTab] = useState<"editor" | "preview">("editor");
 
   // P2P WebRTC Live sync hook integration
   const {
@@ -314,19 +315,19 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
   return (
     <div className={`h-screen flex flex-col font-sans overflow-hidden ${themeTokens.bg}`}>
       {/* Header toolbar */}
-      <header className={`flex-shrink-0 border-b px-6 py-3 flex items-center justify-between shadow-sm z-20 ${themeTokens.header}`}>
-        <div className="flex items-center space-x-4">
+      <header className={`flex-shrink-0 border-b px-3 py-2 sm:px-6 sm:py-3 flex items-center justify-between shadow-sm z-20 ${themeTokens.header}`}>
+        <div className="flex items-center space-x-2 sm:space-x-4 min-w-0">
           <button
             onClick={() => router.push("/")}
-            className={`p-1.5 rounded-lg border ${themeTokens.border} hover:bg-black/5 cursor-pointer focus:outline-none text-gray-500`}
+            className={`p-1 sm:p-1.5 rounded-lg border ${themeTokens.border} hover:bg-black/5 cursor-pointer focus:outline-none text-gray-500 flex-shrink-0`}
             title="Return to Home Screen"
           >
             <ArrowLeft className="h-4 w-4" />
           </button>
           
-          <div className="flex items-center space-x-3.5">
-            <img src="/logo.png" alt="Formify Logo" className="h-8 flex-shrink-0" />
-            <span className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded border ${themeTokens.border} ${themeTokens.inputBg} ${themeTokens.textSecondary}`}>
+          <div className="flex items-center space-x-2 sm:space-x-3.5 min-w-0">
+            <img src="/logo.png" alt="Formify Logo" className="h-6 sm:h-8 flex-shrink-0 dark:invert" />
+            <span className={`hidden xs:inline-block text-[9px] sm:text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded border ${themeTokens.border} ${themeTokens.inputBg} ${themeTokens.textSecondary} flex-shrink-0`}>
               v{APP_VERSION}
             </span>
             {/* Inline Editable Room Name */}
@@ -334,11 +335,11 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
               type="text"
               value={roomName}
               onChange={handleRoomNameChange}
-              className={`px-2.5 py-1 bg-transparent hover:bg-black/5 border border-transparent focus:border-blue-500 focus:bg-white dark:focus:bg-gray-800 rounded-lg text-sm font-semibold focus:outline-none transition-all ${themeTokens.inputText}`}
+              className={`px-1.5 py-0.5 sm:px-2.5 sm:py-1 bg-transparent hover:bg-black/5 border border-transparent focus:border-blue-500 focus:bg-white dark:focus:bg-gray-800 rounded-lg text-xs sm:text-sm font-semibold focus:outline-none transition-all max-w-[70px] xs:max-w-[110px] sm:max-w-xs truncate ${themeTokens.inputText}`}
               title="Click to rename workspace"
             />
             {isWorkspaceInitialized ? (
-              <span className="text-[9px] bg-emerald-500/10 text-emerald-500 font-extrabold px-2 py-0.5 rounded-md uppercase tracking-wider border border-emerald-500/25 flex-shrink-0">
+              <span className="hidden sm:inline-block text-[9px] bg-emerald-500/10 text-emerald-500 font-extrabold px-2 py-0.5 rounded-md uppercase tracking-wider border border-emerald-500/25 flex-shrink-0">
                 Saved Alphanumeric
               </span>
             ) : (
@@ -347,7 +348,7 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
                   localStorage.setItem(schemaStorageKey, JSON.stringify(schema));
                   setIsWorkspaceInitialized(true);
                 }}
-                className="text-[9px] bg-amber-500/10 text-amber-500 hover:bg-amber-500/20 font-extrabold px-2 py-0.5 rounded-md uppercase tracking-wider border border-amber-500/25 flex-shrink-0 cursor-pointer animate-pulse focus:outline-none"
+                className="hidden sm:inline-block text-[9px] bg-amber-500/10 text-amber-500 hover:bg-amber-500/20 font-extrabold px-2 py-0.5 rounded-md uppercase tracking-wider border border-amber-500/25 flex-shrink-0 cursor-pointer animate-pulse focus:outline-none"
                 title="Workspace not created in LocalStorage. Click to initialize."
               >
                 Draft (Click to Init)
@@ -357,37 +358,39 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
         </div>
 
         {/* Global Toolbar Options */}
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-1.5 sm:space-x-3 flex-shrink-0">
           {/* P2P Multiplayer Sync Status Badge */}
-          <div className={`flex items-center space-x-2 px-3 py-1.5 border ${themeTokens.border} ${themeTokens.inputBg} rounded-xl text-xs font-bold`}>
+          <div className={`flex items-center space-x-1.5 px-1.5 py-1 sm:px-3 sm:py-1.5 border ${themeTokens.border} ${themeTokens.inputBg} rounded-xl text-[10px] sm:text-xs font-bold`}>
             {p2pStatus === "disconnected" && (
               <button
                 onClick={initPeerJS}
                 className="flex items-center space-x-1 text-gray-500 hover:text-blue-500 cursor-pointer focus:outline-none"
                 title="Enable multiplayer peer-to-peer real-time sync"
               >
-                <Radio className="h-4.5 w-4.5 animate-pulse" />
-                <span>Go Live (P2P)</span>
+                <Radio className="h-4 w-4 sm:h-4.5 sm:w-4.5 animate-pulse" />
+                <span className="hidden xs:inline">Go Live (P2P)</span>
+                <span className="xs:hidden text-[9px]">Go Live</span>
               </button>
             )}
             {p2pStatus === "connecting" && (
-              <span className="flex items-center space-x-2 text-yellow-600 dark:text-yellow-400">
+              <span className="flex items-center space-x-1.5 text-yellow-600 dark:text-yellow-400">
                 <div className="h-3 w-3 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin" />
-                <span>Connecting...</span>
+                <span className="hidden xs:inline">Connecting...</span>
+                <span className="xs:hidden text-[9px]">Connecting</span>
               </span>
             )}
             {(p2pStatus === "hosting" || p2pStatus === "joined") && (
-              <div className="flex items-center space-x-3">
-                <span className="flex items-center space-x-1.5 text-emerald-600 dark:text-emerald-400">
-                  <span className="h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
-                  <span className="h-2 w-2 rounded-full bg-emerald-500 absolute" />
-                  <span className="font-extrabold capitalize text-[10px] tracking-wider bg-emerald-500/10 px-1.5 py-0.5 rounded-md">
+              <div className="flex items-center space-x-2 sm:space-x-3">
+                <span className="flex items-center space-x-1 text-emerald-600 dark:text-emerald-400">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-ping" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 absolute" />
+                  <span className="font-extrabold capitalize text-[9px] sm:text-[10px] tracking-wider bg-emerald-500/10 px-1.5 py-0.5 rounded-md ml-1">
                     {p2pStatus}
                   </span>
                 </span>
                 
                 {connectedPeers.length > 0 && (
-                  <span className={`flex items-center space-x-1 font-mono text-[10px] ${themeTokens.textSecondary}`}>
+                  <span className={`hidden sm:inline-flex items-center space-x-1 font-mono text-[10px] ${themeTokens.textSecondary}`}>
                     <Users className="h-3.5 w-3.5" />
                     <span>{connectedPeers.length} peer(s)</span>
                   </span>
@@ -396,7 +399,7 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
                 <button
                   onClick={handlePushP2P}
                   disabled={justPushed}
-                  className={`px-2 py-0.5 rounded text-[10px] font-extrabold transition-all cursor-pointer focus:outline-none ${
+                  className={`px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-extrabold transition-all cursor-pointer focus:outline-none ${
                     justPushed
                       ? "bg-emerald-500 text-white"
                       : "bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
@@ -408,14 +411,14 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
 
                 <button
                   onClick={disconnectP2P}
-                  className="text-red-500 hover:text-red-650 cursor-pointer focus:outline-none text-[10px] font-extrabold underline decoration-dotted"
+                  className="text-red-500 hover:text-red-650 cursor-pointer focus:outline-none text-[9px] sm:text-[10px] font-extrabold underline decoration-dotted"
                 >
                   Disconnect
                 </button>
               </div>
             )}
             {p2pStatus === "error" && (
-              <span className="text-red-600 font-extrabold text-[10px] flex items-center space-x-1.5">
+              <span className="text-red-600 font-extrabold text-[9px] sm:text-[10px] flex items-center space-x-1">
                 <span>P2P Offline</span>
                 <button onClick={initPeerJS} className="underline text-blue-500 focus:outline-none">Retry</button>
               </span>
@@ -425,35 +428,63 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
           {/* Settings gear icon */}
           <button
             onClick={openSettings}
-            className={`p-2 rounded-xl border ${themeTokens.border} ${themeTokens.inputBg} ${themeTokens.textSecondary} hover:${themeTokens.text} cursor-pointer focus:outline-none transition-all shadow-sm`}
+            className={`p-1.5 rounded-xl border ${themeTokens.border} ${themeTokens.inputBg} ${themeTokens.textSecondary} hover:${themeTokens.text} cursor-pointer focus:outline-none transition-all shadow-sm flex-shrink-0`}
             title="Open Workspace Settings"
           >
-            <Settings className="h-4.5 w-4.5" />
+            <Settings className="h-4 w-4" />
           </button>
 
           <button
             onClick={handleShareLink}
-            className="flex items-center space-x-1.5 px-3 py-1.5 bg-blue-50 dark:bg-blue-950/50 border border-blue-100 dark:border-blue-900/50 hover:bg-blue-100 text-blue-600 hover:text-blue-700 rounded-xl text-xs font-bold cursor-pointer transition-colors focus:outline-none"
+            className="flex items-center justify-center p-1.5 sm:px-3 sm:py-1.5 bg-blue-50 dark:bg-blue-950/50 border border-blue-100 dark:border-blue-900/50 hover:bg-blue-100 text-blue-600 hover:text-blue-700 rounded-xl text-[10px] sm:text-xs font-bold cursor-pointer transition-colors focus:outline-none flex-shrink-0"
           >
             {shareCopied ? (
               <>
                 <Check className="h-4 w-4 text-emerald-600" />
-                <span className="text-emerald-600">Link Copied!</span>
+                <span className="hidden sm:inline ml-1 text-emerald-600">Link Copied!</span>
+                <span className="sm:hidden text-[9px] font-bold text-emerald-600">Copied</span>
               </>
             ) : (
               <>
                 <Share2 className="h-4 w-4" />
-                <span>Share Workspace</span>
+                <span className="hidden sm:inline ml-1">Share Workspace</span>
+                <span className="sm:hidden text-[9px] font-bold">Share</span>
               </>
             )}
           </button>
         </div>
       </header>
 
+      {/* Mobile View Toggle Bar */}
+      <div className="flex-shrink-0 md:hidden flex border-b bg-black/5">
+        <button
+          onClick={() => setMobileActiveTab("editor")}
+          className={`flex-1 py-2 text-center text-xs font-bold border-b-2 cursor-pointer focus:outline-none transition-all ${
+            mobileActiveTab === "editor"
+              ? "border-blue-600 text-blue-600 dark:text-blue-400"
+              : "border-transparent text-gray-500 hover:text-gray-700"
+          }`}
+        >
+          Design & Edit
+        </button>
+        <button
+          onClick={() => setMobileActiveTab("preview")}
+          className={`flex-1 py-2 text-center text-xs font-bold border-b-2 cursor-pointer focus:outline-none transition-all ${
+            mobileActiveTab === "preview"
+              ? "border-blue-600 text-blue-600 dark:text-blue-400"
+              : "border-transparent text-gray-500 hover:text-gray-700"
+          }`}
+        >
+          Preview & Logs
+        </button>
+      </div>
+
       {/* Main Container Dashboard */}
       <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
         {/* Left Side: Workspace (55%) */}
-        <div className={`w-full md:w-[55%] flex flex-col border-r overflow-hidden ${themeTokens.sidebar}`}>
+        <div className={`w-full md:w-[55%] flex flex-col border-r overflow-hidden ${themeTokens.sidebar} ${
+          mobileActiveTab === "editor" ? "flex" : "hidden md:flex"
+        }`}>
           {/* Tabs header */}
           <div className={`flex-shrink-0 flex border-b bg-black/5 px-4 pt-2 ${themeTokens.border}`}>
             {[
@@ -500,7 +531,9 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
         </div>
 
         {/* Right Side: Form Render and Output Dashboard (45%) */}
-        <div className={`w-full md:w-[45%] flex flex-col overflow-hidden`}>
+        <div className={`w-full md:w-[45%] flex flex-col overflow-hidden ${
+          mobileActiveTab === "preview" ? "flex" : "hidden md:flex"
+        }`}>
           {/* Tabs header */}
           <div className={`flex-shrink-0 flex border-b bg-black/5 px-4 pt-2 ${themeTokens.border}`}>
             {[
@@ -555,22 +588,26 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
       </div>
 
       {/* Footer status bar */}
-      <footer className={`flex-shrink-0 border-t px-6 py-2 flex items-center justify-between text-[11px] z-20 ${themeTokens.footer}`}>
-        <div className="flex items-center space-x-4">
-          <span className="font-semibold">
-            Fields Count: <span className="font-bold opacity-85">{schema.fields?.length || 0}</span>
+      <footer className={`flex-shrink-0 border-t px-4 py-2 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-1.5 sm:gap-0 text-[10px] sm:text-[11px] text-center sm:text-left z-20 ${themeTokens.footer}`}>
+        <div className="flex flex-wrap justify-center sm:justify-start items-center gap-2 sm:gap-4 font-semibold">
+          <span>
+            Fields: <span className="font-bold opacity-85">{schema.fields?.length || 0}</span>
           </span>
-          <span className="font-semibold">
-            Submissions Logged: <span className="font-bold opacity-85">{submissions.length}</span>
+          <span className="opacity-30">|</span>
+          <span>
+            Submissions: <span className="font-bold opacity-85">{submissions.length}</span>
           </span>
           {workspaceId && (
-            <span className="font-semibold text-blue-500 font-mono select-all">
-              Workspace ID: {workspaceId}
-            </span>
+            <>
+              <span className="opacity-30">|</span>
+              <span className="text-blue-500 font-mono select-all">
+                ID: {workspaceId}
+              </span>
+            </>
           )}
         </div>
-        <div className="flex items-center space-x-2">
-          <span className="font-semibold">Validation Status:</span>
+        <div className="flex items-center space-x-2 flex-shrink-0">
+          <span className="font-semibold hidden xs:inline">Validation:</span>
           {error ? (
             <span className="text-red-650 font-bold bg-red-50 dark:bg-red-950/20 px-2 py-0.5 rounded flex items-center space-x-1 animate-pulse border border-red-200/30">
               <span className="h-1.5 w-1.5 rounded-full bg-red-600" />
@@ -579,7 +616,7 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
           ) : (
             <span className="text-emerald-700 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-950/20 px-2 py-0.5 rounded flex items-center space-x-1 border border-emerald-200/30">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-              <span>Schema Fully Valid</span>
+              <span>Schema Valid</span>
             </span>
           )}
         </div>
@@ -633,7 +670,7 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
                         <div className={`h-6 w-8 rounded border shadow-inner flex items-center justify-center ${t.color}`}>
                           <span className={`text-[8px] font-bold ${t.id === "light" ? "text-gray-900" : t.id === "matrix" ? "text-emerald-400" : t.id === "midnight" ? "text-cyan-400" : t.id === "corporate" ? "text-slate-800" : "text-gray-100"}`}>Aa</span>
                         </div>
-                        <span className={`text-[9px] font-semibold mt-1 truncate w-full ${isStaged ? "text-blue-550 font-bold" : themeTokens.textSecondary}`}>
+                        <span className={`text-[9px] font-semibold mt-1 truncate w-full ${isStaged ? "text-blue-600 font-bold" : themeTokens.textSecondary}`}>
                           {t.name}
                         </span>
                       </button>
