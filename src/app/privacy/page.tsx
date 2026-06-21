@@ -48,7 +48,7 @@ export default function PrivacyPage() {
       <header className="max-w-6xl w-full mx-auto px-4 py-4 sm:px-6 sm:py-6 flex justify-between items-center z-10 border-b border-slate-200 dark:border-slate-900">
         <button
           onClick={() => router.push("/")}
-          className="flex items-center space-x-2 text-xs font-semibold text-slate-550 dark:text-slate-400 hover:text-blue-600 dark:hover:text-white transition-all focus:outline-none cursor-pointer"
+          className="flex items-center space-x-2 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-white transition-all focus:outline-none cursor-pointer"
         >
           <ArrowLeft className="h-4 w-4" />
           <span>Back to Home</span>
@@ -71,10 +71,10 @@ export default function PrivacyPage() {
         </div>
 
         {/* Overview Alert */}
-        <div className="bg-emerald-500/5 dark:bg-emerald-950/20 border border-emerald-500/20 rounded-2xl p-5 text-xs text-emerald-800 dark:text-emerald-350 leading-relaxed flex items-start space-x-3 shadow-sm">
+        <div className="bg-emerald-500/5 dark:bg-emerald-950/20 border border-emerald-500/20 rounded-2xl p-5 text-xs text-emerald-800 dark:text-emerald-400 leading-relaxed flex items-start space-x-3 shadow-sm">
           <ShieldCheck className="h-5 w-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" />
           <div>
-            <span className="font-bold text-emerald-800 dark:text-emerald-350 block mb-1">Our Privacy Commitment</span>
+            <span className="font-bold text-emerald-800 dark:text-emerald-400 block mb-1">Our Privacy Commitment</span>
             We collect, store, and process zero user-generated form schemas or form submission values on remote servers. All operations happen entirely within your local browser.
           </div>
         </div>

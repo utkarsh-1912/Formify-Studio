@@ -104,7 +104,7 @@ export default function AboutPage() {
         {/* Developer Perks List */}
         <div className="space-y-4 pt-2 sm:pt-4">
           <h4 className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">Why Developers Choose Formify</h4>
-          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-600 dark:text-slate-350">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-600 dark:text-slate-300">
             {[
               "Bidirectional JSON & Visual Syncing",
               "Production-Ready React & Tailwind Exports",

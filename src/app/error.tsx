@@ -85,7 +85,7 @@ export default function ErrorPage({
           </button>
           <button
             onClick={() => router.push("/")}
-            className="flex items-center justify-center space-x-2 py-3 px-5 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-xs font-bold rounded-xl cursor-pointer transition-all shadow-sm focus:outline-none text-slate-700 dark:text-slate-350"
+            className="flex items-center justify-center space-x-2 py-3 px-5 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-xs font-bold rounded-xl cursor-pointer transition-all shadow-sm focus:outline-none text-slate-700 dark:text-slate-300"
           >
             <Home className="h-4 w-4 text-slate-500" />
             <span>Back to Home</span>

@@ -344,7 +344,7 @@ const TemplatesGallery: React.FC<TemplatesGalleryProps> = ({ themeTokens, onSele
         {/* Import Panels */}
         {importMethod === "file" && (
           <div className="space-y-3">
-            <div className={`border-2 border-dashed ${themeTokens.border} rounded-lg p-4 text-center hover:border-blue-450 transition-colors relative`}>
+            <div className={`border-2 border-dashed ${themeTokens.border} rounded-lg p-4 text-center hover:border-blue-500 transition-colors relative`}>
               <input
                 type="file"
                 accept=".json"
@@ -412,7 +412,7 @@ const TemplatesGallery: React.FC<TemplatesGalleryProps> = ({ themeTokens, onSele
 
         {/* Notifications */}
         {errorMsg && (
-          <div className="bg-red-500/10 border border-red-500/25 p-3 rounded-lg text-xs text-red-650 flex items-start space-x-2">
+          <div className="bg-red-500/10 border border-red-500/25 p-3 rounded-lg text-xs text-red-600 dark:text-red-400 flex items-start space-x-2">
             <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
             <div className="flex-1 break-words">{errorMsg}</div>
           </div>

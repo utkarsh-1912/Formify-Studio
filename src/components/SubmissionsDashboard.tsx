@@ -108,7 +108,7 @@ const SubmissionsDashboard: React.FC<SubmissionsDashboardProps> = ({
         {submissions.length > 0 && (
           <button
             onClick={onClearAllSubmissions}
-            className="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-650 border border-red-200 rounded-lg text-xs font-semibold cursor-pointer transition-colors duration-150 focus:outline-none"
+            className="px-3 py-1.5 bg-red-50 hover:bg-red-100 dark:bg-red-950/20 dark:hover:bg-red-950/40 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900/50 rounded-lg text-xs font-semibold cursor-pointer transition-colors duration-150 focus:outline-none"
           >
             Clear All Logs
           </button>

@@ -199,7 +199,6 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
     // 0. Workspace Security Token Check
     const tokenKey = `formify_edit_token_${workspaceId || "default"}`;
     const storedToken = localStorage.getItem(tokenKey);
-    const hasStoredSchema = !!localStorage.getItem(schemaStorageKey);
 
     const urlParams = new URLSearchParams(window.location.search);
     const urlToken = urlParams.get("token");
@@ -207,33 +206,21 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
     let finalToken = storedToken || "";
     let hasEdit = false;
 
-    if (!hasStoredSchema && !storedToken) {
-      // Brand new workspace! Generate a token
-      const newToken = "tok_" + Math.random().toString(36).substring(2, 15);
-      localStorage.setItem(tokenKey, newToken);
-      finalToken = newToken;
+    if (urlToken) {
+      // Token provided in URL query! Store it and unlock edit permission.
+      localStorage.setItem(tokenKey, urlToken);
+      finalToken = urlToken;
       hasEdit = true;
-      // Append token to URL without reloading
-      const newUrl = `${window.location.pathname}?token=${newToken}`;
-      window.history.replaceState({}, "", newUrl);
+      setShowSwitchBanner(false);
     } else if (storedToken) {
-      if (urlToken === storedToken) {
-        hasEdit = true;
-      } else {
-        // View-Only mode
-        hasEdit = false;
-        if (!urlToken) {
-          setShowSwitchBanner(true);
-        }
-      }
+      // Owner visiting without the token query in URL
+      hasEdit = false;
+      setShowSwitchBanner(true);
     } else {
-      // Legacy workspace: has stored schema but no stored token
-      const newToken = "tok_" + Math.random().toString(36).substring(2, 15);
-      localStorage.setItem(tokenKey, newToken);
-      finalToken = newToken;
-      hasEdit = true;
-      const newUrl = `${window.location.pathname}?token=${newToken}`;
-      window.history.replaceState({}, "", newUrl);
+      // Guest visiting a view-only URL: strictly read-only
+      hasEdit = false;
+      setShowSwitchBanner(false);
+      finalToken = "";
     }
 
     setWorkspaceToken(finalToken);
@@ -407,6 +394,15 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
     }
   };
 
+  const handleCloneWorkspace = () => {
+    const tokenKey = `formify_edit_token_${workspaceId || "default"}`;
+    const newToken = "tok_" + Math.random().toString(36).substring(2, 15);
+    localStorage.setItem(tokenKey, newToken);
+    localStorage.setItem(schemaStorageKey, JSON.stringify(schema));
+    const newUrl = `${window.location.pathname}?token=${newToken}`;
+    window.location.href = newUrl;
+  };
+
   // Settings Modal controls
   const openSettings = () => {
     setStagedTheme(globalTheme);
@@ -452,6 +448,21 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
             className="bg-white text-blue-600 px-3 py-1 rounded-lg hover:bg-blue-50 transition-colors font-bold cursor-pointer text-[10px] sm:text-xs"
           >
             Switch to Edit Mode
+          </button>
+        </div>
+      )}
+      {!hasEditPermission && !showSwitchBanner && (
+        <div className="flex-shrink-0 bg-slate-800 text-white text-xs px-4 py-2 sm:px-6 sm:py-2.5 flex items-center justify-between shadow-md z-30 animate-fade-in font-semibold">
+          <span className="flex items-center space-x-1.5">
+            <Eye className="h-3.5 w-3.5 text-slate-400" />
+            <span>Viewing in <strong>View-Only Mode</strong>. You cannot edit this workspace.</span>
+          </span>
+          <button
+            onClick={handleCloneWorkspace}
+            className="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1 rounded-lg transition-colors font-bold cursor-pointer text-[10px] sm:text-xs flex items-center space-x-1"
+          >
+            <Plus className="h-3 w-3" />
+            <span>Clone to Edit</span>
           </button>
         </div>
       )}
@@ -563,7 +574,7 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
 
                 <button
                   onClick={disconnectP2P}
-                  className="p-1 text-red-500 hover:text-red-650 cursor-pointer focus:outline-none flex items-center"
+                  className="p-1 text-red-500 hover:text-red-600 dark:hover:text-red-400 cursor-pointer focus:outline-none flex items-center"
                   title="Disconnect multiplayer sync"
                 >
                   <LogOut className="h-3.5 w-3.5" />
@@ -571,7 +582,7 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
               </div>
             )}
             {p2pStatus === "error" && (
-              <span className="text-red-650 font-extrabold text-[10px] flex items-center space-x-1" title="P2P Offline">
+              <span className="text-red-600 dark:text-red-400 font-extrabold text-[10px] flex items-center space-x-1" title="P2P Offline">
                 <AlertCircle className="h-4 w-4" />
                 <button onClick={initPeerJS} className="underline text-blue-500 focus:outline-none">Retry</button>
               </span>
@@ -664,6 +675,21 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
                         >
                           <Unlock className="h-3.5 w-3.5 text-blue-500" />
                           <span>Unlock Editing</span>
+                        </button>
+                      </>
+                    )}
+                    {!hasEditPermission && !showSwitchBanner && (
+                      <>
+                        <hr className={`my-1.5 border-t ${themeTokens.border}`} />
+                        <button
+                          onClick={() => {
+                            handleCloneWorkspace();
+                            setIsHeaderMenuOpen(false);
+                          }}
+                          className={`w-full text-left px-4 py-2 text-xs font-bold flex items-center space-x-2 hover:bg-blue-600 hover:text-white transition-colors cursor-pointer ${themeTokens.text}`}
+                        >
+                          <Plus className="h-3.5 w-3.5 text-blue-500" />
+                          <span>Clone to Edit</span>
                         </button>
                       </>
                     )}
@@ -829,7 +855,7 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
         <div className="flex items-center space-x-2 flex-shrink-0">
           <span className="font-semibold hidden xs:inline">Validation:</span>
           {error ? (
-            <span className="text-red-650 font-bold bg-red-50 dark:bg-red-950/20 px-2 py-0.5 rounded flex items-center space-x-1 animate-pulse border border-red-200/30">
+            <span className="text-red-600 dark:text-red-400 font-bold bg-red-50 dark:bg-red-950/20 px-2 py-0.5 rounded flex items-center space-x-1 animate-pulse border border-red-200/30">
               <span className="h-1.5 w-1.5 rounded-full bg-red-600" />
               <span>Invalid Configuration</span>
             </span>
@@ -873,7 +899,7 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
                     { id: "light", name: "Light", color: "bg-white border-gray-200" },
                     { id: "matrix", name: "Matrix", color: "bg-black border-emerald-500/30" },
                     { id: "midnight", name: "Midnight", color: "bg-[#0b132b] border-[#3a506b]/40" },
-                    { id: "corporate", name: "Corporate", color: "bg-slate-50 border-slate-350" }
+                    { id: "corporate", name: "Corporate", color: "bg-slate-50 border-slate-300" }
                   ].map((t) => {
                     const isStaged = stagedTheme === t.id;
                     return (
@@ -1131,7 +1157,7 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
                       type="text"
                       readOnly
                       value={`${window.location.origin}/ws/${workspaceId || "default"}?token=${workspaceToken}`}
-                      className={`flex-1 p-2 border border-amber-350 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-xl text-xs focus:outline-none select-all`}
+                      className={`flex-1 p-2 border border-amber-300 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-xl text-xs focus:outline-none select-all`}
                     />
                     <button
                       onClick={() => handleCopyToClipboard(`${window.location.origin}/ws/${workspaceId || "default"}?token=${workspaceToken}`, "shareEdit")}

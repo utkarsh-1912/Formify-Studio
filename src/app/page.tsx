@@ -75,7 +75,8 @@ export default function LandingPage() {
 
   const handleCreateWorkspace = () => {
     const randomId = Math.random().toString(36).substring(2, 10);
-    router.push(`/ws/${randomId}`);
+    const newToken = "tok_" + Math.random().toString(36).substring(2, 15);
+    router.push(`/ws/${randomId}?token=${newToken}`);
   };
 
   const handleJoinWorkspace = (e: React.FormEvent) => {
@@ -108,14 +109,12 @@ export default function LandingPage() {
     setPreviewShadow("md");
   };
 
-  if (!mounted) return null;
-
   // Sandbox dynamic classes mapping
   const accentClasses = {
     blue: "bg-blue-600 border-blue-500 text-blue-600 focus:border-blue-500 focus:ring-blue-500/20",
     violet: "bg-violet-600 border-violet-500 text-violet-600 focus:border-violet-500 focus:ring-violet-500/20",
     emerald: "bg-emerald-600 border-emerald-500 text-emerald-600 focus:border-emerald-500 focus:ring-emerald-500/20",
-    amber: "bg-amber-500 border-amber-450 text-amber-500 focus:border-amber-500 focus:ring-amber-500/20",
+    amber: "bg-amber-500 border-amber-500 text-amber-500 focus:border-amber-500 focus:ring-amber-500/20",
     rose: "bg-rose-600 border-rose-500 text-rose-600 focus:border-rose-500 focus:ring-rose-500/20"
   };
 
@@ -232,17 +231,17 @@ export default function LandingPage() {
               An enterprise-grade visual workspace. Build bidirectional schemas, customize themes live, collaborate instantly via WebRTC signaling, and export React+Tailwind code immediately.
             </p>
 
-            <div className="flex flex-wrap gap-4 pt-2">
+             <div className="flex flex-wrap gap-4 pt-2">
               <button
                 onClick={handleCreateWorkspace}
-                className="p-2 md:py-4 md:px-8 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-505 text-white text-sm font-bold rounded-2xl cursor-pointer flex items-center space-x-3 transition-all shadow-lg shadow-blue-500/15 dark:shadow-blue-900/25 hover:shadow-blue-500/35 focus:outline-none hover:scale-[1.02] active:scale-[0.98]"
+                className="p-2 md:py-4 md:px-8 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white text-sm font-bold rounded-2xl cursor-pointer flex items-center space-x-3 transition-all shadow-lg shadow-blue-500/15 dark:shadow-blue-900/25 hover:shadow-blue-500/35 focus:outline-none hover:scale-[1.02] active:scale-[0.98]"
               >
                 <span>Create Workspace</span>
                 <ArrowRight className="h-4.5 w-4.5" />
               </button>
               <a
                 href="#workspace-hub"
-                className="p-2 md:py-4 md:px-8 bg-white hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:text-blue-600 dark:hover:text-white hover:border-slate-350 dark:hover:border-slate-700 text-sm font-bold rounded-2xl cursor-pointer transition-all focus:outline-none text-center hover:scale-[1.02] active:scale-[0.98]"
+                className="p-2 md:py-4 md:px-8 bg-white hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:text-blue-600 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-700 text-sm font-bold rounded-2xl cursor-pointer transition-all focus:outline-none text-center hover:scale-[1.02] active:scale-[0.98]"
               >
                 Join Collaborative Room
               </a>
@@ -361,7 +360,7 @@ export default function LandingPage() {
                           className={`text-[9px] font-bold py-1 px-1.5 rounded-md uppercase tracking-wider focus:outline-none transition-all ${
                             previewRadius === r
                               ? "bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm"
-                              : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-350"
+                              : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-300"
                           }`}
                         >
                           {r}
@@ -383,7 +382,7 @@ export default function LandingPage() {
 
                     <button
                       onClick={handleResetMockDemo}
-                      className="w-full flex items-center justify-center space-x-1.5 py-2 px-3 bg-transparent hover:bg-slate-100 dark:hover:bg-slate-950 text-[10px] font-bold rounded-lg border border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-350 transition-colors cursor-pointer"
+                      className="w-full flex items-center justify-center space-x-1.5 py-2 px-3 bg-transparent hover:bg-slate-100 dark:hover:bg-slate-950 text-[10px] font-bold rounded-lg border border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 transition-colors cursor-pointer"
                     >
                       <RotateCcw className="h-3 w-3" />
                       <span>Reset Sandbox</span>
@@ -415,7 +414,7 @@ export default function LandingPage() {
                                     : previewAccent === "emerald"
                                     ? "focus:border-emerald-500 focus:ring-emerald-500/20"
                                     : previewAccent === "amber"
-                                    ? "focus:border-amber-500 focus:ring-amber-550/20"
+                                    ? "focus:border-amber-500 focus:ring-amber-500/20"
                                     : "focus:border-rose-500 focus:ring-rose-500/20"
                                 }`}
                                 disabled
@@ -455,7 +454,7 @@ export default function LandingPage() {
                                   disabled
                                   checked
                                 />
-                                <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-350">{f.label}</span>
+                                <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300">{f.label}</span>
                               </div>
                             )}
                           </div>
@@ -510,7 +509,7 @@ export default function LandingPage() {
               </div>
               <button
                 onClick={handleCreateWorkspace}
-                className="mt-8 py-3.5 px-6 bg-slate-50 hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-slate-350 dark:hover:border-slate-700 text-xs font-bold rounded-xl cursor-pointer flex items-center justify-center space-x-2 transition-all text-slate-700 dark:text-white focus:outline-none hover:scale-[1.01] active:scale-[0.99]"
+                className="mt-8 py-3.5 px-6 bg-slate-50 hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-xs font-bold rounded-xl cursor-pointer flex items-center justify-center space-x-2 transition-all text-slate-700 dark:text-white focus:outline-none hover:scale-[1.01] active:scale-[0.99]"
               >
                 <span>Create Workspace</span>
                 <ArrowRight className="h-4 w-4 text-slate-500 dark:text-slate-400" />
@@ -520,7 +519,7 @@ export default function LandingPage() {
             {/* Multiplayer Join Card */}
             <div className="bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-900/80 p-8 sm:p-10 rounded-3xl flex flex-col justify-between hover:border-purple-500/40 dark:hover:border-purple-500/40 transition-all duration-300 group shadow-sm hover:shadow-md">
               <div className="space-y-5">
-                <div className="p-3 bg-purple-500/10 text-purple-650 dark:text-purple-400 rounded-2xl w-fit group-hover:scale-110 transition-transform">
+                <div className="p-3 bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-2xl w-fit group-hover:scale-110 transition-transform">
                   <Users className="h-7 w-7" />
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 dark:text-white">Multiplayer / Live Sync</h3>
@@ -534,7 +533,7 @@ export default function LandingPage() {
                   value={workspaceInput}
                   onChange={(e) => setWorkspaceInput(e.target.value)}
                   placeholder="Enter Room Code (e.g. z9h1f)"
-                  className="px-4 py-3.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-purple-500 rounded-xl text-xs font-semibold focus:outline-none placeholder-slate-400 dark:placeholder-slate-500 text-purple-600 dark:text-purple-300 font-mono text-center uppercase tracking-widest flex-1 focus:ring-1 focus:ring-purple-550/20"
+                  className="px-4 py-3.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-purple-500 rounded-xl text-xs font-semibold focus:outline-none placeholder-slate-400 dark:placeholder-slate-500 text-purple-600 dark:text-purple-300 font-mono text-center uppercase tracking-widest flex-1 focus:ring-1 focus:ring-purple-500/20"
                 />
                 <button
                   type="submit"
@@ -560,7 +559,7 @@ export default function LandingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Bento item 1 */}
-            <div className="bg-white dark:bg-slate-900/30 border border-slate-200 dark:border-slate-900/80 p-8 rounded-3xl space-y-5 hover:border-slate-350 dark:hover:border-slate-800 transition-all duration-300 shadow-sm hover:shadow-md group">
+            <div className="bg-white dark:bg-slate-900/30 border border-slate-200 dark:border-slate-900/80 p-8 rounded-3xl space-y-5 hover:border-slate-300 dark:hover:border-slate-800 transition-all duration-300 shadow-sm hover:shadow-md group">
               <div className="text-blue-600 dark:text-blue-400 bg-blue-500/10 p-3 rounded-2xl w-fit group-hover:scale-105 transition-transform">
                 <Shield className="h-6 w-6" />
               </div>
@@ -571,7 +570,7 @@ export default function LandingPage() {
             </div>
 
             {/* Bento item 2 */}
-            <div className="bg-white dark:bg-slate-900/30 border border-slate-200 dark:border-slate-900/80 p-8 rounded-3xl space-y-5 hover:border-slate-350 dark:hover:border-slate-800 transition-all duration-300 shadow-sm hover:shadow-md group">
+            <div className="bg-white dark:bg-slate-900/30 border border-slate-200 dark:border-slate-900/80 p-8 rounded-3xl space-y-5 hover:border-slate-300 dark:hover:border-slate-800 transition-all duration-300 shadow-sm hover:shadow-md group">
               <div className="text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 p-3 rounded-2xl w-fit group-hover:scale-105 transition-transform">
                 <Zap className="h-6 w-6" />
               </div>
@@ -582,7 +581,7 @@ export default function LandingPage() {
             </div>
 
             {/* Bento item 3 */}
-            <div className="bg-white dark:bg-slate-900/30 border border-slate-200 dark:border-slate-900/80 p-8 rounded-3xl space-y-5 hover:border-slate-350 dark:hover:border-slate-800 transition-all duration-300 shadow-sm hover:shadow-md group">
+            <div className="bg-white dark:bg-slate-900/30 border border-slate-200 dark:border-slate-900/80 p-8 rounded-3xl space-y-5 hover:border-slate-300 dark:hover:border-slate-800 transition-all duration-300 shadow-sm hover:shadow-md group">
               <div className="text-purple-600 dark:text-purple-400 bg-purple-500/10 p-3 rounded-2xl w-fit group-hover:scale-105 transition-transform">
                 <Code className="h-6 w-6" />
               </div>
@@ -593,7 +592,7 @@ export default function LandingPage() {
             </div>
 
             {/* Bento item 4 */}
-            <div className="bg-white dark:bg-slate-900/30 border border-slate-200 dark:border-slate-900/80 p-8 rounded-3xl space-y-5 hover:border-slate-350 dark:hover:border-slate-800 transition-all duration-300 shadow-sm hover:shadow-md group">
+            <div className="bg-white dark:bg-slate-900/30 border border-slate-200 dark:border-slate-900/80 p-8 rounded-3xl space-y-5 hover:border-slate-300 dark:hover:border-slate-800 transition-all duration-300 shadow-sm hover:shadow-md group">
               <div className="text-pink-600 dark:text-pink-400 bg-pink-500/10 p-3 rounded-2xl w-fit group-hover:scale-105 transition-transform">
                 <Paintbrush className="h-6 w-6" />
               </div>
@@ -604,7 +603,7 @@ export default function LandingPage() {
             </div>
 
             {/* Bento item 5 */}
-            <div className="bg-white dark:bg-slate-900/30 border border-slate-200 dark:border-slate-900/80 p-8 rounded-3xl space-y-5 hover:border-slate-350 dark:hover:border-slate-800 transition-all duration-300 shadow-sm hover:shadow-md group">
+            <div className="bg-white dark:bg-slate-900/30 border border-slate-200 dark:border-slate-900/80 p-8 rounded-3xl space-y-5 hover:border-slate-300 dark:hover:border-slate-800 transition-all duration-300 shadow-sm hover:shadow-md group">
               <div className="text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 p-3 rounded-2xl w-fit group-hover:scale-105 transition-transform">
                 <Terminal className="h-6 w-6" />
               </div>
@@ -615,7 +614,7 @@ export default function LandingPage() {
             </div>
 
             {/* Bento item 6 */}
-            <div className="bg-white dark:bg-slate-900/30 border border-slate-200 dark:border-slate-900/80 p-8 rounded-3xl space-y-5 hover:border-slate-350 dark:hover:border-slate-800 transition-all duration-300 shadow-sm hover:shadow-md group">
+            <div className="bg-white dark:bg-slate-900/30 border border-slate-200 dark:border-slate-900/80 p-8 rounded-3xl space-y-5 hover:border-slate-300 dark:hover:border-slate-800 transition-all duration-300 shadow-sm hover:shadow-md group">
               <div className="text-amber-600 dark:text-amber-400 bg-amber-500/10 p-3 rounded-2xl w-fit group-hover:scale-105 transition-transform">
                 <ServerOff className="h-6 w-6" />
               </div>

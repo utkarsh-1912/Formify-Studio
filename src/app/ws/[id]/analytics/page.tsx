@@ -273,7 +273,7 @@ export default function AnalyticsDashboardPage({ params }: AnalyticsPageProps) {
           </div>
         )}
         {p2pStatus === "disconnected" && (
-          <div className="bg-red-500/10 border-b border-red-500/25 px-4 py-2.5 text-center text-xs font-semibold text-red-650 dark:text-red-400 flex items-center justify-center space-x-2">
+          <div className="bg-red-500/10 border-b border-red-500/25 px-4 py-2.5 text-center text-xs font-semibold text-red-600 dark:text-red-400 flex items-center justify-center space-x-2">
             <AlertCircle className="h-4 w-4 flex-shrink-0" />
             <span>Workspace offline. Displaying cached dashboard data. Connect host to load live records.</span>
           </div>

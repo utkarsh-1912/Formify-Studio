@@ -126,7 +126,7 @@ export default function FormSharePage({ params }: SharePageProps) {
       {/* Top Status Banner */}
       <div className="flex-shrink-0 z-20">
         {p2pStatus === "disconnected" && (
-          <div className="bg-red-500/10 border-b border-red-500/25 px-4 py-2.5 text-center text-xs font-semibold text-red-650 dark:text-red-400 flex items-center justify-center space-x-2">
+          <div className="bg-red-500/10 border-b border-red-500/25 px-4 py-2.5 text-center text-xs font-semibold text-red-600 dark:text-red-400 flex items-center justify-center space-x-2">
             <AlertCircle className="h-4 w-4 flex-shrink-0" />
             <span>
               Workspace offline. Submissions cannot be synced. The form owner must open Formify Studio to receive entries.
@@ -160,7 +160,7 @@ export default function FormSharePage({ params }: SharePageProps) {
               <span>Connecting...</span>
             </span>
           ) : (
-            <span className="text-[10px] font-bold text-red-650 dark:text-red-400 bg-red-500/10 px-2.5 py-1 border border-red-500/20 rounded-full flex items-center space-x-1.5 shadow-sm">
+            <span className="text-[10px] font-bold text-red-600 dark:text-red-400 bg-red-500/10 px-2.5 py-1 border border-red-500/20 rounded-full flex items-center space-x-1.5 shadow-sm">
               <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
               <span>Offline</span>
             </span>

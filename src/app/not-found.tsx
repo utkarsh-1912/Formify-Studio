@@ -66,7 +66,7 @@ export default function NotFound() {
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
             onClick={() => router.push("/")}
-            className="flex items-center justify-center space-x-2 py-3 px-5 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-xs font-bold rounded-xl cursor-pointer transition-all shadow-sm focus:outline-none text-slate-700 dark:text-slate-350"
+            className="flex items-center justify-center space-x-2 py-3 px-5 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-xs font-bold rounded-xl cursor-pointer transition-all shadow-sm focus:outline-none text-slate-700 dark:text-slate-300"
           >
             <ArrowLeft className="h-4 w-4 text-slate-500" />
             <span>Back to Home</span>
@@ -74,7 +74,8 @@ export default function NotFound() {
           <button
             onClick={() => {
               const randomId = Math.random().toString(36).substring(2, 10);
-              router.push(`/ws/${randomId}`);
+              const newToken = "tok_" + Math.random().toString(36).substring(2, 15);
+              router.push(`/ws/${randomId}?token=${newToken}`);
             }}
             className="flex items-center justify-center space-x-2 py-3 px-5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl cursor-pointer transition-all shadow-md shadow-blue-600/10 dark:shadow-blue-600/20 focus:outline-none"
           >
