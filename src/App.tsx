@@ -29,7 +29,8 @@ import {
   Minus,
   Users,
   Send,
-  LogOut
+  LogOut,
+  AlertCircle
 } from "lucide-react";
 
 // Clean canvas schema as default for new workspaces
@@ -391,8 +392,11 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
               title="Click to rename workspace"
             />
             {isWorkspaceInitialized ? (
-              <span className="hidden sm:inline-block text-[9px] bg-emerald-500/10 text-emerald-500 font-extrabold px-2 py-0.5 rounded-md uppercase tracking-wider border border-emerald-500/25 flex-shrink-0">
-                Saved Alphanumeric
+              <span 
+                className="p-1.5 bg-emerald-500/10 text-emerald-500 border border-emerald-500/25 rounded-lg flex-shrink-0 flex items-center justify-center shadow-sm"
+                title="Workspace Saved in LocalStorage"
+              >
+                <Check className="h-4 w-4" />
               </span>
             ) : (
               <button
@@ -400,10 +404,10 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
                   localStorage.setItem(schemaStorageKey, JSON.stringify(schema));
                   setIsWorkspaceInitialized(true);
                 }}
-                className="hidden sm:inline-block text-[9px] bg-amber-500/10 text-amber-500 hover:bg-amber-500/20 font-extrabold px-2 py-0.5 rounded-md uppercase tracking-wider border border-amber-500/25 flex-shrink-0 cursor-pointer animate-pulse focus:outline-none"
-                title="Workspace not created in LocalStorage. Click to initialize."
+                className="p-1.5 bg-amber-500/10 text-amber-500 hover:bg-amber-500/20 border border-amber-500/25 rounded-lg flex-shrink-0 cursor-pointer animate-pulse focus:outline-none flex items-center justify-center shadow-sm"
+                title="Workspace not initialized in LocalStorage. Click to save."
               >
-                Draft (Click to Init)
+                <AlertCircle className="h-4 w-4" />
               </button>
             )}
           </div>
@@ -412,38 +416,36 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
         {/* Global Toolbar Options */}
         <div className="flex items-center space-x-1.5 sm:space-x-3 flex-shrink-0">
           {/* P2P Multiplayer Sync Status Badge */}
-          <div className={`flex items-center space-x-1.5 px-1.5 py-1 sm:px-3 sm:py-1.5 border ${themeTokens.border} ${themeTokens.inputBg} rounded-xl text-[10px] sm:text-xs font-bold`}>
+          <div className={`flex items-center space-x-1.5 px-2 py-1.5 border ${themeTokens.border} ${themeTokens.inputBg} rounded-xl text-xs font-bold shadow-sm`}>
             {p2pStatus === "disconnected" && (
               <button
                 onClick={initPeerJS}
-                className="flex items-center space-x-1 text-gray-500 hover:text-blue-500 cursor-pointer focus:outline-none"
-                title="Enable multiplayer peer-to-peer real-time sync"
+                className="flex items-center text-gray-500 hover:text-blue-500 cursor-pointer focus:outline-none"
+                title="Go Live (Enable multiplayer sync)"
               >
-                <Radio className="h-4 w-4 sm:h-4.5 sm:w-4.5 animate-pulse" />
-                <span className="hidden sm:inline">Go Live</span>
+                <Radio className="h-4 w-4 animate-pulse" />
               </button>
             )}
             {p2pStatus === "connecting" && (
-              <span className="flex items-center space-x-1.5 text-yellow-600 dark:text-yellow-400" title="Connecting...">
-                <div className="h-3 w-3 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin" />
-                <span className="hidden sm:inline">Connecting...</span>
+              <span className="flex items-center text-yellow-600 dark:text-yellow-400" title="Connecting to signaling server...">
+                <div className="h-4 w-4 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin" />
               </span>
             )}
             {(p2pStatus === "hosting" || p2pStatus === "joined") && (
-              <div className="flex items-center space-x-2 sm:space-x-3">
-                <span className="flex items-center space-x-1 text-emerald-600 dark:text-emerald-400" title={`Multiplayer Status: ${p2pStatus}`}>
+              <div className="flex items-center space-x-2">
+                <span 
+                  className="flex items-center text-emerald-600 dark:text-emerald-400" 
+                  title={`Multiplayer Active (${p2pStatus === "hosting" ? "Hosting Workspace" : "Joined Workspace"})`}
+                >
                   <span className="relative flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                   </span>
-                  <span className="hidden sm:inline-block font-extrabold capitalize text-[9px] sm:text-[10px] tracking-wider bg-emerald-500/10 px-1.5 py-0.5 rounded-md">
-                    {p2pStatus}
-                  </span>
                 </span>
                 
                 {connectedPeers.length > 0 && (
-                  <span className="hidden sm:inline-flex items-center space-x-1 font-mono text-[10px] text-gray-500" title={`${connectedPeers.length} active peer(s)`}>
-                    <Users className="h-3.5 w-3.5" />
+                  <span className="inline-flex items-center text-[10px] text-gray-500 font-mono" title={`${connectedPeers.length} active peer(s)`}>
+                    <Users className="h-3.5 w-3.5 mr-0.5" />
                     <span>{connectedPeers.length}</span>
                   </span>
                 )}
@@ -451,30 +453,28 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
                 <button
                   onClick={handlePushP2P}
                   disabled={justPushed}
-                  className={`p-1 sm:px-2 sm:py-0.5 rounded text-[9px] sm:text-[10px] font-extrabold transition-all cursor-pointer focus:outline-none flex items-center justify-center space-x-1 ${
+                  className={`p-1 rounded transition-all cursor-pointer focus:outline-none flex items-center justify-center ${
                     justPushed
                       ? "bg-emerald-500 text-white"
                       : "bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
                   }`}
-                  title="Push current local changes to all connected peers"
+                  title="Push local changes to all connected peers"
                 >
-                  <Send className="h-3 w-3" />
-                  <span className="hidden sm:inline">{justPushed ? "Pushed!" : "Push"}</span>
+                  {justPushed ? <Check className="h-3 w-3" /> : <Send className="h-3 w-3" />}
                 </button>
 
                 <button
                   onClick={disconnectP2P}
-                  className="p-1 text-red-500 hover:text-red-650 cursor-pointer focus:outline-none flex items-center space-x-0.5 text-[9px] sm:text-[10px] font-extrabold"
+                  className="p-1 text-red-500 hover:text-red-650 cursor-pointer focus:outline-none flex items-center"
                   title="Disconnect multiplayer sync"
                 >
                   <LogOut className="h-3.5 w-3.5" />
-                  <span className="hidden sm:inline underline decoration-dotted">Disconnect</span>
                 </button>
               </div>
             )}
             {p2pStatus === "error" && (
-              <span className="text-red-600 font-extrabold text-[9px] sm:text-[10px] flex items-center space-x-1">
-                <span>P2P Offline</span>
+              <span className="text-red-600 font-extrabold text-[10px] flex items-center space-x-1" title="P2P Offline">
+                <AlertCircle className="h-4 w-4" />
                 <button onClick={initPeerJS} className="underline text-blue-500 focus:outline-none">Retry</button>
               </span>
             )}
@@ -491,20 +491,13 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
 
           <button
             onClick={handleShareLink}
-            className="flex items-center justify-center p-1.5 sm:px-3 sm:py-1.5 bg-blue-50 dark:bg-blue-950/50 border border-blue-100 dark:border-blue-900/50 hover:bg-blue-100 text-blue-600 hover:text-blue-700 rounded-xl text-[10px] sm:text-xs font-bold cursor-pointer transition-colors focus:outline-none flex-shrink-0"
+            className="flex items-center justify-center p-1.5 bg-blue-50 dark:bg-blue-950/50 border border-blue-100 dark:border-blue-900/50 hover:bg-blue-100 text-blue-600 hover:text-blue-700 rounded-xl cursor-pointer transition-colors focus:outline-none flex-shrink-0"
+            title="Copy public form share link"
           >
             {shareCopied ? (
-              <>
-                <Check className="h-4 w-4 text-emerald-600" />
-                <span className="hidden sm:inline ml-1 text-emerald-600">Link Copied!</span>
-                <span className="sm:hidden text-[9px] font-bold text-emerald-600">Copied</span>
-              </>
+              <Check className="h-4 w-4 text-emerald-600" />
             ) : (
-              <>
-                <Share2 className="h-4 w-4" />
-                <span className="hidden sm:inline ml-1">Share Workspace</span>
-                <span className="sm:hidden text-[9px] font-bold">Share</span>
-              </>
+              <Share2 className="h-4 w-4" />
             )}
           </button>
         </div>
