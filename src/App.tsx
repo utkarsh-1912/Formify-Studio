@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import JsonEditor from "./components/JsonEditor";
 import FormGenerator from "./components/FormGenerator";
 import VisualBuilder from "./components/VisualBuilder";
@@ -27,7 +27,9 @@ import {
   ArrowLeft,
   Plus,
   Minus,
-  Users
+  Users,
+  Send,
+  LogOut
 } from "lucide-react";
 
 // Clean canvas schema as default for new workspaces
@@ -96,6 +98,15 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
   const [justPushed, setJustPushed] = useState(false);
   const [mobileActiveTab, setMobileActiveTab] = useState<"editor" | "preview">("editor");
 
+  // Combine workspace states into a single memoized state object for P2P Sync
+  const p2pState = useMemo(() => ({
+    schema,
+    theme: themeSettings,
+    fontFamily,
+    fontScale,
+    globalTheme
+  }), [schema, themeSettings, fontFamily, fontScale, globalTheme]);
+
   // P2P WebRTC Live sync hook integration
   const {
     status: p2pStatus,
@@ -106,16 +117,46 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
     push: pushP2P
   } = useP2PSync(
     workspaceId || "default",
-    schema,
-    (remoteSchema) => {
-      setSchema(remoteSchema);
-      setJsonSchema(JSON.stringify(remoteSchema, null, 2));
-      try {
-        validateSchema(remoteSchema);
-        setError(null);
-      } catch (e) {
-        setError((e as Error).message);
+    p2pState,
+    (remoteState) => {
+      if (remoteState.schema) {
+        setSchema(remoteState.schema);
+        setJsonSchema(JSON.stringify(remoteState.schema, null, 2));
+        try {
+          validateSchema(remoteState.schema);
+          setError(null);
+        } catch (e) {
+          setError((e as Error).message);
+        }
       }
+      if (remoteState.theme) {
+        setThemeSettings(remoteState.theme);
+        localStorage.setItem(themeStorageKey, JSON.stringify(remoteState.theme));
+      }
+      if (remoteState.fontFamily) {
+        setFontFamily(remoteState.fontFamily);
+        localStorage.setItem(fontFamStorageKey, remoteState.fontFamily);
+      }
+      if (remoteState.fontScale) {
+        setFontScale(remoteState.fontScale);
+        localStorage.setItem(fontScaleStorageKey, remoteState.fontScale.toString());
+      }
+      if (remoteState.globalTheme) {
+        setGlobalTheme(remoteState.globalTheme);
+        localStorage.setItem(globalThemeStorageKey, remoteState.globalTheme);
+      }
+    },
+    (remoteSubmission) => {
+      const newEntry: SubmissionEntry = {
+        id: remoteSubmission.id || "sub_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5),
+        timestamp: remoteSubmission.timestamp || new Date().toISOString(),
+        data: remoteSubmission.data || remoteSubmission
+      };
+      setSubmissions((prev) => {
+        const updated = [newEntry, ...prev];
+        localStorage.setItem(submissionsStorageKey, JSON.stringify(updated));
+        return updated;
+      });
     }
   );
 
@@ -181,6 +222,14 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
       console.error("Failed to load settings", e);
     }
   }, [schemaStorageKey, submissionsStorageKey, themeStorageKey, globalThemeStorageKey, roomNameStorageKey, fontFamStorageKey, fontScaleStorageKey]);
+
+  // Global Text Resizing Scale Effect
+  useEffect(() => {
+    document.documentElement.style.fontSize = `${fontScale * 100}%`;
+    return () => {
+      document.documentElement.style.fontSize = "";
+    };
+  }, [fontScale]);
 
   // Handle JSON Text Editor changes
   const handleJsonChange = (value: string) => {
@@ -267,9 +316,7 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
   // Generate shareable URL
   const handleShareLink = () => {
     try {
-      const minified = JSON.stringify(schema);
-      const encoded = btoa(unescape(encodeURIComponent(minified)));
-      const shareUrl = `${window.location.origin}/ws/${workspaceId || "default"}?s=${encoded}`;
+      const shareUrl = `${window.location.origin}/ws/${workspaceId || "default"}/share`;
       
       navigator.clipboard.writeText(shareUrl).then(() => {
         setShareCopied(true);
@@ -368,52 +415,55 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
                 title="Enable multiplayer peer-to-peer real-time sync"
               >
                 <Radio className="h-4 w-4 sm:h-4.5 sm:w-4.5 animate-pulse" />
-                <span className="hidden xs:inline">Go Live (P2P)</span>
-                <span className="xs:hidden text-[9px]">Go Live</span>
+                <span className="hidden sm:inline">Go Live</span>
               </button>
             )}
             {p2pStatus === "connecting" && (
-              <span className="flex items-center space-x-1.5 text-yellow-600 dark:text-yellow-400">
+              <span className="flex items-center space-x-1.5 text-yellow-600 dark:text-yellow-400" title="Connecting...">
                 <div className="h-3 w-3 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin" />
-                <span className="hidden xs:inline">Connecting...</span>
-                <span className="xs:hidden text-[9px]">Connecting</span>
+                <span className="hidden sm:inline">Connecting...</span>
               </span>
             )}
             {(p2pStatus === "hosting" || p2pStatus === "joined") && (
               <div className="flex items-center space-x-2 sm:space-x-3">
-                <span className="flex items-center space-x-1 text-emerald-600 dark:text-emerald-400">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-ping" />
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 absolute" />
-                  <span className="font-extrabold capitalize text-[9px] sm:text-[10px] tracking-wider bg-emerald-500/10 px-1.5 py-0.5 rounded-md ml-1">
+                <span className="flex items-center space-x-1 text-emerald-600 dark:text-emerald-400" title={`Multiplayer Status: ${p2pStatus}`}>
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                  </span>
+                  <span className="hidden sm:inline-block font-extrabold capitalize text-[9px] sm:text-[10px] tracking-wider bg-emerald-500/10 px-1.5 py-0.5 rounded-md">
                     {p2pStatus}
                   </span>
                 </span>
                 
                 {connectedPeers.length > 0 && (
-                  <span className={`hidden sm:inline-flex items-center space-x-1 font-mono text-[10px] ${themeTokens.textSecondary}`}>
+                  <span className="hidden sm:inline-flex items-center space-x-1 font-mono text-[10px] text-gray-500" title={`${connectedPeers.length} active peer(s)`}>
                     <Users className="h-3.5 w-3.5" />
-                    <span>{connectedPeers.length} peer(s)</span>
+                    <span>{connectedPeers.length}</span>
                   </span>
                 )}
 
                 <button
                   onClick={handlePushP2P}
                   disabled={justPushed}
-                  className={`px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-extrabold transition-all cursor-pointer focus:outline-none ${
+                  className={`p-1 sm:px-2 sm:py-0.5 rounded text-[9px] sm:text-[10px] font-extrabold transition-all cursor-pointer focus:outline-none flex items-center justify-center space-x-1 ${
                     justPushed
                       ? "bg-emerald-500 text-white"
                       : "bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
                   }`}
                   title="Push current local changes to all connected peers"
                 >
-                  {justPushed ? "Pushed!" : "Push"}
+                  <Send className="h-3 w-3" />
+                  <span className="hidden sm:inline">{justPushed ? "Pushed!" : "Push"}</span>
                 </button>
 
                 <button
                   onClick={disconnectP2P}
-                  className="text-red-500 hover:text-red-650 cursor-pointer focus:outline-none text-[9px] sm:text-[10px] font-extrabold underline decoration-dotted"
+                  className="p-1 text-red-500 hover:text-red-650 cursor-pointer focus:outline-none flex items-center space-x-0.5 text-[9px] sm:text-[10px] font-extrabold"
+                  title="Disconnect multiplayer sync"
                 >
-                  Disconnect
+                  <LogOut className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline underline decoration-dotted">Disconnect</span>
                 </button>
               </div>
             )}
@@ -486,7 +536,7 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
           mobileActiveTab === "editor" ? "flex" : "hidden md:flex"
         }`}>
           {/* Tabs header */}
-          <div className={`flex-shrink-0 flex border-b bg-black/5 px-4 pt-2 ${themeTokens.border}`}>
+          <div className={`flex-shrink-0 flex border-b bg-black/5 px-4 pt-2 overflow-x-auto whitespace-nowrap scrollbar-none ${themeTokens.border}`}>
             {[
               { id: "visual", name: "Visual Builder", icon: Wrench },
               { id: "json", name: "JSON Editor", icon: Code },
@@ -498,7 +548,7 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
                 <button
                   key={tab.id}
                   onClick={() => setLeftTab(tab.id as any)}
-                  className={tabBtnClass(tab.id, leftTab === tab.id)}
+                  className={`flex-shrink-0 whitespace-nowrap ${tabBtnClass(tab.id, leftTab === tab.id)}`}
                 >
                   <Icon className="h-4 w-4" />
                   <span>{tab.name}</span>
@@ -535,7 +585,7 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
           mobileActiveTab === "preview" ? "flex" : "hidden md:flex"
         }`}>
           {/* Tabs header */}
-          <div className={`flex-shrink-0 flex border-b bg-black/5 px-4 pt-2 ${themeTokens.border}`}>
+          <div className={`flex-shrink-0 flex border-b bg-black/5 px-4 pt-2 overflow-x-auto whitespace-nowrap scrollbar-none ${themeTokens.border}`}>
             {[
               { id: "preview", name: "Live Preview", icon: Eye },
               { id: "submissions", name: "Submissions Log", icon: Inbox, badge: submissions.length },
@@ -546,7 +596,7 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
                 <button
                   key={tab.id}
                   onClick={() => setRightTab(tab.id as any)}
-                  className={tabBtnClass(tab.id, rightTab === tab.id)}
+                  className={`flex-shrink-0 whitespace-nowrap ${tabBtnClass(tab.id, rightTab === tab.id)}`}
                 >
                   <Icon className="h-4 w-4" />
                   <span>{tab.name}</span>

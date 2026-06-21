@@ -38,7 +38,9 @@ const loadPeerLibrary = async (): Promise<any> => {
 export function useP2PSync(
   workspaceId: string,
   localSchema: any,
-  onRemoteSchema: (schema: any) => void
+  onRemoteSchema: (schema: any) => void,
+  onRemoteSubmission?: (submission: any) => void,
+  isGuest = false
 ) {
   const [status, setStatus] = useState<P2PStatus>("disconnected");
   const [peerId, setPeerId] = useState("");
@@ -62,7 +64,16 @@ export function useP2PSync(
       const peer = new PeerClass(myId, {
         host: "0.peerjs.com",
         secure: true,
-        port: 443
+        port: 443,
+        config: {
+          iceServers: [
+            { urls: "stun:stun.l.google.com:19302" },
+            { urls: "stun:stun1.l.google.com:19302" },
+            { urls: "stun:stun2.l.google.com:19302" },
+            { urls: "stun:stun3.l.google.com:19302" },
+            { urls: "stun:stun4.l.google.com:19302" }
+          ]
+        }
       });
 
       peerRef.current = peer;
@@ -78,11 +89,22 @@ export function useP2PSync(
         setupConnectionEvents(conn);
       });
 
+      peer.on("disconnected", () => {
+        console.log("PeerJS disconnected from signaling server. Reconnecting...");
+        peer.reconnect();
+      });
+
       peer.on("error", (err: any) => {
         console.error("PeerJS Client Error:", err);
         
         // SELF-HEALING: If host peer is offline/unavailable, promote myself to host
         if (err.type === "peer-unavailable") {
+          if (isGuest) {
+            console.log("P2P Host unavailable. Guest cannot promote to host.");
+            setErrorMessage("Form host is currently offline.");
+            setStatus("disconnected");
+            return;
+          }
           console.log("P2P Host unavailable. Recreating client as workspace host.");
           const hostId = `formify-ws-${workspaceId}-host`;
           recreateAsHost(hostId);
@@ -105,27 +127,50 @@ export function useP2PSync(
       setConnectedPeers((prev) => Array.from(new Set([...prev, conn.peer])));
     }
 
+    // Ping interval to keep connection alive
+    const pingInterval = setInterval(() => {
+      if (conn.open) {
+        conn.send({ type: "PING" });
+      }
+    }, 15000);
+
     conn.on("open", () => {
       console.log("Data connection established with:", conn.peer);
       // Immediately send current schema state to newly connected peer
-      conn.send({ type: "SYNC_SCHEMA", schema: localSchema });
+      conn.send({ type: "SYNC_SCHEMA", schema: localSchema?.schema || localSchema, state: localSchema });
     });
 
     conn.on("data", (data: any) => {
       if (!data || typeof data !== "object") return;
+      if (data.type === "PING") return; // ignore keep-alive heartbeats
 
       if (data.type === "SYNC_SCHEMA") {
         console.log("P2P Schema Sync payload received from:", conn.peer);
         isUpdatingRef.current = true;
-        onRemoteSchema(data.schema);
+        if (data.state) {
+          onRemoteSchema(data.state);
+        } else if (data.schema) {
+          onRemoteSchema(data.schema);
+        }
         setTimeout(() => {
           isUpdatingRef.current = false;
         }, 100);
+      } else if (data.type === "SUBMIT_FORM") {
+        console.log("P2P Submission received from:", conn.peer);
+        if (onRemoteSubmission) {
+          onRemoteSubmission(data.submission);
+        }
       }
+    });
+
+    conn.on("error", (err: any) => {
+      console.error("Connection error with peer:", conn.peer, err);
+      clearInterval(pingInterval);
     });
 
     conn.on("close", () => {
       console.log("Connection closed with:", conn.peer);
+      clearInterval(pingInterval);
       connectionsRef.current = connectionsRef.current.filter((c) => c.peer !== conn.peer);
       setConnectedPeers((prev) => prev.filter((p) => p !== conn.peer));
     });
@@ -161,7 +206,16 @@ export function useP2PSync(
       const peer = new PeerClass(hostId, {
         host: "0.peerjs.com",
         secure: true,
-        port: 443
+        port: 443,
+        config: {
+          iceServers: [
+            { urls: "stun:stun.l.google.com:19302" },
+            { urls: "stun:stun1.l.google.com:19302" },
+            { urls: "stun:stun2.l.google.com:19302" },
+            { urls: "stun:stun3.l.google.com:19302" },
+            { urls: "stun:stun4.l.google.com:19302" }
+          ]
+        }
       });
 
       peerRef.current = peer;
@@ -174,6 +228,11 @@ export function useP2PSync(
 
       peer.on("connection", (conn: any) => {
         setupConnectionEvents(conn);
+      });
+
+      peer.on("disconnected", () => {
+        console.log("Host PeerJS disconnected from signaling server. Reconnecting...");
+        peer.reconnect();
       });
 
       peer.on("error", (err: any) => {
@@ -201,7 +260,7 @@ export function useP2PSync(
 
     connectionsRef.current.forEach((conn) => {
       if (conn.open) {
-        conn.send({ type: "SYNC_SCHEMA", schema: updatedSchema });
+        conn.send({ type: "SYNC_SCHEMA", schema: updatedSchema?.schema || updatedSchema, state: updatedSchema });
       }
     });
   };
@@ -230,6 +289,15 @@ export function useP2PSync(
     };
   }, []);
 
+  const submitForm = (submissionData: any) => {
+    if (connectionsRef.current.length === 0) return;
+    connectionsRef.current.forEach((conn) => {
+      if (conn.open) {
+        conn.send({ type: "SUBMIT_FORM", submission: submissionData });
+      }
+    });
+  };
+
   return {
     status,
     peerId,
@@ -237,6 +305,7 @@ export function useP2PSync(
     connectedPeers,
     initPeerJS,
     disconnect,
-    push: () => broadcastSchema(localSchema)
+    push: () => broadcastSchema(localSchema),
+    submitForm
   };
 }
