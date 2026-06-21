@@ -5,7 +5,8 @@ import {
   ArrowDown,
   Plus,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  GripVertical
 } from "lucide-react";
 import { AppThemeTokens } from "../utils/appTheme";
 
@@ -17,6 +18,32 @@ interface VisualBuilderProps {
 
 const VisualBuilder: React.FC<VisualBuilderProps> = ({ schema, themeTokens, onSchemaChange }) => {
   const [expandedFieldId, setExpandedFieldId] = useState<string | null>(null);
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedIndex(index);
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e: React.DragEvent, targetIndex: number) => {
+    e.preventDefault();
+    if (draggedIndex === null || draggedIndex === targetIndex) return;
+
+    const newFields = [...fields];
+    const [draggedItem] = newFields.splice(draggedIndex, 1);
+    newFields.splice(targetIndex, 0, draggedItem);
+    
+    updateSchema(newFields);
+    setDraggedIndex(null);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null);
+  };
 
   const fields = schema.fields || [];
 
@@ -172,9 +199,14 @@ const VisualBuilder: React.FC<VisualBuilderProps> = ({ schema, themeTokens, onSc
               return (
                 <div
                   key={field.id || idx}
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, idx)}
+                  onDragOver={(e) => handleDragOver(e, idx)}
+                  onDragEnd={handleDragEnd}
+                  onDrop={(e) => handleDrop(e, idx)}
                   className={`rounded-xl border transition-all duration-150 shadow-sm ${themeTokens.card} ${
                     isExpanded ? "ring-1 ring-blue-500/50 border-blue-500" : `hover:border-gray-300 dark:hover:border-gray-600`
-                  }`}
+                  } ${draggedIndex === idx ? "opacity-40 border-dashed border-blue-500 bg-blue-50/20 dark:bg-blue-950/20" : ""}`}
                 >
                   {/* Field Header Summary */}
                   <div
@@ -182,6 +214,9 @@ const VisualBuilder: React.FC<VisualBuilderProps> = ({ schema, themeTokens, onSc
                     className="flex justify-between items-center p-3.5 cursor-pointer select-none"
                   >
                     <div className="flex items-center space-x-3 truncate">
+                      <div className="text-gray-400 hover:text-gray-600 cursor-grab active:cursor-grabbing p-0.5 flex-shrink-0" title="Drag to Reorder">
+                        <GripVertical className="h-4 w-4" />
+                      </div>
                       <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${themeTokens.inputBg} ${themeTokens.textSecondary} border ${themeTokens.border}`}>
                         {field.type}
                       </span>

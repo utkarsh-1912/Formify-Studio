@@ -104,8 +104,9 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
     theme: themeSettings,
     fontFamily,
     fontScale,
-    globalTheme
-  }), [schema, themeSettings, fontFamily, fontScale, globalTheme]);
+    globalTheme,
+    submissions
+  }), [schema, themeSettings, fontFamily, fontScale, globalTheme, submissions]);
 
   // P2P WebRTC Live sync hook integration
   const {
@@ -144,6 +145,10 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
       if (remoteState.globalTheme) {
         setGlobalTheme(remoteState.globalTheme);
         localStorage.setItem(globalThemeStorageKey, remoteState.globalTheme);
+      }
+      if (remoteState.submissions) {
+        setSubmissions(remoteState.submissions);
+        localStorage.setItem(submissionsStorageKey, JSON.stringify(remoteState.submissions));
       }
     },
     (remoteSubmission) => {

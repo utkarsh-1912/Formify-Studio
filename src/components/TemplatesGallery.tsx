@@ -1,12 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Mail,
   UserPlus,
   MessageSquare,
   ShoppingCart,
-  Calendar
+  Calendar,
+  Upload,
+  FileJson,
+  AlertCircle,
+  Check
 } from "lucide-react";
 import { AppThemeTokens } from "../utils/appTheme";
+import validateSchema from "../utils/schemaValidation";
 
 export const templates = [
   {
@@ -230,13 +235,186 @@ interface TemplatesGalleryProps {
 }
 
 const TemplatesGallery: React.FC<TemplatesGalleryProps> = ({ themeTokens, onSelectTemplate }) => {
+  const [importMethod, setImportMethod] = useState<"file" | "text" | "url">("file");
+  const [jsonText, setJsonText] = useState("");
+  const [urlInput, setUrlInput] = useState("");
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [isImporting, setIsImporting] = useState(false);
+
+  const triggerImport = (parsedSchema: any) => {
+    try {
+      validateSchema(parsedSchema);
+      onSelectTemplate(parsedSchema);
+      setSuccessMsg("Schema imported successfully!");
+      setErrorMsg(null);
+      setJsonText("");
+      setUrlInput("");
+      setTimeout(() => setSuccessMsg(null), 3000);
+    } catch (err) {
+      setErrorMsg((err as Error).message);
+      setSuccessMsg(null);
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      try {
+        const content = evt.target?.result as string;
+        const parsed = JSON.parse(content);
+        triggerImport(parsed);
+      } catch (err) {
+        setErrorMsg("Invalid JSON file content.");
+        setSuccessMsg(null);
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const handleUrlFetch = async () => {
+    if (!urlInput.trim()) return;
+    setIsImporting(true);
+    setErrorMsg(null);
+    setSuccessMsg(null);
+    try {
+      const res = await fetch(urlInput);
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      const parsed = await res.json();
+      triggerImport(parsed);
+    } catch (err) {
+      setErrorMsg(`Failed to fetch schema: ${(err as Error).message}`);
+    } finally {
+      setIsImporting(false);
+    }
+  };
+
   return (
     <div className={`p-6 h-full overflow-y-auto space-y-4 ${themeTokens.sidebar}`}>
       <div>
-        <h3 className={`text-lg font-bold ${themeTokens.text}`}>Templates Gallery</h3>
+        <h3 className={`text-lg font-bold ${themeTokens.text}`}>Templates & Imports</h3>
         <p className={`text-xs mt-0.5 ${themeTokens.textSecondary}`}>
-          Select a template to load it instantly as your workspace schema. Warning: this replaces your current schema.
+          Load a pre-made template or import your own JSON schema file below. Warning: importing replaces your current schema.
         </p>
+      </div>
+
+      {/* Import Custom Schema Box */}
+      <div className={`p-5 rounded-xl border ${themeTokens.border} ${themeTokens.card} space-y-4 shadow-sm`}>
+        <div className="flex items-center space-x-2">
+          <FileJson className="h-5 w-5 text-blue-500" />
+          <h4 className={`font-bold text-sm ${themeTokens.text}`}>Import Custom Form Schema</h4>
+        </div>
+        
+        {/* Toggle import method */}
+        <div className="flex border-b text-xs font-semibold">
+          {[
+            { id: "file", label: "JSON File" },
+            { id: "text", label: "Paste JSON" },
+            { id: "url", label: "From URL" }
+          ].map((m) => (
+            <button
+              key={m.id}
+              onClick={() => {
+                setImportMethod(m.id as any);
+                setErrorMsg(null);
+                setSuccessMsg(null);
+              }}
+              className={`pb-2 px-3 border-b-2 transition-all cursor-pointer focus:outline-none ${
+                importMethod === m.id
+                  ? "border-blue-600 text-blue-600 dark:text-blue-400"
+                  : "border-transparent text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              {m.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Import Panels */}
+        {importMethod === "file" && (
+          <div className="space-y-3">
+            <div className={`border-2 border-dashed ${themeTokens.border} rounded-lg p-4 text-center hover:border-blue-450 transition-colors relative`}>
+              <input
+                type="file"
+                accept=".json"
+                onChange={handleFileChange}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+              <Upload className="h-6 w-6 text-gray-400 mx-auto mb-2" />
+              <p className={`text-xs ${themeTokens.textSecondary}`}>
+                <span className="text-blue-500 font-bold">Click to upload</span> or drag and drop a .json schema file
+              </p>
+            </div>
+          </div>
+        )}
+
+        {importMethod === "text" && (
+          <div className="space-y-3">
+            <textarea
+              value={jsonText}
+              onChange={(e) => setJsonText(e.target.value)}
+              placeholder='{ "formTitle": "My Custom Form", "fields": [...] }'
+              rows={3}
+              className={`w-full p-2 border ${themeTokens.border} ${themeTokens.inputBg} ${themeTokens.inputText} rounded-lg text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none`}
+            />
+            <button
+              onClick={() => {
+                try {
+                  const parsed = JSON.parse(jsonText);
+                  triggerImport(parsed);
+                } catch (e) {
+                  setErrorMsg("JSON Parsing failed: check syntax validity.");
+                }
+              }}
+              disabled={!jsonText.trim()}
+              className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold cursor-pointer disabled:opacity-40"
+            >
+              Parse & Import
+            </button>
+          </div>
+        )}
+
+        {importMethod === "url" && (
+          <div className="space-y-3">
+            <div className="flex space-x-2">
+              <input
+                type="text"
+                value={urlInput}
+                onChange={(e) => setUrlInput(e.target.value)}
+                placeholder="https://example.com/form-schema.json"
+                className={`flex-1 p-2 border ${themeTokens.border} ${themeTokens.inputBg} ${themeTokens.inputText} rounded-lg text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none`}
+              />
+              <button
+                onClick={handleUrlFetch}
+                disabled={isImporting || !urlInput.trim()}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold cursor-pointer disabled:opacity-40 flex items-center space-x-1"
+              >
+                {isImporting ? (
+                  <div className="h-3 w-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <span>Fetch</span>
+                )}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Notifications */}
+        {errorMsg && (
+          <div className="bg-red-500/10 border border-red-500/25 p-3 rounded-lg text-xs text-red-650 flex items-start space-x-2">
+            <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
+            <div className="flex-1 break-words">{errorMsg}</div>
+          </div>
+        )}
+        {successMsg && (
+          <div className="bg-emerald-500/10 border border-emerald-500/25 p-3 rounded-lg text-xs text-emerald-600 flex items-start space-x-2">
+            <Check className="h-4 w-4 flex-shrink-0 mt-0.5" />
+            <div>{successMsg}</div>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 gap-4 mt-2">
