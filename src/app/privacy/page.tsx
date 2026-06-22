@@ -34,8 +34,6 @@ export default function PrivacyPage() {
     }
   }, []);
 
-  if (!mounted) return null;
-
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 flex flex-col justify-between font-sans selection:bg-blue-600 selection:text-white overflow-y-auto relative">
       {/* Background gradients */}

@@ -34,8 +34,6 @@ export default function AboutPage() {
     }
   }, []);
 
-  if (!mounted) return null;
-
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 flex flex-col justify-between font-sans selection:bg-blue-600 selection:text-white overflow-y-auto relative">
       {/* Background gradients */}
@@ -111,7 +109,9 @@ export default function AboutPage() {
               "Submissions Logging & CSV Downloads",
               "Lightweight Local-First Configurations",
               "Corporate, Dark, and Matrix Styling presets",
-              "Client-side Validation Schema Integrity"
+              "Client-side Validation Schema Integrity",
+              "Secure Cryptographic View-Only & Edit Tokens",
+              "Redesigned Submission Record Details Modal"
             ].map((perk, i) => (
               <li key={i} className="flex items-center space-x-2">
                 <Check className="h-4 w-4 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />

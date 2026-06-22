@@ -11,13 +11,20 @@ Formify Studio is an enterprise-grade, local-first visual form engine and genera
 - **Bi-Directional Live Sync**: Modify schemas visually via the drag-and-drop property builder, or code directly in the advanced JSON editor (powered by CodeMirror) with real-time validation.
 - **WebRTC Serverless Collaboration**: Connect and sync workspace schemas in real-time directly between browsers without any intermediate database lag.
 - **Tailwind & CSS Variable Styling**: Customize borders, layout grids, shadows, button sizes, and typography weights on the fly.
+- **Role-Based Cryptographic Access Tokens**:
+  - **Edit Mode**: Access workspaces with `?token=tok_xxxx` to unlock builders, customizations, templates, and settings.
+  - **View-Only Mode**: Access workspaces securely without tokens to share layouts or review designs. Switches and edit bypasses are locked out for guest safety.
+- **Redesigned Submission Details Modal**:
+  - Structured fields view formatting check-boxes, text, and keys into premium list cards.
+  - Live toggles between formatted structured data lists and raw JSON schemas.
+  - Date & time logging info grid with calendar & clock iconography.
+  - Dynamic copy confirmations for raw JSON payloads.
 - **5 Workspace Layout Themes**:
   - **Light**: Crisp, clean, high-contrast.
   - **Dark**: Low-light slate mode.
   - **Corporate**: Sleek professional layout.
   - **Midnight**: Elegant deep blue space tone.
   - **Matrix**: Developer terminal green font interface.
-- **Redesigned Clean Settings Panel**: Personalize workspace settings, scale typography font styles (Geist Sans, Geist Mono, Georgia) from `0.8x` to `1.5x` with instant preview.
 - **Local-First Data Sandbox**: Form schema changes and submissions log entries are persisted privately in the browser's LocalStorage. Export logs directly to CSV or JSON formats.
 
 ---
@@ -127,3 +134,4 @@ Formify Studio values user privacy. By prioritizing a **local-first** approach:
 - All form configuration and builder data is kept in the user's browser sandbox.
 - WebRTC peer connections are direct browser-to-browser channels without standard backend log pipelines.
 - Data export configurations (JSON/CSV) run strictly client-side.
+- Share permissions are cryptographic: sharing a View-Only link protects editing credentials by hiding edit tokens and option dialogs.
