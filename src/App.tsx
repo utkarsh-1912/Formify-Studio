@@ -110,6 +110,7 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
   const [workspaceToken, setWorkspaceToken] = useState<string>("");
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isHeaderMenuOpen, setIsHeaderMenuOpen] = useState(false);
+  const [showSwitchBanner, setShowSwitchBanner] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
   const handleCopyToClipboard = (text: string, fieldId: string) => {
@@ -209,13 +210,15 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
       localStorage.setItem(tokenKey, urlToken);
       finalToken = urlToken;
       hasEdit = true;
+      setShowSwitchBanner(false);
     } else if (storedToken) {
-      // Owner visiting without the token query in URL: automatically grant edit permission
-      finalToken = storedToken;
-      hasEdit = true;
-    } else {
-      // Guest visiting a view-only URL: strictly read-only
+      // Owner visiting without the token query in URL: Place in read-only preview mode, but show Switch banner
       hasEdit = false;
+      setShowSwitchBanner(true);
+    } else {
+      // Guest visiting a view-only URL: strictly read-only, hide Switch banner
+      hasEdit = false;
+      setShowSwitchBanner(false);
       finalToken = "";
     }
 
@@ -381,6 +384,15 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
     }
   };
 
+  const handleSwitchToEditMode = () => {
+    const tokenKey = `formify_edit_token_${workspaceId || "default"}`;
+    const storedToken = localStorage.getItem(tokenKey);
+    if (storedToken) {
+      const newUrl = `${window.location.pathname}?token=${storedToken}`;
+      window.location.href = newUrl;
+    }
+  };
+
   // Settings Modal controls
   const openSettings = () => {
     setStagedTheme(globalTheme);
@@ -415,6 +427,28 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
 
   return (
     <div className={`h-screen flex flex-col font-sans overflow-hidden ${themeTokens.bg}`}>
+      {showSwitchBanner && (
+        <div className="flex-shrink-0 bg-blue-600 text-white text-xs px-4 py-2 sm:px-6 sm:py-2.5 flex items-center justify-between shadow-md z-30 animate-fade-in font-semibold">
+          <span className="flex items-center space-x-1.5 font-sans">
+            <Lock className="h-3.5 w-3.5 text-blue-200" />
+            <span>You own this workspace. You are currently viewing in <strong>View-Only Mode</strong>.</span>
+          </span>
+          <button
+            onClick={handleSwitchToEditMode}
+            className="bg-white text-blue-600 px-3 py-1 rounded-lg hover:bg-blue-50 transition-colors font-bold cursor-pointer text-[10px] sm:text-xs"
+          >
+            Switch to Edit Mode
+          </button>
+        </div>
+      )}
+      {!hasEditPermission && !showSwitchBanner && (
+        <div className="flex-shrink-0 bg-slate-800 text-white text-xs px-4 py-2 sm:px-6 sm:py-2.5 flex items-center shadow-md z-30 animate-fade-in font-semibold">
+          <span className="flex items-center space-x-1.5 font-sans">
+            <Eye className="h-3.5 w-3.5 text-slate-400" />
+            <span>Viewing in <strong>View-Only Mode</strong>. You cannot edit this workspace.</span>
+          </span>
+        </div>
+      )}
       {/* Header toolbar */}
       <header className={`flex-shrink-0 border-b px-3 py-2 sm:px-6 sm:py-3 flex items-center justify-between shadow-sm z-20 ${themeTokens.header}`}>
         <div className="flex items-center space-x-2 sm:space-x-4 min-w-0">
@@ -617,6 +651,21 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
                       <span>Preview Embed</span>
                     </a>
 
+                    {showSwitchBanner && (
+                      <>
+                        <hr className={`my-1.5 border-t ${themeTokens.border}`} />
+                        <button
+                          onClick={() => {
+                            handleSwitchToEditMode();
+                            setIsHeaderMenuOpen(false);
+                          }}
+                          className={`w-full text-left px-4 py-2 text-xs font-bold flex items-center space-x-2 hover:bg-blue-600 hover:text-white transition-colors cursor-pointer ${themeTokens.text}`}
+                        >
+                          <Unlock className="h-3.5 w-3.5 text-blue-500" />
+                          <span>Unlock Editing</span>
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
               </>

@@ -130,7 +130,7 @@ const SubmissionsDashboard: React.FC<SubmissionsDashboardProps> = ({
       <div className="flex flex-col sm:flex-row gap-3">
         {/* Search Input */}
         <div className="relative flex-1">
-          <Search className="h-4.5 w-4.5 absolute left-3 top-3 text-gray-400" />
+          <Search className="h-4.5 w-4.5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
             value={searchTerm}
@@ -222,7 +222,12 @@ const SubmissionsDashboard: React.FC<SubmissionsDashboardProps> = ({
 
       {/* Modal Detail Viewer */}
       {activeModalEntry && (
-        <div className="fixed inset-0 bg-black/75 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fade-in">
+        <div 
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setActiveModalEntry(null);
+          }}
+          className="fixed inset-0 bg-black/75 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fade-in"
+        >
           <div className={`rounded-2xl max-w-xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden border ${themeTokens.border} ${themeTokens.modalBg} animate-scale-up`}>
             <div className={`px-6 py-4.5 border-b ${themeTokens.border} flex justify-between items-center bg-black/5`}>
               <div className="flex items-center space-x-2.5">
@@ -303,7 +308,12 @@ const SubmissionsDashboard: React.FC<SubmissionsDashboardProps> = ({
                             {k}
                           </span>
                           <span className={`block text-xs font-medium break-all ${themeTokens.text}`}>
-                            {isBool ? (v ? "Checked / Yes" : "Unchecked / No") : String(v)}
+                            {isBool 
+                              ? (v ? "Checked / Yes" : "Unchecked / No") 
+                              : typeof v === "object" && v !== null
+                                ? JSON.stringify(v)
+                                : String(v)
+                            }
                           </span>
                         </div>
                         {isBool && (
@@ -322,7 +332,7 @@ const SubmissionsDashboard: React.FC<SubmissionsDashboardProps> = ({
                 </div>
               ) : (
                 <div className="relative group">
-                  <pre className={`rounded-xl p-4 font-mono text-[11px] overflow-auto max-h-72 border ${themeTokens.border} ${themeTokens.codeBg} ${themeTokens.text} leading-relaxed`}>
+                  <pre className={`rounded-xl p-4 font-mono text-[11px] overflow-auto max-h-72 border ${themeTokens.border} ${themeTokens.codeBg} leading-relaxed`}>
                     {JSON.stringify(activeModalEntry.data, null, 2)}
                   </pre>
                 </div>
