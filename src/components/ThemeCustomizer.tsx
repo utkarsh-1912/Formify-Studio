@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useRef } from "react";
 import { ThemeSettings } from "../utils/codeGenerators";
 import { GlobalThemeMode, AppThemeTokens } from "../utils/appTheme";
-import { Sun, Moon, Terminal, Sparkles, Briefcase } from "lucide-react";
+import { Sun, Moon, Terminal, Sparkles, Briefcase, Check, Palette} from "lucide-react";
 
 interface ThemeCustomizerProps {
   settings: ThemeSettings;
@@ -20,6 +20,7 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
   onGlobalThemeChange,
   readOnly = false
 }) => {
+  const colorInputRef = useRef<HTMLInputElement>(null);
   const updateSetting = <K extends keyof ThemeSettings>(key: K, value: ThemeSettings[K]) => {
     if (readOnly) return;
     onChange({
@@ -29,13 +30,48 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
   };
 
   const colors = [
-    { id: "indigo", name: "Indigo Focus", class: "bg-indigo-600" },
-    { id: "blue", name: "Tech Blue", class: "bg-blue-600" },
-    { id: "emerald", name: "Forest Emerald", class: "bg-emerald-600" },
-    { id: "violet", name: "Royal Violet", class: "bg-violet-600" },
-    { id: "rose", name: "Warm Rose", class: "bg-rose-600" },
-    { id: "amber", name: "Sun Amber", class: "bg-amber-500" },
-    { id: "slate", name: "Steel Slate", class: "bg-slate-700" }
+    {
+      id: "indigo",
+      name: "Indigo Focus",
+      class: "bg-indigo-600",
+      hex: "#4f46e5"
+    },
+    {
+      id: "blue",
+      name: "Tech Blue",
+      class: "bg-blue-600",
+      hex: "#2563eb"
+    },
+    {
+      id: "emerald",
+      name: "Forest Emerald",
+      class: "bg-emerald-600",
+      hex: "#059669"
+    },
+    {
+      id: "violet",
+      name: "Royal Violet",
+      class: "bg-violet-600",
+      hex: "#7c3aed"
+    },
+    {
+      id: "rose",
+      name: "Warm Rose",
+      class: "bg-rose-600",
+      hex: "#e11d48"
+    },
+    {
+      id: "amber",
+      name: "Sun Amber",
+      class: "bg-amber-500",
+      hex: "#f59e0b"
+    },
+    {
+      id: "slate",
+      name: "Steel Slate",
+      class: "bg-slate-700",
+      hex: "#334155"
+    }
   ];
 
   const radii = [
@@ -54,15 +90,44 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
   ];
 
   const globalThemes = [
-    { id: "light", name: "Standard Light", desc: "Default crisp workspace", icon: Sun },
-    { id: "dark", name: "Developer Dark", desc: "Sleek low-light coder mode", icon: Moon },
-    { id: "matrix", name: "Matrix Green", desc: "Matrix terminal style digital theme", icon: Terminal },
-    { id: "midnight", name: "Midnight Navy", desc: "Deep dark blue midnight vibe", icon: Sparkles },
-    { id: "corporate", name: "Corporate Gray", desc: "Professional gray styling preset", icon: Briefcase }
+    {
+      id: "light",
+      name: "Standard Light",
+      desc: "Default crisp workspace",
+      icon: Sun
+    },
+    {
+      id: "dark",
+      name: "Developer Dark",
+      desc: "Sleek low-light coder mode",
+      icon: Moon
+    },
+    {
+      id: "matrix",
+      name: "Matrix Green",
+      desc: "Matrix terminal style digital theme",
+      icon: Terminal
+    },
+    {
+      id: "midnight",
+      name: "Midnight Navy",
+      desc: "Deep dark blue midnight vibe",
+      icon: Sparkles
+    },
+    {
+      id: "corporate",
+      name: "Corporate Gray",
+      desc: "Professional gray styling preset",
+      icon: Briefcase
+    }
   ];
 
   const cardStyle = `p-4 rounded-xl border ${themeTokens.border} ${themeTokens.card} shadow-sm space-y-3`;
   const labelStyle = `text-sm font-semibold block ${themeTokens.text}`;
+
+  const isCustomColor =
+    settings.primaryColor &&
+    !colors.some((c) => c.id === settings.primaryColor);
 
   return (
     <div className={`p-6 space-y-6 h-full overflow-y-auto ${themeTokens.sidebar}`}>
@@ -79,22 +144,101 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
       {/* Form Accent Color Palette */}
       <div className={cardStyle}>
         <label className={labelStyle}>Form Primary Accent Color</label>
-        <div className="grid grid-cols-2 gap-2 pt-1">
-          {colors.map((c) => (
-            <button
-              key={c.id}
-              onClick={() => updateSetting("primaryColor", c.id)}
-              disabled={readOnly}
-              className={`flex items-center space-x-2.5 p-2 rounded-lg border text-left text-xs font-medium transition-all focus:outline-none ${
-                settings.primaryColor === c.id
-                  ? "border-blue-500 bg-blue-500/10 text-blue-500 shadow-sm"
-                  : `${themeTokens.border} ${themeTokens.inputBg} ${themeTokens.textSecondary} hover:border-gray-400 dark:hover:border-gray-600`
-              } ${readOnly ? "opacity-70 cursor-not-allowed" : "cursor-pointer"}`}
-            >
-              <span className={`h-4.5 w-4.5 rounded-full ${c.class} shadow-inner flex-shrink-0`} />
-              <span className="truncate">{c.name}</span>
-            </button>
-          ))}
+
+        <div className="flex flex-wrap gap-3 pt-2 items-center">
+          {colors.map((c) => {
+            const selected = settings.primaryColor === c.id;
+
+            return (
+              <button
+                key={c.id}
+                type="button"
+                title={c.name}
+                onClick={() =>
+                  updateSetting(
+                    "primaryColor",
+                    c.id as ThemeSettings["primaryColor"]
+                  )
+                }
+                disabled={readOnly}
+                className={`
+                  relative h-10 w-10 rounded-full
+                  transition-all duration-200
+                  hover:scale-105
+                  border-2
+                  ${
+                    selected
+                      ? "border-white ring-2 ring-blue-500 shadow-md"
+                      : `${themeTokens.border}`
+                  }
+                  ${
+                    readOnly
+                      ? "opacity-70 cursor-not-allowed"
+                      : "cursor-pointer"
+                  }
+                `}
+              >
+                <span
+                  className={`absolute inset-0 rounded-full ${c.class}`}
+                />
+
+                {selected && (
+                  <Check
+                    size={16}
+                    className="absolute inset-0 m-auto text-white z-10"
+                  />
+                )}
+              </button>
+            );
+          })}
+
+          {isCustomColor && (
+            <div
+              className="h-10 w-10 rounded-full border-2 ring-2 ring-blue-500 shadow-md"
+              style={{
+                backgroundColor: String(settings.primaryColor)
+              }}
+              title="Selected Custom Color"
+            />
+          )}
+
+          <button
+            type="button"
+            title="Custom Color"
+            onClick={() => colorInputRef.current?.click()}
+            disabled={readOnly}
+            className={`
+              h-10 w-10 rounded-full border
+              flex items-center justify-center
+              transition-all duration-200
+              hover:scale-105
+              ${themeTokens.border}
+              ${themeTokens.inputBg}
+              ${
+                readOnly
+                  ? "opacity-70 cursor-not-allowed"
+                  : "cursor-pointer"
+              }
+            `}
+          >
+            <Palette
+              size={16}
+              className={themeTokens.textSecondary}
+            />
+          </button>
+
+          <input
+            ref={colorInputRef}
+            type="color"
+            className="hidden"
+            disabled={readOnly}
+            onChange={(e) =>
+              updateSetting(
+                "primaryColor",
+                e.target.value as ThemeSettings["primaryColor"]
+              )
+            }
+          />
         </div>
       </div>
 
