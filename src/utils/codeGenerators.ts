@@ -73,7 +73,13 @@ export const getThemeClasses = (theme: ThemeSettings) => {
     lg: "shadow-lg"
   };
 
-  const selectedColor = colorMap[theme.primaryColor] || colorMap.indigo;
+  const selectedColor = colorMap[theme.primaryColor] || {
+    bg: "custom-accent-bg",
+    text: "custom-accent-text",
+    ring: "custom-accent-ring focus:ring-2 focus:ring-offset-0",
+    border: "custom-accent-border",
+    hover: "custom-accent-bg-hover"
+  };
   const selectedRadius = radiusMap[theme.borderRadius] || radiusMap.md;
   const selectedShadow = shadowMap[theme.shadow] || shadowMap.md;
 
@@ -90,6 +96,17 @@ export const getThemeClasses = (theme: ThemeSettings) => {
 export const generateReactCode = (schema: any, theme: ThemeSettings): string => {
   const fields = schema.fields || [];
   const themeClasses = getThemeClasses(theme);
+  
+  const colorMapHex: Record<string, string> = {
+    indigo: "#4f46e5",
+    blue: "#2563eb",
+    emerald: "#059669",
+    violet: "#7c3aed",
+    rose: "#e11d48",
+    amber: "#f59e0b",
+    slate: "#334155"
+  };
+  const accentColorHex = theme.primaryColor.startsWith("#") ? theme.primaryColor : (colorMapHex[theme.primaryColor] || "#4f46e5");
   
   const fieldsMarkup = fields.map((field: any) => {
     let inputMarkup = "";
@@ -251,6 +268,29 @@ export default function GeneratedForm() {
 
   return (
     <div className="max-w-2xl mx-auto py-8 px-4">
+      <style>{\`
+        :root {
+          --primary-accent: ${accentColorHex};
+        }
+        .custom-accent-bg {
+          background-color: var(--primary-accent) !important;
+        }
+        .custom-accent-bg-hover:hover {
+          background-color: var(--primary-accent) !important;
+          filter: brightness(0.95);
+        }
+        .custom-accent-text {
+          color: var(--primary-accent) !important;
+        }
+        .custom-accent-border {
+          border-color: var(--primary-accent) !important;
+        }
+        .custom-accent-ring:focus {
+          --tw-ring-color: var(--primary-accent) !important;
+          ring-color: var(--primary-accent) !important;
+          border-color: var(--primary-accent) !important;
+        }
+      \`}</style>
       <div className="${themeClasses.card}">
         <div className="mb-6">
           <h2 className="text-2xl font-bold text-gray-900">${schema.formTitle || "Untitled Form"}</h2>
@@ -281,6 +321,17 @@ ${fieldsMarkup}
 export const generateHTMLCode = (schema: any, theme: ThemeSettings): string => {
   const fields = schema.fields || [];
   const themeClasses = getThemeClasses(theme);
+  
+  const colorMapHex: Record<string, string> = {
+    indigo: "#4f46e5",
+    blue: "#2563eb",
+    emerald: "#059669",
+    violet: "#7c3aed",
+    rose: "#e11d48",
+    amber: "#f59e0b",
+    slate: "#334155"
+  };
+  const accentColorHex = theme.primaryColor.startsWith("#") ? theme.primaryColor : (colorMapHex[theme.primaryColor] || "#4f46e5");
   
   const fieldsMarkup = fields.map((field: any) => {
     let inputMarkup = "";
@@ -428,6 +479,27 @@ ${radioOptions}
   <style>
     body {
       font-family: 'Inter', sans-serif;
+    }
+    :root {
+      --primary-accent: ${accentColorHex};
+    }
+    .custom-accent-bg {
+      background-color: var(--primary-accent) !important;
+    }
+    .custom-accent-bg-hover:hover {
+      background-color: var(--primary-accent) !important;
+      filter: brightness(0.95);
+    }
+    .custom-accent-text {
+      color: var(--primary-accent) !important;
+    }
+    .custom-accent-border {
+      border-color: var(--primary-accent) !important;
+    }
+    .custom-accent-ring:focus {
+      --tw-ring-color: var(--primary-accent) !important;
+      ring-color: var(--primary-accent) !important;
+      border-color: var(--primary-accent) !important;
     }
   </style>
 </head>

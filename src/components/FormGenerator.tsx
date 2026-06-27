@@ -127,8 +127,44 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({
     paddingBottom: `calc(0.75rem * ${fontScale})`
   };
 
+  const isCustomColor = theme.primaryColor && theme.primaryColor.startsWith("#");
+  const accentColorHex = isCustomColor 
+    ? theme.primaryColor 
+    : ({
+        indigo: "#4f46e5",
+        blue: "#2563eb",
+        emerald: "#059669",
+        violet: "#7c3aed",
+        rose: "#e11d48",
+        amber: "#f59e0b",
+        slate: "#334155"
+      }[theme.primaryColor] || "#4f46e5");
+
   return (
     <div className={`p-6 h-full overflow-y-auto flex flex-col justify-start ${themeTokens.previewBg}`}>
+      <style dangerouslySetInnerHTML={{ __html: `
+        :root {
+          --primary-accent: ${accentColorHex};
+        }
+        .custom-accent-bg {
+          background-color: var(--primary-accent) !important;
+        }
+        .custom-accent-bg-hover:hover {
+          background-color: var(--primary-accent) !important;
+          filter: brightness(0.95);
+        }
+        .custom-accent-text {
+          color: var(--primary-accent) !important;
+        }
+        .custom-accent-border {
+          border-color: var(--primary-accent) !important;
+        }
+        .custom-accent-ring:focus {
+          --tw-ring-color: var(--primary-accent) !important;
+          ring-color: var(--primary-accent) !important;
+          border-color: var(--primary-accent) !important;
+        }
+      ` }} />
       <div className="max-w-2xl w-full mx-auto">
         <div className={`${cardClasses} transition-all duration-300 relative`}>
           
