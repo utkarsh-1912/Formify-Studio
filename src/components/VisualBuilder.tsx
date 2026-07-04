@@ -6,7 +6,15 @@ import {
   Plus,
   ChevronDown,
   ChevronUp,
-  GripVertical
+  GripVertical,
+  Type,
+  Mail,
+  Hash,
+  Calendar,
+  List,
+  CircleDot,
+  CheckSquare,
+  AlignLeft
 } from "lucide-react";
 import { AppThemeTokens } from "../utils/appTheme";
 
@@ -161,25 +169,25 @@ const FieldEditorCard: React.FC<FieldEditorCardProps> = ({
               <button
                 onClick={(e) => handleMoveField(idx, "up", e)}
                 disabled={idx === 0}
-                className={`p-1 text-gray-400 hover:text-blue-500 disabled:opacity-30 rounded cursor-pointer`}
+                className={`p-2 text-gray-400 hover:text-blue-500 disabled:opacity-30 rounded-xl cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 flex items-center justify-center min-h-[38px] min-w-[38px] transition-colors`}
                 title="Move Up"
               >
-                <ArrowUp className="h-4 w-4" />
+                <ArrowUp className="h-4.5 w-4.5" />
               </button>
               <button
                 onClick={(e) => handleMoveField(idx, "down", e)}
                 disabled={idx === fieldsCount - 1}
-                className={`p-1 text-gray-400 hover:text-blue-500 disabled:opacity-30 rounded cursor-pointer`}
+                className={`p-2 text-gray-400 hover:text-blue-500 disabled:opacity-30 rounded-xl cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 flex items-center justify-center min-h-[38px] min-w-[38px] transition-colors`}
                 title="Move Down"
               >
-                <ArrowDown className="h-4 w-4" />
+                <ArrowDown className="h-4.5 w-4.5" />
               </button>
               <button
                 onClick={(e) => handleRemoveField(idx, e)}
-                className={`p-1 text-gray-400 hover:text-red-500 rounded cursor-pointer`}
+                className={`p-2 text-gray-400 hover:text-red-500 rounded-xl cursor-pointer hover:bg-red-500/10 flex items-center justify-center min-h-[38px] min-w-[38px] transition-colors`}
                 title="Delete Field"
               >
-                <Trash2 className="h-4 w-4" />
+                <Trash2 className="h-4.5 w-4.5" />
               </button>
             </>
           )}
@@ -543,26 +551,34 @@ const VisualBuilder: React.FC<VisualBuilderProps> = ({ schema, themeTokens, onSc
       {!readOnly && (
         <div className={`p-5 rounded-xl border ${themeTokens.border} ${themeTokens.card} space-y-3.5 shadow-sm`}>
           <label className={`block text-xs font-bold uppercase tracking-wider ${themeTokens.textSecondary}`}>Append New Form Element</label>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {[
-              { type: "text", name: "Text Input" },
-              { type: "email", name: "Email" },
-              { type: "number", name: "Number" },
-              { type: "date", name: "Date" },
-              { type: "select", name: "Dropdown" },
-              { type: "radio", name: "Radio List" },
-              { type: "checkbox", name: "Checkbox" },
-              { type: "textarea", name: "Paragraph" }
-            ].map((item) => (
-              <button
-                key={item.type}
-                onClick={() => handleAddField(item.type)}
-                className={`py-2 px-1 border ${themeTokens.border} hover:border-blue-500 rounded-lg text-xs font-semibold ${themeTokens.textSecondary} hover:text-blue-500 ${themeTokens.inputBg} hover:bg-blue-50/10 text-center transition-all cursor-pointer focus:outline-none flex flex-col items-center justify-center space-y-1 shadow-sm hover:shadow`}
-              >
-                <Plus className="h-3.5 w-3.5 text-blue-500" />
-                <span>{item.name}</span>
-              </button>
-            ))}
+              { type: "text", name: "Text Input", desc: "For single-line text values", icon: Type },
+              { type: "email", name: "Email Address", desc: "Validates mail addresses", icon: Mail },
+              { type: "number", name: "Number Field", desc: "Restricts entries to digits", icon: Hash },
+              { type: "date", name: "Date Selector", desc: "Includes visual calendar", icon: Calendar },
+              { type: "select", name: "Dropdown Select", desc: "Option selection list picker", icon: List },
+              { type: "radio", name: "Radio Choice", desc: "Choose one option from items", icon: CircleDot },
+              { type: "checkbox", name: "Checkbox Toggle", desc: "Single tick or agreement box", icon: CheckSquare },
+              { type: "textarea", name: "Paragraph Field", desc: "For multi-line descriptions", icon: AlignLeft }
+            ].map((item) => {
+              const Icon = item.icon;
+              return (
+                <button
+                  key={item.type}
+                  onClick={() => handleAddField(item.type)}
+                  className={`p-3 border ${themeTokens.border} hover:border-blue-500 rounded-xl text-xs font-semibold ${themeTokens.textSecondary} hover:text-blue-500 ${themeTokens.inputBg} hover:bg-blue-500/5 text-left transition-all duration-200 cursor-pointer focus:outline-none flex items-start space-x-3 shadow-sm hover:shadow hover:scale-[1.01]`}
+                >
+                  <div className="p-1.5 bg-blue-500/10 text-blue-500 rounded-lg flex-shrink-0">
+                    <Icon className="h-4.5 w-4.5" />
+                  </div>
+                  <div className="min-w-0">
+                    <span className={`block font-bold text-xs ${themeTokens.text} hover:text-blue-500`}>{item.name}</span>
+                    <span className="block text-[10px] text-gray-400 font-normal leading-normal mt-0.5">{item.desc}</span>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
       )}

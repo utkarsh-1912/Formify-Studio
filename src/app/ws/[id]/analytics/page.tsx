@@ -336,29 +336,29 @@ export default function AnalyticsDashboardPage({ params }: AnalyticsPageProps) {
         {/* KPI stats section */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {/* Card 1: Submissions */}
-          <div className={`p-4 rounded-xl border ${themeTokens.border} ${themeTokens.card} flex items-center justify-between`}>
+          <div className={`p-5 rounded-2xl border ${themeTokens.border} ${themeTokens.card} flex items-center justify-between hover:scale-[1.01] hover:shadow-md transition-all duration-200`}>
             <div>
               <span className={`text-[10px] font-bold uppercase tracking-wider ${themeTokens.textSecondary}`}>Total Responses</span>
               <h2 className={`text-2xl font-extrabold mt-1 ${themeTokens.text}`}>{submissions.length}</h2>
             </div>
-            <div className="p-3 bg-blue-500/10 text-blue-500 rounded-lg">
+            <div className="p-3 bg-blue-500/10 text-blue-500 rounded-xl">
               <Inbox className="h-6 w-6" />
             </div>
           </div>
 
           {/* Card 2: Form Fields */}
-          <div className={`p-4 rounded-xl border ${themeTokens.border} ${themeTokens.card} flex items-center justify-between`}>
+          <div className={`p-5 rounded-2xl border ${themeTokens.border} ${themeTokens.card} flex items-center justify-between hover:scale-[1.01] hover:shadow-md transition-all duration-200`}>
             <div>
               <span className={`text-[10px] font-bold uppercase tracking-wider ${themeTokens.textSecondary}`}>Form Input Fields</span>
               <h2 className={`text-2xl font-extrabold mt-1 ${themeTokens.text}`}>{schema?.fields?.length || 0}</h2>
             </div>
-            <div className="p-3 bg-purple-500/10 text-purple-500 rounded-lg">
+            <div className="p-3 bg-purple-500/10 text-purple-500 rounded-xl">
               <Layers className="h-6 w-6" />
             </div>
           </div>
 
           {/* Card 3: Latest Entry */}
-          <div className={`p-4 rounded-xl border ${themeTokens.border} ${themeTokens.card} flex items-center justify-between`}>
+          <div className={`p-5 rounded-2xl border ${themeTokens.border} ${themeTokens.card} flex items-center justify-between hover:scale-[1.01] hover:shadow-md transition-all duration-200`}>
             <div>
               <span className={`text-[10px] font-bold uppercase tracking-wider ${themeTokens.textSecondary}`}>Latest Submission</span>
               <h2 className={`text-xs font-mono font-bold mt-2.5 truncate max-w-[200px] ${themeTokens.text}`}>
@@ -367,7 +367,7 @@ export default function AnalyticsDashboardPage({ params }: AnalyticsPageProps) {
                   : "No submissions yet"}
               </h2>
             </div>
-            <div className="p-3 bg-emerald-500/10 text-emerald-500 rounded-lg">
+            <div className="p-3 bg-emerald-500/10 text-emerald-500 rounded-xl">
               <Clock className="h-6 w-6" />
             </div>
           </div>
@@ -375,7 +375,7 @@ export default function AnalyticsDashboardPage({ params }: AnalyticsPageProps) {
 
         {/* Timeline Activity Chart */}
         {submissions.length > 0 && (
-          <div className={`p-5 rounded-xl border ${themeTokens.border} ${themeTokens.card} shadow-sm space-y-4`}>
+          <div className={`p-5.5 rounded-2xl border ${themeTokens.border} ${themeTokens.card} shadow-sm hover:scale-[1.005] hover:shadow-md transition-all duration-200 space-y-4`}>
             <div>
               <h3 className={`font-bold text-xs uppercase tracking-wider ${themeTokens.textSecondary} flex items-center space-x-1.5`}>
                 <TrendingUp className="h-4.5 w-4.5 text-emerald-500" />
@@ -470,7 +470,7 @@ export default function AnalyticsDashboardPage({ params }: AnalyticsPageProps) {
         )}
 
         {/* Search, Filter & CSV list container */}
-        <div className={`p-5 rounded-xl border ${themeTokens.border} ${themeTokens.card} flex flex-col space-y-4 shadow-sm`}>
+        <div className={`p-5 rounded-2xl border ${themeTokens.border} ${themeTokens.card} shadow-sm space-y-4 hover:scale-[1.002] transition-all duration-200`}>
           <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
             <div>
               <h3 className={`font-bold text-sm ${themeTokens.text}`}>Submissions Log Grid</h3>
@@ -555,9 +555,13 @@ export default function AnalyticsDashboardPage({ params }: AnalyticsPageProps) {
           onClick={(e) => {
             if (e.target === e.currentTarget) setActiveModalEntry(null);
           }}
-          className="fixed inset-0 bg-black/75 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fade-in"
+          className="fixed inset-0 bg-black/75 backdrop-blur-md flex items-end md:items-center justify-center p-0 md:p-4 z-50 animate-fade-in"
         >
-          <div className={`rounded-2xl max-w-xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden border ${themeTokens.border} ${themeTokens.card} animate-scale-up`}>
+          <div className={`w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden border-t md:border border-gray-200/50 dark:border-gray-800/80 rounded-t-3xl md:rounded-2xl ${themeTokens.card} animate-slide-up md:animate-scale-up md:max-w-xl`}>
+            {/* Mobile Drag Handle Indicator */}
+            <div className="md:hidden flex justify-center py-2.5 flex-shrink-0">
+              <div className="w-12 h-1 bg-gray-300 dark:bg-gray-700 rounded-full" />
+            </div>
             <div className={`px-6 py-4.5 border-b ${themeTokens.border} flex justify-between items-center bg-black/5`}>
               <div className="flex items-center space-x-2.5">
                 <div className="p-2 bg-blue-500/10 text-blue-500 rounded-xl">
@@ -639,11 +643,16 @@ export default function AnalyticsDashboardPage({ params }: AnalyticsPageProps) {
                 <div className="space-y-3">
                   {Object.entries(activeModalEntry.data).map(([k, v]) => {
                     const isBool = typeof v === "boolean";
+                    const field = schema?.fields?.find((f: any) => f.id === k);
+                    const displayName = field?.label || k;
                     return (
                       <div key={k} className={`p-3.5 rounded-xl border ${themeTokens.border} ${themeTokens.inputBg} flex items-start justify-between gap-4 transition-all hover:bg-black/[0.01] dark:hover:bg-white/[0.01]`}>
                         <div className="min-w-0">
-                          <span className="inline-block text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 bg-slate-500/5 px-2 py-0.5 rounded-md border border-slate-500/10 mb-1.5">
-                            {k}
+                          <span className={`block font-bold text-xs ${themeTokens.text} mb-1`}>
+                            {displayName}
+                          </span>
+                          <span className="inline-block text-[9px] font-mono text-slate-400 bg-slate-500/5 px-1.5 py-0.5 rounded border border-slate-500/10 mb-1.5">
+                            ID: {k}
                           </span>
                           <span className={`block text-xs font-medium break-all ${themeTokens.text}`}>
                             {isBool 

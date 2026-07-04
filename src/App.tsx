@@ -104,7 +104,7 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
   const [shareCopied, setShareCopied] = useState(false);
   const [shareFillMode, setShareFillMode] = useState<"multi" | "single">("multi");
   const [justPushed, setJustPushed] = useState(false);
-  const [mobileActiveTab, setMobileActiveTab] = useState<"editor" | "preview">("editor");
+  const [mobileView, setMobileView] = useState<"visual" | "json" | "theme" | "templates" | "preview" | "submissions" | "code">("visual");
 
   // Security Auth States
   const [hasEditPermission, setHasEditPermission] = useState(true);
@@ -676,38 +676,48 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
         </div>
       </header>
 
-      {/* Mobile View Toggle Bar */}
-      <div className="flex-shrink-0 md:hidden flex border-b bg-black/5">
-        <button
-          onClick={() => setMobileActiveTab("editor")}
-          className={`flex-1 py-2 text-center text-xs font-bold border-b-2 cursor-pointer focus:outline-none transition-all ${
-            mobileActiveTab === "editor"
-              ? "border-blue-600 text-blue-600 dark:text-blue-400"
-              : "border-transparent text-gray-500 hover:text-gray-700"
-          }`}
-        >
-          Design & Edit
-        </button>
-        <button
-          onClick={() => setMobileActiveTab("preview")}
-          className={`flex-1 py-2 text-center text-xs font-bold border-b-2 cursor-pointer focus:outline-none transition-all ${
-            mobileActiveTab === "preview"
-              ? "border-blue-600 text-blue-600 dark:text-blue-400"
-              : "border-transparent text-gray-500 hover:text-gray-700"
-          }`}
-        >
-          Preview & Logs
-        </button>
-      </div>
-
       {/* Main Container Dashboard */}
       <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
         {/* Left Side: Workspace (55%) */}
         <div className={`w-full md:w-[55%] flex flex-col border-r overflow-hidden ${themeTokens.sidebar} ${
-          mobileActiveTab === "editor" ? "flex" : "hidden md:flex"
+          ["visual", "json", "theme", "templates"].includes(mobileView) ? "flex" : "hidden md:flex"
         }`}>
+          {/* Mobile sub-tab toggle for Build */}
+          {["visual", "json"].includes(mobileView) && (
+            <div className="md:hidden flex-shrink-0 flex items-center justify-between px-4 py-2.5 border-b bg-black/5 dark:bg-white/5 border-gray-200/50 dark:border-gray-800/50">
+              <span className={`text-[11px] font-bold uppercase tracking-wider ${themeTokens.textSecondary}`}>Build Mode</span>
+              <div className="flex space-x-1 bg-black/5 dark:bg-white/5 p-0.5 rounded-lg border border-gray-200/30 dark:border-gray-800/30">
+                <button
+                  onClick={() => {
+                    setLeftTab("visual");
+                    setMobileView("visual");
+                  }}
+                  className={`px-3 py-1 rounded-md text-[10px] font-bold transition-all cursor-pointer ${
+                    leftTab === "visual"
+                      ? "bg-blue-600 text-white shadow-sm"
+                      : `${themeTokens.textSecondary} hover:text-gray-900 dark:hover:text-white`
+                  }`}
+                >
+                  Visual
+                </button>
+                <button
+                  onClick={() => {
+                    setLeftTab("json");
+                    setMobileView("json");
+                  }}
+                  className={`px-3 py-1 rounded-md text-[10px] font-bold transition-all cursor-pointer ${
+                    leftTab === "json"
+                      ? "bg-blue-600 text-white shadow-sm"
+                      : `${themeTokens.textSecondary} hover:text-gray-900 dark:hover:text-white`
+                  }`}
+                >
+                  JSON
+                </button>
+              </div>
+            </div>
+          )}
           {/* Tabs header */}
-          <div className={`flex-shrink-0 flex border-b bg-black/5 px-4 pt-2 overflow-x-auto whitespace-nowrap scrollbar-none ${themeTokens.border}`}>
+          <div className={`hidden md:flex flex-shrink-0 border-b bg-black/5 px-4 pt-2 overflow-x-auto whitespace-nowrap scrollbar-none ${themeTokens.border}`}>
             {[
               { id: "visual", name: "Visual Builder", icon: Wrench },
               { id: "json", name: "JSON Editor", icon: Code },
@@ -754,10 +764,44 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
 
         {/* Right Side: Form Render and Output Dashboard (45%) */}
         <div className={`w-full md:w-[45%] flex flex-col overflow-hidden ${
-          mobileActiveTab === "preview" ? "flex" : "hidden md:flex"
+          ["preview", "submissions", "code"].includes(mobileView) ? "flex" : "hidden md:flex"
         }`}>
+          {/* Mobile sub-tab toggle for Data */}
+          {["submissions", "code"].includes(mobileView) && (
+            <div className="md:hidden flex-shrink-0 flex items-center justify-between px-4 py-2.5 border-b bg-black/5 dark:bg-white/5 border-gray-200/50 dark:border-gray-800/50">
+              <span className={`text-[11px] font-bold uppercase tracking-wider ${themeTokens.textSecondary}`}>Data Option</span>
+              <div className="flex space-x-1 bg-black/5 dark:bg-white/5 p-0.5 rounded-lg border border-gray-200/30 dark:border-gray-800/30">
+                <button
+                  onClick={() => {
+                    setRightTab("submissions");
+                    setMobileView("submissions");
+                  }}
+                  className={`px-3 py-1 rounded-md text-[10px] font-bold transition-all cursor-pointer ${
+                    rightTab === "submissions"
+                      ? "bg-blue-600 text-white shadow-sm"
+                      : `${themeTokens.textSecondary} hover:text-gray-900 dark:hover:text-white`
+                  }`}
+                >
+                  Logs
+                </button>
+                <button
+                  onClick={() => {
+                    setRightTab("code");
+                    setMobileView("code");
+                  }}
+                  className={`px-3 py-1 rounded-md text-[10px] font-bold transition-all cursor-pointer ${
+                    rightTab === "code"
+                      ? "bg-blue-600 text-white shadow-sm"
+                      : `${themeTokens.textSecondary} hover:text-gray-900 dark:hover:text-white`
+                  }`}
+                >
+                  Export
+                </button>
+              </div>
+            </div>
+          )}
           {/* Tabs header */}
-          <div className={`flex-shrink-0 flex border-b bg-black/5 px-4 pt-2 overflow-x-auto whitespace-nowrap scrollbar-none ${themeTokens.border}`}>
+          <div className={`hidden md:flex flex-shrink-0 border-b bg-black/5 px-4 pt-2 overflow-x-auto whitespace-nowrap scrollbar-none ${themeTokens.border}`}>
             {[
               { id: "preview", name: "Live Preview", icon: Eye },
               { id: "submissions", name: "Submissions Log", icon: Inbox, badge: submissions.length },
@@ -798,6 +842,7 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
               <SubmissionsDashboard
                 submissions={submissions}
                 themeTokens={themeTokens}
+                schema={schema}
                 onDeleteSubmission={handleDeleteSubmission}
                 onClearAllSubmissions={handleClearAllSubmissions}
               />
@@ -809,8 +854,59 @@ const App: React.FC<AppProps> = ({ workspaceId }) => {
         </div>
       </div>
 
+      {/* Sticky Bottom Navigation Bar for Mobile */}
+      <div className="md:hidden flex-shrink-0 border-t bg-white/95 dark:bg-gray-950/95 backdrop-blur-md flex items-center justify-around py-2 px-3 z-30 shadow-lg border-gray-200/50 dark:border-gray-800/50">
+        {[
+          { id: "build", name: "Build", icon: Wrench, active: ["visual", "json"].includes(mobileView) },
+          { id: "theme", name: "Style", icon: Paintbrush, active: mobileView === "theme" },
+          { id: "templates", name: "Templates", icon: Layers, active: mobileView === "templates" },
+          { id: "preview", name: "Preview", icon: Eye, active: mobileView === "preview" },
+          { id: "submissions", name: "Data", icon: Inbox, active: ["submissions", "code"].includes(mobileView), badge: submissions.length }
+        ].map((tab) => {
+          const Icon = tab.icon;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => {
+                if (tab.id === "build") {
+                  const target = leftTab === "json" ? "json" : "visual";
+                  setLeftTab(target as any);
+                  setMobileView(target);
+                } else if (tab.id === "submissions") {
+                  const target = rightTab === "code" ? "code" : "submissions";
+                  setRightTab(target as any);
+                  setMobileView(target);
+                } else {
+                  if (["theme", "templates"].includes(tab.id)) {
+                    setLeftTab(tab.id as any);
+                  } else {
+                    setRightTab(tab.id as any);
+                  }
+                  setMobileView(tab.id as any);
+                }
+              }}
+              className={`flex flex-col items-center justify-center flex-1 py-1 rounded-xl transition-all relative cursor-pointer ${
+                tab.active
+                  ? "text-blue-600 dark:text-blue-400 font-bold scale-105"
+                  : "text-gray-500 dark:text-gray-400 hover:text-gray-700"
+              }`}
+            >
+              <div className="relative">
+                <Icon className="h-5 w-5" />
+                {tab.badge !== undefined && tab.badge > 0 && (
+                  <span className="absolute -top-1.5 -right-2 text-[8px] bg-red-500 text-white font-extrabold px-1.5 py-0.5 rounded-full animate-scale-up">
+                    {tab.badge}
+                  </span>
+                )}
+              </div>
+              <span className="text-[10px] mt-0.5 tracking-tight">{tab.name}</span>
+            </button>
+          );
+        })}
+      </div>
+
       {/* Footer status bar */}
-      <footer className={`flex-shrink-0 border-t px-4 py-2 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-1.5 sm:gap-0 text-[10px] sm:text-[11px] text-center sm:text-left z-20 ${themeTokens.footer}`}>
+      <footer className={`hidden md:flex flex-shrink-0 border-t px-4 py-2 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-1.5 sm:gap-0 text-[10px] sm:text-[11px] text-center sm:text-left z-20 ${themeTokens.footer}`}>
         <div className="flex flex-wrap justify-center sm:justify-start items-center gap-2 sm:gap-4 font-semibold">
           <span>
             Fields: <span className="font-bold opacity-85">{schema.fields?.length || 0}</span>

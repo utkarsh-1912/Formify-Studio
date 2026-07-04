@@ -141,6 +141,37 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
         </p>
       </div>
 
+      {/* Workspace Global Theme Grid */}
+      <div className={cardStyle}>
+        <label className={labelStyle}>Workspace Theme Mode</label>
+        <div className="grid grid-cols-2 gap-2 pt-1">
+          {globalThemes.map((t) => {
+            const Icon = t.icon;
+            const selected = globalTheme === t.id;
+            return (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => onGlobalThemeChange(t.id as GlobalThemeMode)}
+                className={`p-2.5 rounded-lg border text-left flex items-start space-x-2.5 transition-all text-xs font-semibold focus:outline-none cursor-pointer ${
+                  selected
+                    ? "border-blue-500 bg-blue-500/10 text-blue-500 shadow-sm"
+                    : `${themeTokens.border} ${themeTokens.inputBg} ${themeTokens.textSecondary} hover:border-gray-400 dark:hover:border-gray-600`
+                }`}
+              >
+                <div className={`p-1 rounded-md ${selected ? "bg-blue-500 text-white" : "bg-black/5 dark:bg-white/5 text-gray-500"} flex-shrink-0`}>
+                  <Icon size={14} />
+                </div>
+                <div className="min-w-0">
+                  <span className="block font-bold truncate text-[11px]">{t.name}</span>
+                  <span className="block text-[9px] text-gray-400 font-normal leading-normal mt-0.5 truncate">{t.desc}</span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Form Accent Color Palette */}
       <div className={cardStyle}>
         <label className={labelStyle}>Form Primary Accent Color</label>
@@ -286,13 +317,13 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
       {/* Border Corners */}
       <div className={cardStyle}>
         <label className={labelStyle}>Form Border Radius (Corners)</label>
-        <div className="flex flex-wrap gap-2 pt-1">
+        <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 pt-1">
           {radii.map((r) => (
             <button
               key={r.id}
               onClick={() => updateSetting("borderRadius", r.id)}
               disabled={readOnly}
-              className={`px-3.5 py-2 rounded-lg border text-xs font-medium transition-all focus:outline-none ${
+              className={`py-2 px-1 rounded-lg border text-xs font-medium transition-all text-center focus:outline-none ${
                 settings.borderRadius === r.id
                   ? "border-blue-500 bg-blue-500/10 text-blue-500 shadow-sm"
                   : `${themeTokens.border} ${themeTokens.inputBg} ${themeTokens.textSecondary} hover:border-gray-400 dark:hover:border-gray-600`
@@ -307,13 +338,13 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
       {/* Shadows Selection */}
       <div className={cardStyle}>
         <label className={labelStyle}>Form Box Shadow Density</label>
-        <div className="flex flex-wrap gap-2 pt-1">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
           {shadows.map((s) => (
             <button
               key={s.id}
               onClick={() => updateSetting("shadow", s.id)}
               disabled={readOnly}
-              className={`px-3.5 py-2 rounded-lg border text-xs font-medium transition-all focus:outline-none ${
+              className={`py-2 px-1 rounded-lg border text-xs font-medium transition-all text-center focus:outline-none ${
                 settings.shadow === s.id
                   ? "border-blue-500 bg-blue-500/10 text-blue-500 shadow-sm"
                   : `${themeTokens.border} ${themeTokens.inputBg} ${themeTokens.textSecondary} hover:border-gray-400 dark:hover:border-gray-600`

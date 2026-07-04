@@ -255,7 +255,7 @@ export default function FormSharePage({ params }: SharePageProps) {
         {/* Content Box */}
         <div className="w-full max-w-2xl flex-1 flex flex-col justify-center">
           {hasSubmitted ? (
-            <div className={`w-full p-8 rounded-2xl border ${themeTokens.border} ${themeTokens.card} text-center shadow-lg max-w-md mx-auto relative overflow-hidden animate-fade-in`}>
+            <div className={`w-full p-8 rounded-2xl border ${themeTokens.border} ${themeTokens.card} glass-panel bg-white/70 dark:bg-gray-900/70 text-center shadow-lg max-w-md mx-auto relative overflow-hidden animate-fade-in`}>
               <div className="h-12 w-12 rounded-full bg-emerald-100 dark:bg-emerald-950/50 flex items-center justify-center text-emerald-600 dark:text-emerald-400 mx-auto mb-4 animate-scale-up">
                 <Check className="h-6 w-6" />
               </div>
@@ -289,7 +289,7 @@ export default function FormSharePage({ params }: SharePageProps) {
               fillMode={fillMode}
             />
           ) : (
-            <div className={`w-full p-8 rounded-2xl border ${themeTokens.border} ${themeTokens.card} text-center shadow-lg max-w-md mx-auto`}>
+            <div className={`w-full p-8 rounded-2xl border ${themeTokens.border} ${themeTokens.card} glass-panel bg-white/70 dark:bg-gray-900/70 text-center shadow-lg max-w-md mx-auto`}>
               <div className="h-10 w-10 bg-blue-500/10 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Radio className="h-5 w-5 animate-pulse" />
               </div>

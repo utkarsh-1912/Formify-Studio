@@ -26,6 +26,7 @@ export interface SubmissionEntry {
 interface SubmissionsDashboardProps {
   submissions: SubmissionEntry[];
   themeTokens: AppThemeTokens;
+  schema?: any;
   onDeleteSubmission: (id: string) => void;
   onClearAllSubmissions: () => void;
 }
@@ -33,6 +34,7 @@ interface SubmissionsDashboardProps {
 const SubmissionsDashboard: React.FC<SubmissionsDashboardProps> = ({
   submissions,
   themeTokens,
+  schema,
   onDeleteSubmission,
   onClearAllSubmissions
 }) => {
@@ -233,9 +235,13 @@ const SubmissionsDashboard: React.FC<SubmissionsDashboardProps> = ({
           onClick={(e) => {
             if (e.target === e.currentTarget) setActiveModalEntry(null);
           }}
-          className="fixed inset-0 bg-black/75 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fade-in"
+          className="fixed inset-0 bg-black/75 backdrop-blur-md flex items-end md:items-center justify-center p-0 md:p-4 z-50 animate-fade-in"
         >
-          <div className={`rounded-2xl max-w-xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden border ${themeTokens.border} ${themeTokens.modalBg} animate-scale-up`}>
+          <div className={`w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden border-t md:border border-gray-200/50 dark:border-gray-800/80 rounded-t-3xl md:rounded-2xl ${themeTokens.modalBg} animate-slide-up md:animate-scale-up md:max-w-xl`}>
+            {/* Mobile Drag Handle Indicator */}
+            <div className="md:hidden flex justify-center py-2.5 flex-shrink-0">
+              <div className="w-12 h-1 bg-gray-300 dark:bg-gray-700 rounded-full" />
+            </div>
             <div className={`px-6 py-4.5 border-b ${themeTokens.border} flex justify-between items-center bg-black/5`}>
               <div className="flex items-center space-x-2.5">
                 <div className="p-2 bg-blue-500/10 text-blue-500 rounded-xl">
@@ -317,11 +323,16 @@ const SubmissionsDashboard: React.FC<SubmissionsDashboardProps> = ({
                 <div className="space-y-3">
                   {Object.entries(activeModalEntry.data).map(([k, v]) => {
                     const isBool = typeof v === "boolean";
+                    const field = schema?.fields?.find((f: any) => f.id === k);
+                    const displayName = field?.label || k;
                     return (
                       <div key={k} className={`p-3.5 rounded-xl border ${themeTokens.border} ${themeTokens.inputBg} flex items-start justify-between gap-4 transition-all hover:bg-black/[0.01] dark:hover:bg-white/[0.01]`}>
                         <div className="min-w-0">
-                          <span className="inline-block text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 bg-slate-500/5 px-2 py-0.5 rounded-md border border-slate-500/10 mb-1.5">
-                            {k}
+                          <span className={`block font-bold text-xs ${themeTokens.text} mb-1`}>
+                            {displayName}
+                          </span>
+                          <span className="inline-block text-[9px] font-mono text-slate-400 bg-slate-500/5 px-1.5 py-0.5 rounded border border-slate-500/10 mb-1.5">
+                            ID: {k}
                           </span>
                           <span className={`block text-xs font-medium break-all ${themeTokens.text}`}>
                             {isBool 

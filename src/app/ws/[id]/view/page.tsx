@@ -176,7 +176,7 @@ export default function EmbeddedFormViewPage({ params }: ViewPageProps) {
       {/* Content Box */}
       <div className="flex-1 flex flex-col justify-center items-center w-full max-w-2xl mx-auto p-2 sm:p-4">
         {hasSubmitted ? (
-          <div className={`w-full p-6 rounded-2xl border ${themeTokens.border} ${themeTokens.card} text-center shadow-md max-w-md mx-auto relative overflow-hidden animate-fade-in`}>
+          <div className={`w-full p-6 rounded-2xl border ${themeTokens.border} ${themeTokens.card} glass-panel bg-white/70 dark:bg-gray-900/70 text-center shadow-md max-w-md mx-auto relative overflow-hidden animate-fade-in`}>
             <div className="h-10 w-10 rounded-full bg-emerald-100 dark:bg-emerald-950/50 flex items-center justify-center text-emerald-600 dark:text-emerald-400 mx-auto mb-3 animate-scale-up">
               <Check className="h-5 w-5" />
             </div>
