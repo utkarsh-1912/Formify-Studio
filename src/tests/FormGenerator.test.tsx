@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import FormGenerator from "../components/FormGenerator";
 import { themeMap } from "../utils/appTheme";
 
@@ -62,7 +62,7 @@ describe("FormGenerator Component", () => {
     expect(screen.getByLabelText(/Email/i)).toBeInTheDocument();
   });
 
-  test("submits form data", () => {
+  test("submits form data", async () => {
     render(
       <FormGenerator
         schema={mockSchema}
@@ -75,9 +75,9 @@ describe("FormGenerator Component", () => {
     fireEvent.change(screen.getByLabelText(/Email/i), { target: { value: "john@example.com" } });
     fireEvent.click(screen.getByRole("button", { name: /Submit Form/i }));
 
-    expect(mockOnSubmit).toHaveBeenCalledWith({
+    await waitFor(() => expect(mockOnSubmit).toHaveBeenCalledWith({
       name: "John Doe",
       email: "john@example.com",
-    });
+    }));
   });
 });

@@ -14,9 +14,60 @@ import {
   List,
   CircleDot,
   CheckSquare,
-  AlignLeft
+  AlignLeft,
+  ListChecks,
+  Star,
+  SlidersHorizontal,
+  Paperclip,
+  Phone,
+  Heading,
+  SeparatorHorizontal,
+  EyeOff,
+  Calculator
 } from "lucide-react";
 import { AppThemeTokens } from "../utils/appTheme";
+
+/** Field types with no free-text input (so placeholder / regex don't apply). */
+const NO_TEXT_ENTRY = ["checkbox", "radio", "select", "multiselect", "rating", "slider", "file", "section", "pagebreak", "hidden", "calculated"];
+const OPTION_TYPES = ["select", "radio", "multiselect"];
+
+/** Rules (visibleIf / requiredIf) are edited as an expression string, or raw JSON for structured rules. */
+const ruleToText = (rule: unknown): string =>
+  rule === undefined || rule === null ? "" : typeof rule === "string" ? rule : JSON.stringify(rule);
+
+const textToRule = (text: string): unknown => {
+  const t = text.trim();
+  if (!t) return undefined;
+  if (t.startsWith("{")) {
+    try {
+      return JSON.parse(t);
+    } catch {
+      return t; // leave as text; schema validation will flag it
+    }
+  }
+  return t;
+};
+
+/** Drop empty advanced props and coerce numeric ones before committing a field edit. */
+const cleanField = (f: any): any => {
+  const out = { ...f };
+  ["visibleIf", "requiredIf", "formula", "description", "accept"].forEach((k) => {
+    if (typeof out[k] === "string" && out[k].trim() === "") delete out[k];
+  });
+  ["visibleIf", "requiredIf"].forEach((k) => {
+    if (typeof out[k] === "string") {
+      const r = textToRule(out[k]);
+      if (r === undefined) delete out[k];
+      else out[k] = r;
+    }
+  });
+  ["min", "max", "step", "maxSizeKB", "precision"].forEach((k) => {
+    if (out[k] === "" || out[k] === undefined) delete out[k];
+    else if (typeof out[k] === "string" && out.type !== "date" && !isNaN(Number(out[k]))) out[k] = Number(out[k]);
+    else if (typeof out[k] === "string" && out.type !== "date") delete out[k];
+  });
+  return out;
+};
 
 interface VisualBuilderProps {
   schema: any;
@@ -77,7 +128,7 @@ const FieldEditorCard: React.FC<FieldEditorCardProps> = ({
 
   const handleBlur = () => {
     if (!readOnly) {
-      handleFieldChange(idx, localField);
+      handleFieldChange(idx, cleanField(localField));
     }
   };
 
@@ -230,7 +281,7 @@ const FieldEditorCard: React.FC<FieldEditorCardProps> = ({
 
           {/* Placeholder & Required Checkbox */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-            {localField.type !== "checkbox" && localField.type !== "radio" && (
+            {!NO_TEXT_ENTRY.includes(localField.type) && (
               <div>
                 <label className={subLabelClass}>Placeholder Help Text</label>
                 <input
@@ -243,6 +294,7 @@ const FieldEditorCard: React.FC<FieldEditorCardProps> = ({
                 />
               </div>
             )}
+            {!["section", "pagebreak", "hidden", "calculated"].includes(localField.type) && (
             <div className="flex items-center space-x-2 pt-4">
               <input
                 type="checkbox"
@@ -256,10 +308,138 @@ const FieldEditorCard: React.FC<FieldEditorCardProps> = ({
                 Required Field Validation
               </label>
             </div>
+            )}
           </div>
 
-          {/* Regex Validation Pattern (if not selection/checkbox) */}
-          {localField.type !== "checkbox" && localField.type !== "radio" && localField.type !== "select" && (
+          {/* Advanced: description, bounds, file rules, formula, conditional logic */}
+          <div className={`border ${themeTokens.border} p-3 rounded-lg space-y-3`}>
+            <span className={`block text-xs font-bold uppercase tracking-wider ${themeTokens.text}`}>Advanced &amp; Logic</span>
+            {localField.type !== "hidden" && (
+              <div>
+                <label className={subLabelClass} htmlFor={`desc-${localField.id}`}>Help / Description Text</label>
+                <input
+                  id={`desc-${localField.id}`}
+                  type="text"
+                  value={localField.description || ""}
+                  onChange={(e) => handleTextChange("description", e.target.value)}
+                  onBlur={handleBlur}
+                  readOnly={readOnly}
+                  className={`${inputClass} ${readOnly ? "opacity-70 cursor-not-allowed" : ""}`}
+                />
+              </div>
+            )}
+            {["number", "slider", "rating", "date", "multiselect", "file"].includes(localField.type) && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                {(["min", "max"] as const).map((k) => (
+                  <div key={k}>
+                    <label className={subLabelClass} htmlFor={`${k}-${localField.id}`}>{k === "min" ? "Minimum" : "Maximum"}</label>
+                    <input
+                      id={`${k}-${localField.id}`}
+                      type={localField.type === "date" ? "date" : "number"}
+                      value={localField[k] ?? ""}
+                      onChange={(e) => handleTextChange(k, e.target.value)}
+                      onBlur={handleBlur}
+                      readOnly={readOnly}
+                      className={`${inputClass} ${readOnly ? "opacity-70 cursor-not-allowed" : ""}`}
+                    />
+                  </div>
+                ))}
+                {["number", "slider"].includes(localField.type) && (
+                  <div>
+                    <label className={subLabelClass} htmlFor={`step-${localField.id}`}>Step</label>
+                    <input
+                      id={`step-${localField.id}`}
+                      type="number"
+                      value={localField.step ?? ""}
+                      onChange={(e) => handleTextChange("step", e.target.value)}
+                      onBlur={handleBlur}
+                      readOnly={readOnly}
+                      className={`${inputClass} ${readOnly ? "opacity-70 cursor-not-allowed" : ""}`}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+            {localField.type === "file" && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                  <label className={subLabelClass} htmlFor={`accept-${localField.id}`}>Accepted types</label>
+                  <input
+                    id={`accept-${localField.id}`}
+                    type="text"
+                    value={localField.accept || ""}
+                    onChange={(e) => handleTextChange("accept", e.target.value)}
+                    onBlur={handleBlur}
+                    readOnly={readOnly}
+                    placeholder="image/*,.pdf"
+                    className={`${inputClass} ${readOnly ? "opacity-70 cursor-not-allowed" : ""}`}
+                  />
+                </div>
+                <div>
+                  <label className={subLabelClass} htmlFor={`size-${localField.id}`}>Max size (KB)</label>
+                  <input
+                    id={`size-${localField.id}`}
+                    type="number"
+                    value={localField.maxSizeKB ?? ""}
+                    onChange={(e) => handleTextChange("maxSizeKB", e.target.value)}
+                    onBlur={handleBlur}
+                    readOnly={readOnly}
+                    className={`${inputClass} ${readOnly ? "opacity-70 cursor-not-allowed" : ""}`}
+                  />
+                </div>
+              </div>
+            )}
+            {localField.type === "calculated" && (
+              <div>
+                <label className={subLabelClass} htmlFor={`formula-${localField.id}`}>Formula</label>
+                <input
+                  id={`formula-${localField.id}`}
+                  type="text"
+                  value={localField.formula || ""}
+                  onChange={(e) => handleTextChange("formula", e.target.value)}
+                  onBlur={handleBlur}
+                  readOnly={readOnly}
+                  placeholder="e.g. round(price * quantity, 2)"
+                  className={`${inputClass} font-mono ${readOnly ? "opacity-70 cursor-not-allowed" : ""}`}
+                />
+              </div>
+            )}
+            {(
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                  <label className={subLabelClass} htmlFor={`vis-${localField.id}`}>Show only if…</label>
+                  <input
+                    id={`vis-${localField.id}`}
+                    type="text"
+                    value={ruleToText(localField.visibleIf)}
+                    onChange={(e) => handleTextChange("visibleIf", e.target.value)}
+                    onBlur={handleBlur}
+                    readOnly={readOnly}
+                    placeholder="e.g. plan == 'pro' && seats > 5"
+                    className={`${inputClass} font-mono ${readOnly ? "opacity-70 cursor-not-allowed" : ""}`}
+                  />
+                </div>
+                {!["section", "pagebreak", "hidden", "calculated"].includes(localField.type) && (
+                  <div>
+                    <label className={subLabelClass} htmlFor={`reqif-${localField.id}`}>Required only if…</label>
+                    <input
+                      id={`reqif-${localField.id}`}
+                      type="text"
+                      value={ruleToText(localField.requiredIf)}
+                      onChange={(e) => handleTextChange("requiredIf", e.target.value)}
+                      onBlur={handleBlur}
+                      readOnly={readOnly}
+                      placeholder="e.g. contactMe == true"
+                      className={`${inputClass} font-mono ${readOnly ? "opacity-70 cursor-not-allowed" : ""}`}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Regex Validation Pattern (text-entry types only) */}
+          {!NO_TEXT_ENTRY.includes(localField.type) && (
             <div className={`border ${themeTokens.border} p-3 rounded-lg space-y-3`}>
               <span className={`block text-xs font-bold uppercase tracking-wider ${themeTokens.text}`}>Format Regex Validation</span>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -292,7 +472,7 @@ const FieldEditorCard: React.FC<FieldEditorCardProps> = ({
           )}
 
           {/* Options management for Select and Radio */}
-          {(localField.type === "select" || localField.type === "radio") && (
+          {OPTION_TYPES.includes(localField.type) && (
             <div className={`border ${themeTokens.border} p-3 rounded-lg space-y-3`}>
               <div className="flex justify-between items-center">
                 <span className={`block text-xs font-bold uppercase tracking-wider ${themeTokens.text}`}>Choices / Options</span>
@@ -427,12 +607,26 @@ const VisualBuilder: React.FC<VisualBuilderProps> = ({ schema, themeTokens, onSc
       required: false
     };
 
-    if (type === "select" || type === "radio") {
+    if (OPTION_TYPES.includes(type)) {
       newField.options = [
         { value: "option1", label: "Option 1" },
         { value: "option2", label: "Option 2" }
       ];
-    } else {
+    } else if (type === "slider") {
+      newField.min = 0;
+      newField.max = 100;
+    } else if (type === "rating") {
+      newField.max = 5;
+    } else if (type === "calculated") {
+      newField.formula = "0";
+      delete newField.required;
+    } else if (type === "section" || type === "pagebreak") {
+      newField.label = type === "section" ? "New Section" : "Next Step";
+      delete newField.required;
+    } else if (type === "hidden") {
+      newField.defaultValue = "";
+      delete newField.required;
+    } else if (!NO_TEXT_ENTRY.includes(type)) {
       newField.placeholder = "Enter value...";
     }
 
@@ -560,7 +754,16 @@ const VisualBuilder: React.FC<VisualBuilderProps> = ({ schema, themeTokens, onSc
               { type: "select", name: "Dropdown Select", desc: "Option selection list picker", icon: List },
               { type: "radio", name: "Radio Choice", desc: "Choose one option from items", icon: CircleDot },
               { type: "checkbox", name: "Checkbox Toggle", desc: "Single tick or agreement box", icon: CheckSquare },
-              { type: "textarea", name: "Paragraph Field", desc: "For multi-line descriptions", icon: AlignLeft }
+              { type: "textarea", name: "Paragraph Field", desc: "For multi-line descriptions", icon: AlignLeft },
+              { type: "phone", name: "Phone Number", desc: "Validates telephone numbers", icon: Phone },
+              { type: "multiselect", name: "Multi-select", desc: "Choose several options", icon: ListChecks },
+              { type: "rating", name: "Star Rating", desc: "1–N rating scale", icon: Star },
+              { type: "slider", name: "Slider", desc: "Pick a number on a range", icon: SlidersHorizontal },
+              { type: "file", name: "File Upload", desc: "Attach files (metadata only)", icon: Paperclip },
+              { type: "calculated", name: "Calculated", desc: "Computed from other fields", icon: Calculator },
+              { type: "section", name: "Section Heading", desc: "Group fields under a title", icon: Heading },
+              { type: "pagebreak", name: "Page Break", desc: "Start a new form step", icon: SeparatorHorizontal },
+              { type: "hidden", name: "Hidden Value", desc: "Carry a value, not shown", icon: EyeOff }
             ].map((item) => {
               const Icon = item.icon;
               return (

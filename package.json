@@ -32,7 +32,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "gen:runtime": "node scripts/engine-runtime.mjs"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.2",

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ThemeSettings, generateReactCode, generateHTMLCode } from "../utils/codeGenerators";
+import { ThemeSettings, generateReactCode, generateHTMLCode, generateWebComponentCode } from "../utils/codeGenerators";
 import { Clipboard, Check } from "lucide-react";
 import { AppThemeTokens } from "../utils/appTheme";
 
@@ -10,7 +10,7 @@ interface CodeExporterProps {
 }
 
 const CodeExporter: React.FC<CodeExporterProps> = ({ schema, theme, themeTokens }) => {
-  const [activeTab, setActiveTab] = useState<"react" | "html" | "json">("react");
+  const [activeTab, setActiveTab] = useState<"react" | "html" | "webcomponent" | "json">("react");
   const [copied, setCopied] = useState(false);
 
   const getCode = () => {
@@ -19,6 +19,8 @@ const CodeExporter: React.FC<CodeExporterProps> = ({ schema, theme, themeTokens 
         return generateReactCode(schema, theme);
       case "html":
         return generateHTMLCode(schema, theme);
+      case "webcomponent":
+        return generateWebComponentCode(schema, theme);
       case "json":
         return JSON.stringify(schema, null, 2);
     }
@@ -55,6 +57,9 @@ const CodeExporter: React.FC<CodeExporterProps> = ({ schema, theme, themeTokens 
         <button onClick={() => { setActiveTab("html"); setCopied(false); }} className={tabBtnClass("html")}>
           HTML + Tailwind
         </button>
+        <button onClick={() => { setActiveTab("webcomponent"); setCopied(false); }} className={tabBtnClass("webcomponent")}>
+          Web Component
+        </button>
         <button onClick={() => { setActiveTab("json"); setCopied(false); }} className={tabBtnClass("json")}>
           JSON Schema
         </button>
@@ -65,7 +70,7 @@ const CodeExporter: React.FC<CodeExporterProps> = ({ schema, theme, themeTokens 
         {/* Code Bar Header */}
         <div className={`px-4 py-2 ${themeTokens.codeHeader} flex justify-between items-center text-xs font-mono select-none`}>
           <span>
-            {activeTab === "react" ? "GeneratedForm.tsx" : activeTab === "html" ? "index.html" : "schema.json"}
+            {activeTab === "react" ? "GeneratedForm.tsx" : activeTab === "html" ? "index.html" : activeTab === "webcomponent" ? "formify-form.js" : "schema.json"}
           </span>
           <button
             onClick={handleCopy}
