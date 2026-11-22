@@ -38,7 +38,7 @@ describe("typed values", () => {
     fireEvent.click(screen.getByLabelText(/Newsletter/));
     fireEvent.click(screen.getByLabelText("Alpha"));
     fireEvent.click(screen.getByLabelText("Seven"));
-    fireEvent.change(screen.getByLabelText(/Volume/), { target: { value: "6" } });
+    fireEvent.change(screen.getByRole("slider", { name: /Volume/ }), { target: { value: "6" } });
     fireEvent.click(screen.getByLabelText("Two"));
     submit();
     await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1));
@@ -245,7 +245,7 @@ describe("multi-step", () => {
       { id: "pb", type: "pagebreak", label: "Contact" },
       { id: "email", type: "email", label: "Email", required: true },
       { id: "pb2", type: "pagebreak", label: "Extras", visibleIf: "wantExtras == true" },
-      { id: "extra", type: "text", label: "Extra info", required: true },
+      { id: "extra", type: "text", label: "Extra info", required: true, visibleIf: "wantExtras == true" },
       { id: "wantExtras", type: "checkbox", label: "Add extras" }
     ]
   };
@@ -384,7 +384,7 @@ describe("submission UX", () => {
     const { onSubmit } = mount({ formTitle: "D", fields: [{ id: "user.name[0]", type: "text", label: "Who", required: true }] });
     submit();
     expect(await screen.findByText("This field is required.")).toBeInTheDocument();
-    change("Who", "Ada");
+    change(/Who/, "Ada");
     submit();
     await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ "user.name[0]": "Ada" }));
   });

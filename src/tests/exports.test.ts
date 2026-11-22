@@ -1,6 +1,5 @@
 import { readFileSync } from "node:fs";
 import ts from "typescript";
-// @ts-expect-error plain JS build script shared with `npm run gen:runtime`
 import { buildRuntimeModule } from "../../scripts/engine-runtime.mjs";
 import { FORMIFY_RUNTIME_JS, FORMIFY_RUNTIME_TS } from "../engine/runtimeSource.generated";
 import { evaluateExpression, computeValues, getSteps, collectSubmission } from "../engine/logic";
@@ -87,7 +86,7 @@ const click = (form: Element, role: string) => (form.querySelector(`[data-formif
 const submit = (form: HTMLFormElement) => form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
 const text = (form: Element, attr: string, id: string) => q(form, attr, id)[0]?.textContent;
 
-function exerciseForm(form: HTMLFormElement, onSubmit: (p: any) => void) {
+function exerciseForm(form: HTMLFormElement, onSubmit: ReturnType<typeof vi.fn>) {
   // step 1 only: name; progress + Next visible, Submit hidden
   expect(wrap(form, "name").hidden).toBe(false);
   expect(wrap(form, "plan").hidden).toBe(true);
