@@ -16,7 +16,6 @@
     "fake-indexeddb": "^6.2.8",
     "lucide-react": "^1.21.0",
     "next": "^15.1.0",
-    "peerjs": "^1.5.5",
     "postcss": "^8.4.31",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -24,6 +23,10 @@
     "react-toastify": "^10.0.6",
     "tailwindcss": "^3.4.15",
     "typescript": "^5.3.3",
+    "y-protocols": "^1.0.7",
+    "y-webrtc": "^10.3.0",
+    "y-websocket": "^3.1.0",
+    "yjs": "^13.6.33",
     "zustand": "^5.1.0"
   },
   "scripts": {
