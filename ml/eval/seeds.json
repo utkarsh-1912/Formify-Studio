@@ -1,0 +1,6341 @@
+[
+  {
+    "id": "seed-001",
+    "domain": "healthcare",
+    "prompt": "Patient intake form for a dental clinic",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Dental Patient Intake",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "dob",
+          "type": "date",
+          "label": "Date of Birth",
+          "required": true
+        },
+        {
+          "id": "phone",
+          "type": "text",
+          "label": "Phone Number"
+        },
+        {
+          "id": "insurance",
+          "type": "text",
+          "label": "Insurance Provider"
+        },
+        {
+          "id": "allergies",
+          "type": "textarea",
+          "label": "Known Allergies"
+        },
+        {
+          "id": "consent",
+          "type": "checkbox",
+          "label": "I consent to treatment",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-002",
+    "domain": "healthcare",
+    "prompt": "Appointment request for a physiotherapy practice",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Physiotherapy Appointment Request",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "service",
+          "type": "select",
+          "label": "Service Type",
+          "required": true,
+          "options": [
+            {
+              "value": "sports-injury",
+              "label": "Sports Injury"
+            },
+            {
+              "value": "back-pain",
+              "label": "Back Pain"
+            },
+            {
+              "value": "post-surgery",
+              "label": "Post-Surgery"
+            },
+            {
+              "value": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "id": "preferredDate",
+          "type": "date",
+          "label": "Preferred Date",
+          "required": true
+        },
+        {
+          "id": "notes",
+          "type": "textarea",
+          "label": "Additional Notes"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-003",
+    "domain": "healthcare",
+    "prompt": "Symptom check-in survey before a telehealth visit",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Telehealth Symptom Check-in",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "symptoms",
+          "type": "textarea",
+          "label": "Describe Your Symptoms",
+          "required": true
+        },
+        {
+          "id": "duration",
+          "type": "select",
+          "label": "How Long Have You Had Symptoms?",
+          "required": true,
+          "options": [
+            {
+              "value": "less-than-1-day",
+              "label": "Less than 1 day"
+            },
+            {
+              "value": "1-3-days",
+              "label": "1-3 days"
+            },
+            {
+              "value": "4-7-days",
+              "label": "4-7 days"
+            },
+            {
+              "value": "more-than-a-week",
+              "label": "More than a week"
+            }
+          ]
+        },
+        {
+          "id": "fever",
+          "type": "radio",
+          "label": "Do You Have a Fever?",
+          "required": true,
+          "options": [
+            {
+              "value": "yes",
+              "label": "Yes"
+            },
+            {
+              "value": "no",
+              "label": "No"
+            }
+          ]
+        },
+        {
+          "id": "medications",
+          "type": "textarea",
+          "label": "Current Medications"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-004",
+    "domain": "healthcare",
+    "prompt": "Blood donation registration",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Blood Donor Registration",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "bloodType",
+          "type": "select",
+          "label": "Blood Type",
+          "options": [
+            {
+              "value": "a",
+              "label": "A+"
+            },
+            {
+              "value": "a",
+              "label": "A-"
+            },
+            {
+              "value": "b",
+              "label": "B+"
+            },
+            {
+              "value": "b",
+              "label": "B-"
+            },
+            {
+              "value": "ab",
+              "label": "AB+"
+            },
+            {
+              "value": "ab",
+              "label": "AB-"
+            },
+            {
+              "value": "o",
+              "label": "O+"
+            },
+            {
+              "value": "o",
+              "label": "O-"
+            }
+          ]
+        },
+        {
+          "id": "weight",
+          "type": "number",
+          "label": "Weight in kg",
+          "required": true
+        },
+        {
+          "id": "lastDonation",
+          "type": "date",
+          "label": "Date of Last Donation"
+        },
+        {
+          "id": "eligible",
+          "type": "checkbox",
+          "label": "I confirm I am in good health",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-005",
+    "domain": "healthcare",
+    "prompt": "Pharmacy prescription refill request",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Prescription Refill Request",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "dob",
+          "type": "date",
+          "label": "Date of Birth",
+          "required": true
+        },
+        {
+          "id": "rxNumber",
+          "type": "text",
+          "label": "Prescription Number",
+          "required": true
+        },
+        {
+          "id": "pickup",
+          "type": "radio",
+          "label": "Pickup Method",
+          "required": true,
+          "options": [
+            {
+              "value": "in-store",
+              "label": "In store"
+            },
+            {
+              "value": "delivery",
+              "label": "Delivery"
+            }
+          ]
+        },
+        {
+          "id": "phone",
+          "type": "text",
+          "label": "Phone Number"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-006",
+    "domain": "healthcare",
+    "prompt": "Mental health clinic new client questionnaire",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "New Client Questionnaire",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "reason",
+          "type": "textarea",
+          "label": "What brings you in?",
+          "required": true
+        },
+        {
+          "id": "therapyBefore",
+          "type": "radio",
+          "label": "Have you attended therapy before?",
+          "options": [
+            {
+              "value": "yes",
+              "label": "Yes"
+            },
+            {
+              "value": "no",
+              "label": "No"
+            }
+          ]
+        },
+        {
+          "id": "emergencyContact",
+          "type": "text",
+          "label": "Emergency Contact Name",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-007",
+    "domain": "hr",
+    "prompt": "Job application form for a software engineer role",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Software Engineer Application",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "phone",
+          "type": "text",
+          "label": "Phone Number"
+        },
+        {
+          "id": "experience",
+          "type": "number",
+          "label": "Years of Experience",
+          "required": true
+        },
+        {
+          "id": "portfolio",
+          "type": "text",
+          "label": "Portfolio URL"
+        },
+        {
+          "id": "coverLetter",
+          "type": "textarea",
+          "label": "Cover Letter"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-008",
+    "domain": "hr",
+    "prompt": "Employee time-off request",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Time Off Request",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "leaveType",
+          "type": "select",
+          "label": "Leave Type",
+          "required": true,
+          "options": [
+            {
+              "value": "vacation",
+              "label": "Vacation"
+            },
+            {
+              "value": "sick",
+              "label": "Sick"
+            },
+            {
+              "value": "parental",
+              "label": "Parental"
+            },
+            {
+              "value": "unpaid",
+              "label": "Unpaid"
+            }
+          ]
+        },
+        {
+          "id": "startDate",
+          "type": "date",
+          "label": "Start Date",
+          "required": true
+        },
+        {
+          "id": "endDate",
+          "type": "date",
+          "label": "End Date",
+          "required": true
+        },
+        {
+          "id": "reason",
+          "type": "textarea",
+          "label": "Reason"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-009",
+    "domain": "hr",
+    "prompt": "Exit interview survey",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Exit Interview",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "lastDay",
+          "type": "date",
+          "label": "Last Working Day",
+          "required": true
+        },
+        {
+          "id": "reasonLeaving",
+          "type": "select",
+          "label": "Primary Reason for Leaving",
+          "required": true,
+          "options": [
+            {
+              "value": "compensation",
+              "label": "Compensation"
+            },
+            {
+              "value": "career-growth",
+              "label": "Career growth"
+            },
+            {
+              "value": "management",
+              "label": "Management"
+            },
+            {
+              "value": "relocation",
+              "label": "Relocation"
+            },
+            {
+              "value": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "id": "wouldRecommend",
+          "type": "radio",
+          "label": "Would you recommend us as an employer?",
+          "required": true,
+          "options": [
+            {
+              "value": "yes",
+              "label": "Yes"
+            },
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "maybe",
+              "label": "Maybe"
+            }
+          ]
+        },
+        {
+          "id": "feedback",
+          "type": "textarea",
+          "label": "Additional Feedback"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-010",
+    "domain": "hr",
+    "prompt": "New hire onboarding details",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "New Hire Onboarding",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "startDate",
+          "type": "date",
+          "label": "Start Date",
+          "required": true
+        },
+        {
+          "id": "tshirt",
+          "type": "select",
+          "label": "T-Shirt Size",
+          "options": [
+            {
+              "value": "s",
+              "label": "S"
+            },
+            {
+              "value": "m",
+              "label": "M"
+            },
+            {
+              "value": "l",
+              "label": "L"
+            },
+            {
+              "value": "xl",
+              "label": "XL"
+            }
+          ]
+        },
+        {
+          "id": "dietary",
+          "type": "text",
+          "label": "Dietary Restrictions"
+        },
+        {
+          "id": "laptop",
+          "type": "radio",
+          "label": "Laptop Preference",
+          "required": true,
+          "options": [
+            {
+              "value": "mac",
+              "label": "Mac"
+            },
+            {
+              "value": "windows",
+              "label": "Windows"
+            },
+            {
+              "value": "linux",
+              "label": "Linux"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-011",
+    "domain": "hr",
+    "prompt": "Internal referral submission",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Employee Referral",
+      "fields": [
+        {
+          "id": "referrerName",
+          "type": "text",
+          "label": "Your Name",
+          "required": true
+        },
+        {
+          "id": "candidateName",
+          "type": "text",
+          "label": "Candidate Name",
+          "required": true
+        },
+        {
+          "id": "candidateEmail",
+          "type": "email",
+          "label": "Candidate Email",
+          "required": true
+        },
+        {
+          "id": "position",
+          "type": "text",
+          "label": "Position Referred For",
+          "required": true
+        },
+        {
+          "id": "relationship",
+          "type": "text",
+          "label": "How do you know the candidate?"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-012",
+    "domain": "hr",
+    "prompt": "Quarterly employee satisfaction pulse",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Employee Pulse Survey",
+      "fields": [
+        {
+          "id": "satisfaction",
+          "type": "select",
+          "label": "Overall Satisfaction",
+          "required": true,
+          "options": [
+            {
+              "value": "very-low",
+              "label": "Very low"
+            },
+            {
+              "value": "low",
+              "label": "Low"
+            },
+            {
+              "value": "neutral",
+              "label": "Neutral"
+            },
+            {
+              "value": "high",
+              "label": "High"
+            },
+            {
+              "value": "very-high",
+              "label": "Very high"
+            }
+          ]
+        },
+        {
+          "id": "manager",
+          "type": "radio",
+          "label": "I feel supported by my manager",
+          "required": true,
+          "options": [
+            {
+              "value": "agree",
+              "label": "Agree"
+            },
+            {
+              "value": "neutral",
+              "label": "Neutral"
+            },
+            {
+              "value": "disagree",
+              "label": "Disagree"
+            }
+          ]
+        },
+        {
+          "id": "workload",
+          "type": "select",
+          "label": "Workload",
+          "options": [
+            {
+              "value": "too-light",
+              "label": "Too light"
+            },
+            {
+              "value": "about-right",
+              "label": "About right"
+            },
+            {
+              "value": "too-heavy",
+              "label": "Too heavy"
+            }
+          ]
+        },
+        {
+          "id": "comments",
+          "type": "textarea",
+          "label": "Anything else?"
+        },
+        {
+          "id": "anonymous",
+          "type": "checkbox",
+          "label": "Submit anonymously"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-013",
+    "domain": "education",
+    "prompt": "Course enrollment form for an online coding bootcamp",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Bootcamp Enrollment",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "track",
+          "type": "select",
+          "label": "Track",
+          "required": true,
+          "options": [
+            {
+              "value": "web-development",
+              "label": "Web Development"
+            },
+            {
+              "value": "data-science",
+              "label": "Data Science"
+            },
+            {
+              "value": "cybersecurity",
+              "label": "Cybersecurity"
+            }
+          ]
+        },
+        {
+          "id": "level",
+          "type": "radio",
+          "label": "Experience Level",
+          "required": true,
+          "options": [
+            {
+              "value": "beginner",
+              "label": "Beginner"
+            },
+            {
+              "value": "intermediate",
+              "label": "Intermediate"
+            },
+            {
+              "value": "advanced",
+              "label": "Advanced"
+            }
+          ]
+        },
+        {
+          "id": "startDate",
+          "type": "date",
+          "label": "Preferred Start Date"
+        },
+        {
+          "id": "goals",
+          "type": "textarea",
+          "label": "What are your goals?"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-014",
+    "domain": "education",
+    "prompt": "Student feedback survey for a university course",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Course Feedback",
+      "fields": [
+        {
+          "id": "courseCode",
+          "type": "text",
+          "label": "Course Code",
+          "required": true
+        },
+        {
+          "id": "rating",
+          "type": "select",
+          "label": "Overall Rating",
+          "required": true,
+          "options": [
+            {
+              "value": "1",
+              "label": "1"
+            },
+            {
+              "value": "2",
+              "label": "2"
+            },
+            {
+              "value": "3",
+              "label": "3"
+            },
+            {
+              "value": "4",
+              "label": "4"
+            },
+            {
+              "value": "5",
+              "label": "5"
+            }
+          ]
+        },
+        {
+          "id": "instructorClarity",
+          "type": "radio",
+          "label": "Was the instructor clear?",
+          "required": true,
+          "options": [
+            {
+              "value": "yes",
+              "label": "Yes"
+            },
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "sometimes",
+              "label": "Sometimes"
+            }
+          ]
+        },
+        {
+          "id": "improvements",
+          "type": "textarea",
+          "label": "What could be improved?"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-015",
+    "domain": "education",
+    "prompt": "Scholarship application",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Scholarship Application",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "gpa",
+          "type": "number",
+          "label": "GPA",
+          "required": true
+        },
+        {
+          "id": "major",
+          "type": "text",
+          "label": "Intended Major",
+          "required": true
+        },
+        {
+          "id": "essay",
+          "type": "textarea",
+          "label": "Personal Statement",
+          "required": true
+        },
+        {
+          "id": "financialNeed",
+          "type": "checkbox",
+          "label": "I would like to be considered for need-based aid"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-016",
+    "domain": "education",
+    "prompt": "Parent-teacher conference sign-up",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Parent-Teacher Conference",
+      "fields": [
+        {
+          "id": "parentName",
+          "type": "text",
+          "label": "Parent Name",
+          "required": true
+        },
+        {
+          "id": "studentName",
+          "type": "text",
+          "label": "Student Name",
+          "required": true
+        },
+        {
+          "id": "grade",
+          "type": "select",
+          "label": "Grade",
+          "required": true,
+          "options": [
+            {
+              "value": "k",
+              "label": "K"
+            },
+            {
+              "value": "1",
+              "label": "1"
+            },
+            {
+              "value": "2",
+              "label": "2"
+            },
+            {
+              "value": "3",
+              "label": "3"
+            },
+            {
+              "value": "4",
+              "label": "4"
+            },
+            {
+              "value": "5",
+              "label": "5"
+            }
+          ]
+        },
+        {
+          "id": "slot",
+          "type": "select",
+          "label": "Preferred Time Slot",
+          "required": true,
+          "options": [
+            {
+              "value": "3-00-pm",
+              "label": "3:00 PM"
+            },
+            {
+              "value": "3-30-pm",
+              "label": "3:30 PM"
+            },
+            {
+              "value": "4-00-pm",
+              "label": "4:00 PM"
+            },
+            {
+              "value": "4-30-pm",
+              "label": "4:30 PM"
+            }
+          ]
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-017",
+    "domain": "education",
+    "prompt": "School field trip permission slip",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Field Trip Permission Slip",
+      "fields": [
+        {
+          "id": "studentName",
+          "type": "text",
+          "label": "Student Name",
+          "required": true
+        },
+        {
+          "id": "guardianName",
+          "type": "text",
+          "label": "Guardian Name",
+          "required": true
+        },
+        {
+          "id": "emergencyPhone",
+          "type": "text",
+          "label": "Emergency Phone",
+          "required": true
+        },
+        {
+          "id": "allergies",
+          "type": "textarea",
+          "label": "Allergies or Medical Needs"
+        },
+        {
+          "id": "permission",
+          "type": "checkbox",
+          "label": "I give permission for my child to attend",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-018",
+    "domain": "education",
+    "prompt": "Library membership signup",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Library Membership",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "address",
+          "type": "textarea",
+          "label": "Home Address",
+          "required": true
+        },
+        {
+          "id": "cardType",
+          "type": "radio",
+          "label": "Membership Type",
+          "required": true,
+          "options": [
+            {
+              "value": "adult",
+              "label": "Adult"
+            },
+            {
+              "value": "student",
+              "label": "Student"
+            },
+            {
+              "value": "senior",
+              "label": "Senior"
+            }
+          ]
+        },
+        {
+          "id": "dob",
+          "type": "date",
+          "label": "Date of Birth",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-019",
+    "domain": "ecommerce",
+    "prompt": "Product return request form",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Return Request",
+      "fields": [
+        {
+          "id": "orderNumber",
+          "type": "text",
+          "label": "Order Number",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "item",
+          "type": "text",
+          "label": "Item Name",
+          "required": true
+        },
+        {
+          "id": "reason",
+          "type": "select",
+          "label": "Reason for Return",
+          "required": true,
+          "options": [
+            {
+              "value": "damaged",
+              "label": "Damaged"
+            },
+            {
+              "value": "wrong-item",
+              "label": "Wrong item"
+            },
+            {
+              "value": "no-longer-needed",
+              "label": "No longer needed"
+            },
+            {
+              "value": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "id": "refundMethod",
+          "type": "radio",
+          "label": "Refund Method",
+          "required": true,
+          "options": [
+            {
+              "value": "original-payment",
+              "label": "Original payment"
+            },
+            {
+              "value": "store-credit",
+              "label": "Store credit"
+            }
+          ]
+        },
+        {
+          "id": "comments",
+          "type": "textarea",
+          "label": "Comments"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-020",
+    "domain": "ecommerce",
+    "prompt": "Customer checkout shipping details",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Shipping Details",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "address",
+          "type": "text",
+          "label": "Street Address",
+          "required": true
+        },
+        {
+          "id": "city",
+          "type": "text",
+          "label": "City",
+          "required": true
+        },
+        {
+          "id": "postalCode",
+          "type": "text",
+          "label": "Postal Code",
+          "required": true
+        },
+        {
+          "id": "shipping",
+          "type": "radio",
+          "label": "Shipping Speed",
+          "required": true,
+          "options": [
+            {
+              "value": "standard",
+              "label": "Standard"
+            },
+            {
+              "value": "express",
+              "label": "Express"
+            },
+            {
+              "value": "overnight",
+              "label": "Overnight"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-021",
+    "domain": "ecommerce",
+    "prompt": "Product review submission",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Write a Review",
+      "fields": [
+        {
+          "id": "productName",
+          "type": "text",
+          "label": "Product",
+          "required": true
+        },
+        {
+          "id": "rating",
+          "type": "select",
+          "label": "Rating",
+          "required": true,
+          "options": [
+            {
+              "value": "1",
+              "label": "1"
+            },
+            {
+              "value": "2",
+              "label": "2"
+            },
+            {
+              "value": "3",
+              "label": "3"
+            },
+            {
+              "value": "4",
+              "label": "4"
+            },
+            {
+              "value": "5",
+              "label": "5"
+            }
+          ]
+        },
+        {
+          "id": "title",
+          "type": "text",
+          "label": "Review Title",
+          "required": true
+        },
+        {
+          "id": "body",
+          "type": "textarea",
+          "label": "Your Review",
+          "required": true
+        },
+        {
+          "id": "recommend",
+          "type": "checkbox",
+          "label": "I would recommend this product"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-022",
+    "domain": "ecommerce",
+    "prompt": "Wholesale account application",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Wholesale Application",
+      "fields": [
+        {
+          "id": "company",
+          "type": "text",
+          "label": "Company Name",
+          "required": true
+        },
+        {
+          "id": "taxId",
+          "type": "text",
+          "label": "Tax ID",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "monthlyVolume",
+          "type": "number",
+          "label": "Estimated Monthly Order Volume"
+        },
+        {
+          "id": "categories",
+          "type": "select",
+          "label": "Primary Category",
+          "required": true,
+          "options": [
+            {
+              "value": "apparel",
+              "label": "Apparel"
+            },
+            {
+              "value": "electronics",
+              "label": "Electronics"
+            },
+            {
+              "value": "home",
+              "label": "Home"
+            },
+            {
+              "value": "beauty",
+              "label": "Beauty"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-023",
+    "domain": "ecommerce",
+    "prompt": "Gift card purchase",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Buy a Gift Card",
+      "fields": [
+        {
+          "id": "amount",
+          "type": "select",
+          "label": "Amount",
+          "required": true,
+          "options": [
+            {
+              "value": "25",
+              "label": "$25"
+            },
+            {
+              "value": "50",
+              "label": "$50"
+            },
+            {
+              "value": "100",
+              "label": "$100"
+            },
+            {
+              "value": "200",
+              "label": "$200"
+            }
+          ]
+        },
+        {
+          "id": "recipientName",
+          "type": "text",
+          "label": "Recipient Name",
+          "required": true
+        },
+        {
+          "id": "recipientEmail",
+          "type": "email",
+          "label": "Recipient Email",
+          "required": true
+        },
+        {
+          "id": "message",
+          "type": "textarea",
+          "label": "Personal Message"
+        },
+        {
+          "id": "deliveryDate",
+          "type": "date",
+          "label": "Delivery Date"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-024",
+    "domain": "ecommerce",
+    "prompt": "Pre-order waitlist signup for a new sneaker",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Sneaker Waitlist",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "size",
+          "type": "select",
+          "label": "Shoe Size",
+          "required": true,
+          "options": [
+            {
+              "value": "7",
+              "label": "7"
+            },
+            {
+              "value": "8",
+              "label": "8"
+            },
+            {
+              "value": "9",
+              "label": "9"
+            },
+            {
+              "value": "10",
+              "label": "10"
+            },
+            {
+              "value": "11",
+              "label": "11"
+            },
+            {
+              "value": "12",
+              "label": "12"
+            }
+          ]
+        },
+        {
+          "id": "colorway",
+          "type": "radio",
+          "label": "Colorway",
+          "required": true,
+          "options": [
+            {
+              "value": "black",
+              "label": "Black"
+            },
+            {
+              "value": "white",
+              "label": "White"
+            },
+            {
+              "value": "red",
+              "label": "Red"
+            }
+          ]
+        },
+        {
+          "id": "newsletter",
+          "type": "checkbox",
+          "label": "Subscribe to drop alerts"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-025",
+    "domain": "events",
+    "prompt": "Conference registration for a developer summit",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Developer Summit Registration",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "company",
+          "type": "text",
+          "label": "Company"
+        },
+        {
+          "id": "ticket",
+          "type": "radio",
+          "label": "Ticket Type",
+          "required": true,
+          "options": [
+            {
+              "value": "general",
+              "label": "General"
+            },
+            {
+              "value": "vip",
+              "label": "VIP"
+            },
+            {
+              "value": "student",
+              "label": "Student"
+            }
+          ]
+        },
+        {
+          "id": "workshops",
+          "type": "select",
+          "label": "Workshop Track",
+          "options": [
+            {
+              "value": "frontend",
+              "label": "Frontend"
+            },
+            {
+              "value": "backend",
+              "label": "Backend"
+            },
+            {
+              "value": "ai",
+              "label": "AI"
+            },
+            {
+              "value": "devops",
+              "label": "DevOps"
+            }
+          ]
+        },
+        {
+          "id": "dietary",
+          "type": "text",
+          "label": "Dietary Requirements"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-026",
+    "domain": "events",
+    "prompt": "Wedding RSVP form",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Wedding RSVP",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "attending",
+          "type": "radio",
+          "label": "Will you attend?",
+          "required": true,
+          "options": [
+            {
+              "value": "joyfully-accept",
+              "label": "Joyfully accept"
+            },
+            {
+              "value": "regretfully-decline",
+              "label": "Regretfully decline"
+            }
+          ]
+        },
+        {
+          "id": "guests",
+          "type": "number",
+          "label": "Number of Guests"
+        },
+        {
+          "id": "mealChoice",
+          "type": "select",
+          "label": "Meal Choice",
+          "options": [
+            {
+              "value": "chicken",
+              "label": "Chicken"
+            },
+            {
+              "value": "fish",
+              "label": "Fish"
+            },
+            {
+              "value": "vegetarian",
+              "label": "Vegetarian"
+            }
+          ]
+        },
+        {
+          "id": "songRequest",
+          "type": "text",
+          "label": "Song Request"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-027",
+    "domain": "events",
+    "prompt": "Hackathon team registration",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Hackathon Registration",
+      "fields": [
+        {
+          "id": "teamName",
+          "type": "text",
+          "label": "Team Name",
+          "required": true
+        },
+        {
+          "id": "leadEmail",
+          "type": "email",
+          "label": "Team Lead Email",
+          "required": true
+        },
+        {
+          "id": "members",
+          "type": "number",
+          "label": "Number of Members",
+          "required": true
+        },
+        {
+          "id": "idea",
+          "type": "textarea",
+          "label": "Project Idea"
+        },
+        {
+          "id": "tshirt",
+          "type": "select",
+          "label": "T-Shirt Size",
+          "options": [
+            {
+              "value": "s",
+              "label": "S"
+            },
+            {
+              "value": "m",
+              "label": "M"
+            },
+            {
+              "value": "l",
+              "label": "L"
+            },
+            {
+              "value": "xl",
+              "label": "XL"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-028",
+    "domain": "events",
+    "prompt": "Volunteer signup for a charity run",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Charity Run Volunteer Signup",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "phone",
+          "type": "text",
+          "label": "Phone Number"
+        },
+        {
+          "id": "role",
+          "type": "select",
+          "label": "Preferred Role",
+          "required": true,
+          "options": [
+            {
+              "value": "registration",
+              "label": "Registration"
+            },
+            {
+              "value": "water-station",
+              "label": "Water station"
+            },
+            {
+              "value": "course-marshal",
+              "label": "Course marshal"
+            },
+            {
+              "value": "medical",
+              "label": "Medical"
+            }
+          ]
+        },
+        {
+          "id": "shift",
+          "type": "radio",
+          "label": "Shift",
+          "required": true,
+          "options": [
+            {
+              "value": "morning",
+              "label": "Morning"
+            },
+            {
+              "value": "afternoon",
+              "label": "Afternoon"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-029",
+    "domain": "events",
+    "prompt": "Speaker proposal submission for a meetup",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Call for Speakers",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "talkTitle",
+          "type": "text",
+          "label": "Talk Title",
+          "required": true
+        },
+        {
+          "id": "abstract",
+          "type": "textarea",
+          "label": "Abstract",
+          "required": true
+        },
+        {
+          "id": "duration",
+          "type": "select",
+          "label": "Duration",
+          "required": true,
+          "options": [
+            {
+              "value": "15-min",
+              "label": "15 min"
+            },
+            {
+              "value": "30-min",
+              "label": "30 min"
+            },
+            {
+              "value": "45-min",
+              "label": "45 min"
+            }
+          ]
+        },
+        {
+          "id": "bio",
+          "type": "textarea",
+          "label": "Speaker Bio"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-030",
+    "domain": "events",
+    "prompt": "Birthday party invitation response",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Party RSVP",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "coming",
+          "type": "radio",
+          "label": "Are you coming?",
+          "required": true,
+          "options": [
+            {
+              "value": "yes",
+              "label": "Yes"
+            },
+            {
+              "value": "no",
+              "label": "No"
+            }
+          ]
+        },
+        {
+          "id": "plusOnes",
+          "type": "number",
+          "label": "Plus Ones"
+        },
+        {
+          "id": "allergies",
+          "type": "text",
+          "label": "Food Allergies"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-031",
+    "domain": "saas",
+    "prompt": "Bug report form for a project management app",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Bug Report",
+      "fields": [
+        {
+          "id": "title",
+          "type": "text",
+          "label": "Title",
+          "required": true
+        },
+        {
+          "id": "severity",
+          "type": "select",
+          "label": "Severity",
+          "required": true,
+          "options": [
+            {
+              "value": "low",
+              "label": "Low"
+            },
+            {
+              "value": "medium",
+              "label": "Medium"
+            },
+            {
+              "value": "high",
+              "label": "High"
+            },
+            {
+              "value": "critical",
+              "label": "Critical"
+            }
+          ]
+        },
+        {
+          "id": "steps",
+          "type": "textarea",
+          "label": "Steps to Reproduce",
+          "required": true
+        },
+        {
+          "id": "expected",
+          "type": "textarea",
+          "label": "Expected Behavior"
+        },
+        {
+          "id": "browser",
+          "type": "select",
+          "label": "Browser",
+          "options": [
+            {
+              "value": "chrome",
+              "label": "Chrome"
+            },
+            {
+              "value": "firefox",
+              "label": "Firefox"
+            },
+            {
+              "value": "safari",
+              "label": "Safari"
+            },
+            {
+              "value": "edge",
+              "label": "Edge"
+            }
+          ]
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-032",
+    "domain": "saas",
+    "prompt": "Feature request submission",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Feature Request",
+      "fields": [
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "title",
+          "type": "text",
+          "label": "Feature Title",
+          "required": true
+        },
+        {
+          "id": "description",
+          "type": "textarea",
+          "label": "Describe the feature",
+          "required": true
+        },
+        {
+          "id": "priority",
+          "type": "radio",
+          "label": "How important is this to you?",
+          "options": [
+            {
+              "value": "nice-to-have",
+              "label": "Nice to have"
+            },
+            {
+              "value": "important",
+              "label": "Important"
+            },
+            {
+              "value": "critical",
+              "label": "Critical"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-033",
+    "domain": "saas",
+    "prompt": "Free trial signup",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Start Your Free Trial",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "workEmail",
+          "type": "email",
+          "label": "Work Email",
+          "required": true
+        },
+        {
+          "id": "company",
+          "type": "text",
+          "label": "Company Name",
+          "required": true
+        },
+        {
+          "id": "teamSize",
+          "type": "select",
+          "label": "Team Size",
+          "required": true,
+          "options": [
+            {
+              "value": "1-10",
+              "label": "1-10"
+            },
+            {
+              "value": "11-50",
+              "label": "11-50"
+            },
+            {
+              "value": "51-200",
+              "label": "51-200"
+            },
+            {
+              "value": "200",
+              "label": "200+"
+            }
+          ]
+        },
+        {
+          "id": "terms",
+          "type": "checkbox",
+          "label": "I agree to the terms of service",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-034",
+    "domain": "saas",
+    "prompt": "Enterprise demo request",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Request a Demo",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "workEmail",
+          "type": "email",
+          "label": "Work Email",
+          "required": true
+        },
+        {
+          "id": "company",
+          "type": "text",
+          "label": "Company",
+          "required": true
+        },
+        {
+          "id": "jobTitle",
+          "type": "text",
+          "label": "Job Title"
+        },
+        {
+          "id": "useCase",
+          "type": "textarea",
+          "label": "What do you want to achieve?"
+        },
+        {
+          "id": "preferredDate",
+          "type": "date",
+          "label": "Preferred Demo Date"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-035",
+    "domain": "saas",
+    "prompt": "Subscription cancellation survey",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Cancel Subscription",
+      "fields": [
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "reason",
+          "type": "select",
+          "label": "Why are you cancelling?",
+          "required": true,
+          "options": [
+            {
+              "value": "too-expensive",
+              "label": "Too expensive"
+            },
+            {
+              "value": "missing-features",
+              "label": "Missing features"
+            },
+            {
+              "value": "found-alternative",
+              "label": "Found alternative"
+            },
+            {
+              "value": "no-longer-needed",
+              "label": "No longer needed"
+            }
+          ]
+        },
+        {
+          "id": "alternative",
+          "type": "text",
+          "label": "Which alternative?"
+        },
+        {
+          "id": "feedback",
+          "type": "textarea",
+          "label": "How could we improve?"
+        },
+        {
+          "id": "comeback",
+          "type": "radio",
+          "label": "Would you consider returning?",
+          "options": [
+            {
+              "value": "yes",
+              "label": "Yes"
+            },
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "maybe",
+              "label": "Maybe"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-036",
+    "domain": "saas",
+    "prompt": "API access key request for developers",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "API Access Request",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "projectName",
+          "type": "text",
+          "label": "Project Name",
+          "required": true
+        },
+        {
+          "id": "useCase",
+          "type": "textarea",
+          "label": "Intended Use",
+          "required": true
+        },
+        {
+          "id": "expectedRps",
+          "type": "number",
+          "label": "Expected Requests per Second"
+        },
+        {
+          "id": "acceptTerms",
+          "type": "checkbox",
+          "label": "I accept the API terms",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-037",
+    "domain": "finance",
+    "prompt": "Personal loan application",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Personal Loan Application",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "amount",
+          "type": "number",
+          "label": "Loan Amount",
+          "required": true
+        },
+        {
+          "id": "term",
+          "type": "select",
+          "label": "Term",
+          "required": true,
+          "options": [
+            {
+              "value": "12-months",
+              "label": "12 months"
+            },
+            {
+              "value": "24-months",
+              "label": "24 months"
+            },
+            {
+              "value": "36-months",
+              "label": "36 months"
+            },
+            {
+              "value": "60-months",
+              "label": "60 months"
+            }
+          ]
+        },
+        {
+          "id": "income",
+          "type": "number",
+          "label": "Annual Income",
+          "required": true
+        },
+        {
+          "id": "employment",
+          "type": "radio",
+          "label": "Employment Status",
+          "required": true,
+          "options": [
+            {
+              "value": "employed",
+              "label": "Employed"
+            },
+            {
+              "value": "self-employed",
+              "label": "Self-employed"
+            },
+            {
+              "value": "unemployed",
+              "label": "Unemployed"
+            },
+            {
+              "value": "retired",
+              "label": "Retired"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-038",
+    "domain": "finance",
+    "prompt": "Expense reimbursement claim",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Expense Claim",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "expenseDate",
+          "type": "date",
+          "label": "Expense Date",
+          "required": true
+        },
+        {
+          "id": "category",
+          "type": "select",
+          "label": "Category",
+          "required": true,
+          "options": [
+            {
+              "value": "travel",
+              "label": "Travel"
+            },
+            {
+              "value": "meals",
+              "label": "Meals"
+            },
+            {
+              "value": "equipment",
+              "label": "Equipment"
+            },
+            {
+              "value": "software",
+              "label": "Software"
+            },
+            {
+              "value": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "id": "amount",
+          "type": "number",
+          "label": "Amount",
+          "required": true
+        },
+        {
+          "id": "description",
+          "type": "textarea",
+          "label": "Description",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-039",
+    "domain": "finance",
+    "prompt": "Invoice dispute form",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Invoice Dispute",
+      "fields": [
+        {
+          "id": "invoiceNumber",
+          "type": "text",
+          "label": "Invoice Number",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "disputedAmount",
+          "type": "number",
+          "label": "Disputed Amount",
+          "required": true
+        },
+        {
+          "id": "reason",
+          "type": "textarea",
+          "label": "Reason for Dispute",
+          "required": true
+        },
+        {
+          "id": "contactPref",
+          "type": "radio",
+          "label": "Preferred Contact Method",
+          "options": [
+            {
+              "value": "email",
+              "label": "Email"
+            },
+            {
+              "value": "phone",
+              "label": "Phone"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-040",
+    "domain": "finance",
+    "prompt": "Investor interest registration for a startup round",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Investor Interest",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "firm",
+          "type": "text",
+          "label": "Firm"
+        },
+        {
+          "id": "checkSize",
+          "type": "select",
+          "label": "Typical Check Size",
+          "required": true,
+          "options": [
+            {
+              "value": "under-25k",
+              "label": "Under $25k"
+            },
+            {
+              "value": "25k-100k",
+              "label": "$25k-$100k"
+            },
+            {
+              "value": "100k-500k",
+              "label": "$100k-$500k"
+            },
+            {
+              "value": "over-500k",
+              "label": "Over $500k"
+            }
+          ]
+        },
+        {
+          "id": "accredited",
+          "type": "checkbox",
+          "label": "I am an accredited investor",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-041",
+    "domain": "finance",
+    "prompt": "Budget planning input from department heads",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Department Budget Request",
+      "fields": [
+        {
+          "id": "department",
+          "type": "text",
+          "label": "Department",
+          "required": true
+        },
+        {
+          "id": "headName",
+          "type": "text",
+          "label": "Department Head",
+          "required": true
+        },
+        {
+          "id": "requestedBudget",
+          "type": "number",
+          "label": "Requested Budget",
+          "required": true
+        },
+        {
+          "id": "justification",
+          "type": "textarea",
+          "label": "Justification",
+          "required": true
+        },
+        {
+          "id": "fiscalYear",
+          "type": "select",
+          "label": "Fiscal Year",
+          "required": true,
+          "options": [
+            {
+              "value": "2026",
+              "label": "2026"
+            },
+            {
+              "value": "2027",
+              "label": "2027"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-042",
+    "domain": "finance",
+    "prompt": "Tax document upload checklist for clients",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Tax Documents Checklist",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "hasW2",
+          "type": "checkbox",
+          "label": "I have my W-2"
+        },
+        {
+          "id": "has1099",
+          "type": "checkbox",
+          "label": "I have my 1099 forms"
+        },
+        {
+          "id": "dependents",
+          "type": "number",
+          "label": "Number of Dependents"
+        },
+        {
+          "id": "notes",
+          "type": "textarea",
+          "label": "Notes for your accountant"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-043",
+    "domain": "realestate",
+    "prompt": "Rental property application",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Rental Application",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "phone",
+          "type": "text",
+          "label": "Phone Number"
+        },
+        {
+          "id": "moveInDate",
+          "type": "date",
+          "label": "Desired Move-in Date",
+          "required": true
+        },
+        {
+          "id": "income",
+          "type": "number",
+          "label": "Monthly Income",
+          "required": true
+        },
+        {
+          "id": "pets",
+          "type": "radio",
+          "label": "Do you have pets?",
+          "options": [
+            {
+              "value": "yes",
+              "label": "Yes"
+            },
+            {
+              "value": "no",
+              "label": "No"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-044",
+    "domain": "realestate",
+    "prompt": "Property viewing request",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Book a Viewing",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "propertyId",
+          "type": "text",
+          "label": "Property ID",
+          "required": true
+        },
+        {
+          "id": "viewingDate",
+          "type": "date",
+          "label": "Preferred Date",
+          "required": true
+        },
+        {
+          "id": "timeOfDay",
+          "type": "radio",
+          "label": "Time of Day",
+          "options": [
+            {
+              "value": "morning",
+              "label": "Morning"
+            },
+            {
+              "value": "afternoon",
+              "label": "Afternoon"
+            },
+            {
+              "value": "evening",
+              "label": "Evening"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-045",
+    "domain": "realestate",
+    "prompt": "Maintenance request from a tenant",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Maintenance Request",
+      "fields": [
+        {
+          "id": "unit",
+          "type": "text",
+          "label": "Unit Number",
+          "required": true
+        },
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "issueType",
+          "type": "select",
+          "label": "Issue Type",
+          "required": true,
+          "options": [
+            {
+              "value": "plumbing",
+              "label": "Plumbing"
+            },
+            {
+              "value": "electrical",
+              "label": "Electrical"
+            },
+            {
+              "value": "heating",
+              "label": "Heating"
+            },
+            {
+              "value": "appliance",
+              "label": "Appliance"
+            },
+            {
+              "value": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "id": "description",
+          "type": "textarea",
+          "label": "Describe the Issue",
+          "required": true
+        },
+        {
+          "id": "urgent",
+          "type": "checkbox",
+          "label": "This is an emergency"
+        },
+        {
+          "id": "entryPermission",
+          "type": "checkbox",
+          "label": "Permission to enter if not home"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-046",
+    "domain": "realestate",
+    "prompt": "Home seller listing inquiry",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "List Your Home",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "address",
+          "type": "text",
+          "label": "Property Address",
+          "required": true
+        },
+        {
+          "id": "bedrooms",
+          "type": "number",
+          "label": "Bedrooms"
+        },
+        {
+          "id": "askingPrice",
+          "type": "number",
+          "label": "Expected Asking Price"
+        },
+        {
+          "id": "timeline",
+          "type": "select",
+          "label": "Selling Timeline",
+          "options": [
+            {
+              "value": "immediately",
+              "label": "Immediately"
+            },
+            {
+              "value": "1-3-months",
+              "label": "1-3 months"
+            },
+            {
+              "value": "3-6-months",
+              "label": "3-6 months"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-047",
+    "domain": "realestate",
+    "prompt": "Roommate matching profile",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Find a Roommate",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "budget",
+          "type": "number",
+          "label": "Monthly Budget",
+          "required": true
+        },
+        {
+          "id": "smoker",
+          "type": "radio",
+          "label": "Do you smoke?",
+          "required": true,
+          "options": [
+            {
+              "value": "yes",
+              "label": "Yes"
+            },
+            {
+              "value": "no",
+              "label": "No"
+            }
+          ]
+        },
+        {
+          "id": "schedule",
+          "type": "select",
+          "label": "Daily Schedule",
+          "options": [
+            {
+              "value": "early-bird",
+              "label": "Early bird"
+            },
+            {
+              "value": "night-owl",
+              "label": "Night owl"
+            },
+            {
+              "value": "flexible",
+              "label": "Flexible"
+            }
+          ]
+        },
+        {
+          "id": "about",
+          "type": "textarea",
+          "label": "About You"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-048",
+    "domain": "realestate",
+    "prompt": "HOA violation report",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "HOA Violation Report",
+      "fields": [
+        {
+          "id": "address",
+          "type": "text",
+          "label": "Address of Violation",
+          "required": true
+        },
+        {
+          "id": "violationType",
+          "type": "select",
+          "label": "Type",
+          "required": true,
+          "options": [
+            {
+              "value": "noise",
+              "label": "Noise"
+            },
+            {
+              "value": "parking",
+              "label": "Parking"
+            },
+            {
+              "value": "landscaping",
+              "label": "Landscaping"
+            },
+            {
+              "value": "trash",
+              "label": "Trash"
+            },
+            {
+              "value": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "id": "date",
+          "type": "date",
+          "label": "Date Observed",
+          "required": true
+        },
+        {
+          "id": "details",
+          "type": "textarea",
+          "label": "Details",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-049",
+    "domain": "travel",
+    "prompt": "Hotel booking inquiry",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Hotel Booking",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "checkIn",
+          "type": "date",
+          "label": "Check-in Date",
+          "required": true
+        },
+        {
+          "id": "checkOut",
+          "type": "date",
+          "label": "Check-out Date",
+          "required": true
+        },
+        {
+          "id": "guests",
+          "type": "number",
+          "label": "Number of Guests",
+          "required": true
+        },
+        {
+          "id": "roomType",
+          "type": "select",
+          "label": "Room Type",
+          "options": [
+            {
+              "value": "standard",
+              "label": "Standard"
+            },
+            {
+              "value": "deluxe",
+              "label": "Deluxe"
+            },
+            {
+              "value": "suite",
+              "label": "Suite"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-050",
+    "domain": "travel",
+    "prompt": "Group tour booking request",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Group Tour Booking",
+      "fields": [
+        {
+          "id": "organizer",
+          "type": "text",
+          "label": "Organizer Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "destination",
+          "type": "select",
+          "label": "Destination",
+          "required": true,
+          "options": [
+            {
+              "value": "japan",
+              "label": "Japan"
+            },
+            {
+              "value": "italy",
+              "label": "Italy"
+            },
+            {
+              "value": "peru",
+              "label": "Peru"
+            },
+            {
+              "value": "iceland",
+              "label": "Iceland"
+            }
+          ]
+        },
+        {
+          "id": "groupSize",
+          "type": "number",
+          "label": "Group Size",
+          "required": true
+        },
+        {
+          "id": "travelDate",
+          "type": "date",
+          "label": "Preferred Departure Date",
+          "required": true
+        },
+        {
+          "id": "requests",
+          "type": "textarea",
+          "label": "Special Requests"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-051",
+    "domain": "travel",
+    "prompt": "Airport transfer request",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Airport Transfer",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "phone",
+          "type": "text",
+          "label": "Phone Number"
+        },
+        {
+          "id": "flightNumber",
+          "type": "text",
+          "label": "Flight Number",
+          "required": true
+        },
+        {
+          "id": "arrival",
+          "type": "date",
+          "label": "Arrival Date",
+          "required": true
+        },
+        {
+          "id": "passengers",
+          "type": "number",
+          "label": "Passengers",
+          "required": true
+        },
+        {
+          "id": "luggage",
+          "type": "select",
+          "label": "Luggage",
+          "options": [
+            {
+              "value": "carry-on-only",
+              "label": "Carry-on only"
+            },
+            {
+              "value": "1-2-bags",
+              "label": "1-2 bags"
+            },
+            {
+              "value": "3-bags",
+              "label": "3+ bags"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-052",
+    "domain": "travel",
+    "prompt": "Travel insurance quote",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Travel Insurance Quote",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "destination",
+          "type": "text",
+          "label": "Destination",
+          "required": true
+        },
+        {
+          "id": "tripCost",
+          "type": "number",
+          "label": "Trip Cost",
+          "required": true
+        },
+        {
+          "id": "travelers",
+          "type": "number",
+          "label": "Number of Travelers",
+          "required": true
+        },
+        {
+          "id": "coverage",
+          "type": "radio",
+          "label": "Coverage Level",
+          "required": true,
+          "options": [
+            {
+              "value": "basic",
+              "label": "Basic"
+            },
+            {
+              "value": "standard",
+              "label": "Standard"
+            },
+            {
+              "value": "premium",
+              "label": "Premium"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-053",
+    "domain": "travel",
+    "prompt": "Visa pre-screening questionnaire",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Visa Pre-screening",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "nationality",
+          "type": "text",
+          "label": "Nationality",
+          "required": true
+        },
+        {
+          "id": "passportNumber",
+          "type": "text",
+          "label": "Passport Number",
+          "required": true
+        },
+        {
+          "id": "purpose",
+          "type": "select",
+          "label": "Purpose of Visit",
+          "required": true,
+          "options": [
+            {
+              "value": "tourism",
+              "label": "Tourism"
+            },
+            {
+              "value": "business",
+              "label": "Business"
+            },
+            {
+              "value": "study",
+              "label": "Study"
+            },
+            {
+              "value": "transit",
+              "label": "Transit"
+            }
+          ]
+        },
+        {
+          "id": "arrivalDate",
+          "type": "date",
+          "label": "Intended Arrival",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-054",
+    "domain": "travel",
+    "prompt": "Car rental reservation",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Car Rental Reservation",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "licenseNumber",
+          "type": "text",
+          "label": "Driver License Number",
+          "required": true
+        },
+        {
+          "id": "pickupDate",
+          "type": "date",
+          "label": "Pickup Date",
+          "required": true
+        },
+        {
+          "id": "returnDate",
+          "type": "date",
+          "label": "Return Date",
+          "required": true
+        },
+        {
+          "id": "carClass",
+          "type": "select",
+          "label": "Car Class",
+          "required": true,
+          "options": [
+            {
+              "value": "economy",
+              "label": "Economy"
+            },
+            {
+              "value": "compact",
+              "label": "Compact"
+            },
+            {
+              "value": "suv",
+              "label": "SUV"
+            },
+            {
+              "value": "luxury",
+              "label": "Luxury"
+            }
+          ]
+        },
+        {
+          "id": "insurance",
+          "type": "checkbox",
+          "label": "Add full insurance"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-055",
+    "domain": "nonprofit",
+    "prompt": "Donation form for an animal shelter",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Donate to the Shelter",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "amount",
+          "type": "select",
+          "label": "Donation Amount",
+          "required": true,
+          "options": [
+            {
+              "value": "10",
+              "label": "$10"
+            },
+            {
+              "value": "25",
+              "label": "$25"
+            },
+            {
+              "value": "50",
+              "label": "$50"
+            },
+            {
+              "value": "100",
+              "label": "$100"
+            },
+            {
+              "value": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "id": "recurring",
+          "type": "checkbox",
+          "label": "Make this a monthly donation"
+        },
+        {
+          "id": "dedication",
+          "type": "text",
+          "label": "In honor of"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-056",
+    "domain": "nonprofit",
+    "prompt": "Food bank assistance request",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Food Assistance Request",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "phone",
+          "type": "text",
+          "label": "Phone Number"
+        },
+        {
+          "id": "householdSize",
+          "type": "number",
+          "label": "Household Size",
+          "required": true
+        },
+        {
+          "id": "address",
+          "type": "text",
+          "label": "Address",
+          "required": true
+        },
+        {
+          "id": "dietary",
+          "type": "textarea",
+          "label": "Dietary Needs"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-057",
+    "domain": "nonprofit",
+    "prompt": "Grant application for a community project",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Community Grant Application",
+      "fields": [
+        {
+          "id": "orgName",
+          "type": "text",
+          "label": "Organization Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "amountRequested",
+          "type": "number",
+          "label": "Amount Requested",
+          "required": true
+        },
+        {
+          "id": "projectSummary",
+          "type": "textarea",
+          "label": "Project Summary",
+          "required": true
+        },
+        {
+          "id": "startDate",
+          "type": "date",
+          "label": "Project Start Date"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-058",
+    "domain": "nonprofit",
+    "prompt": "Mentor program application",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Mentor Application",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "expertise",
+          "type": "select",
+          "label": "Area of Expertise",
+          "required": true,
+          "options": [
+            {
+              "value": "engineering",
+              "label": "Engineering"
+            },
+            {
+              "value": "design",
+              "label": "Design"
+            },
+            {
+              "value": "business",
+              "label": "Business"
+            },
+            {
+              "value": "healthcare",
+              "label": "Healthcare"
+            }
+          ]
+        },
+        {
+          "id": "hoursPerMonth",
+          "type": "number",
+          "label": "Hours per Month",
+          "required": true
+        },
+        {
+          "id": "motivation",
+          "type": "textarea",
+          "label": "Why do you want to mentor?"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-059",
+    "domain": "nonprofit",
+    "prompt": "Adopt a pet application",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Pet Adoption Application",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "petName",
+          "type": "text",
+          "label": "Pet You Are Interested In",
+          "required": true
+        },
+        {
+          "id": "homeType",
+          "type": "radio",
+          "label": "Home Type",
+          "required": true,
+          "options": [
+            {
+              "value": "house",
+              "label": "House"
+            },
+            {
+              "value": "apartment",
+              "label": "Apartment"
+            }
+          ]
+        },
+        {
+          "id": "otherPets",
+          "type": "radio",
+          "label": "Other pets at home?",
+          "options": [
+            {
+              "value": "yes",
+              "label": "Yes"
+            },
+            {
+              "value": "no",
+              "label": "No"
+            }
+          ]
+        },
+        {
+          "id": "experience",
+          "type": "textarea",
+          "label": "Previous Pet Experience"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-060",
+    "domain": "nonprofit",
+    "prompt": "Neighborhood cleanup volunteer registration",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Cleanup Day Registration",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "group",
+          "type": "text",
+          "label": "Group or Organization"
+        },
+        {
+          "id": "attendees",
+          "type": "number",
+          "label": "Number of Attendees",
+          "required": true
+        },
+        {
+          "id": "tools",
+          "type": "checkbox",
+          "label": "I can bring my own tools"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-061",
+    "domain": "legal",
+    "prompt": "New client intake for a law firm",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Client Intake",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "phone",
+          "type": "text",
+          "label": "Phone Number"
+        },
+        {
+          "id": "matterType",
+          "type": "select",
+          "label": "Matter Type",
+          "required": true,
+          "options": [
+            {
+              "value": "family",
+              "label": "Family"
+            },
+            {
+              "value": "immigration",
+              "label": "Immigration"
+            },
+            {
+              "value": "employment",
+              "label": "Employment"
+            },
+            {
+              "value": "real-estate",
+              "label": "Real Estate"
+            },
+            {
+              "value": "criminal",
+              "label": "Criminal"
+            }
+          ]
+        },
+        {
+          "id": "summary",
+          "type": "textarea",
+          "label": "Brief Summary of Your Matter",
+          "required": true
+        },
+        {
+          "id": "conflict",
+          "type": "text",
+          "label": "Names of Opposing Parties"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-062",
+    "domain": "legal",
+    "prompt": "Non-disclosure agreement request",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "NDA Request",
+      "fields": [
+        {
+          "id": "requester",
+          "type": "text",
+          "label": "Your Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "counterparty",
+          "type": "text",
+          "label": "Counterparty Company",
+          "required": true
+        },
+        {
+          "id": "ndaType",
+          "type": "radio",
+          "label": "NDA Type",
+          "required": true,
+          "options": [
+            {
+              "value": "mutual",
+              "label": "Mutual"
+            },
+            {
+              "value": "one-way",
+              "label": "One-way"
+            }
+          ]
+        },
+        {
+          "id": "term",
+          "type": "select",
+          "label": "Term",
+          "options": [
+            {
+              "value": "1-year",
+              "label": "1 year"
+            },
+            {
+              "value": "2-years",
+              "label": "2 years"
+            },
+            {
+              "value": "5-years",
+              "label": "5 years"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-063",
+    "domain": "legal",
+    "prompt": "Data subject access request under GDPR",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Data Access Request",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "requestType",
+          "type": "select",
+          "label": "Request Type",
+          "required": true,
+          "options": [
+            {
+              "value": "access",
+              "label": "Access"
+            },
+            {
+              "value": "deletion",
+              "label": "Deletion"
+            },
+            {
+              "value": "correction",
+              "label": "Correction"
+            },
+            {
+              "value": "portability",
+              "label": "Portability"
+            }
+          ]
+        },
+        {
+          "id": "details",
+          "type": "textarea",
+          "label": "Details of Request"
+        },
+        {
+          "id": "identityConfirm",
+          "type": "checkbox",
+          "label": "I confirm I am the data subject",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-064",
+    "domain": "legal",
+    "prompt": "Contract review submission",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Contract Review Request",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "contractType",
+          "type": "text",
+          "label": "Contract Type",
+          "required": true
+        },
+        {
+          "id": "deadline",
+          "type": "date",
+          "label": "Needed By",
+          "required": true
+        },
+        {
+          "id": "urgency",
+          "type": "radio",
+          "label": "Urgency",
+          "options": [
+            {
+              "value": "standard",
+              "label": "Standard"
+            },
+            {
+              "value": "rush",
+              "label": "Rush"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-065",
+    "domain": "legal",
+    "prompt": "Trademark inquiry",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Trademark Inquiry",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "markText",
+          "type": "text",
+          "label": "Proposed Mark",
+          "required": true
+        },
+        {
+          "id": "goods",
+          "type": "textarea",
+          "label": "Goods or Services",
+          "required": true
+        },
+        {
+          "id": "country",
+          "type": "text",
+          "label": "Country of Filing",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-066",
+    "domain": "legal",
+    "prompt": "Witness statement form",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Witness Statement",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "incidentDate",
+          "type": "date",
+          "label": "Date of Incident",
+          "required": true
+        },
+        {
+          "id": "location",
+          "type": "text",
+          "label": "Location",
+          "required": true
+        },
+        {
+          "id": "statement",
+          "type": "textarea",
+          "label": "Your Statement",
+          "required": true
+        },
+        {
+          "id": "truthful",
+          "type": "checkbox",
+          "label": "I declare this statement is true",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-067",
+    "domain": "government",
+    "prompt": "Business permit application",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Business Permit Application",
+      "fields": [
+        {
+          "id": "businessName",
+          "type": "text",
+          "label": "Business Name",
+          "required": true
+        },
+        {
+          "id": "ownerName",
+          "type": "text",
+          "label": "Owner Name",
+          "required": true
+        },
+        {
+          "id": "businessType",
+          "type": "select",
+          "label": "Business Type",
+          "required": true,
+          "options": [
+            {
+              "value": "retail",
+              "label": "Retail"
+            },
+            {
+              "value": "restaurant",
+              "label": "Restaurant"
+            },
+            {
+              "value": "services",
+              "label": "Services"
+            },
+            {
+              "value": "manufacturing",
+              "label": "Manufacturing"
+            }
+          ]
+        },
+        {
+          "id": "address",
+          "type": "text",
+          "label": "Business Address",
+          "required": true
+        },
+        {
+          "id": "employees",
+          "type": "number",
+          "label": "Number of Employees"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-068",
+    "domain": "government",
+    "prompt": "Pothole report for city maintenance",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Report a Pothole",
+      "fields": [
+        {
+          "id": "location",
+          "type": "text",
+          "label": "Street and Cross Street",
+          "required": true
+        },
+        {
+          "id": "severity",
+          "type": "radio",
+          "label": "Severity",
+          "required": true,
+          "options": [
+            {
+              "value": "minor",
+              "label": "Minor"
+            },
+            {
+              "value": "moderate",
+              "label": "Moderate"
+            },
+            {
+              "value": "severe",
+              "label": "Severe"
+            }
+          ]
+        },
+        {
+          "id": "description",
+          "type": "textarea",
+          "label": "Description"
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-069",
+    "domain": "government",
+    "prompt": "Voter registration form",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Voter Registration",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "dob",
+          "type": "date",
+          "label": "Date of Birth",
+          "required": true
+        },
+        {
+          "id": "address",
+          "type": "text",
+          "label": "Residential Address",
+          "required": true
+        },
+        {
+          "id": "citizen",
+          "type": "checkbox",
+          "label": "I am a citizen",
+          "required": true
+        },
+        {
+          "id": "party",
+          "type": "select",
+          "label": "Party Affiliation",
+          "options": [
+            {
+              "value": "none",
+              "label": "None"
+            },
+            {
+              "value": "democratic",
+              "label": "Democratic"
+            },
+            {
+              "value": "republican",
+              "label": "Republican"
+            },
+            {
+              "value": "other",
+              "label": "Other"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-070",
+    "domain": "government",
+    "prompt": "Public records request",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Records Request",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "agency",
+          "type": "text",
+          "label": "Agency",
+          "required": true
+        },
+        {
+          "id": "recordsDescription",
+          "type": "textarea",
+          "label": "Records Requested",
+          "required": true
+        },
+        {
+          "id": "feeWaiver",
+          "type": "checkbox",
+          "label": "Request a fee waiver"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-071",
+    "domain": "government",
+    "prompt": "Parking permit application for residents",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Parking Permit Application",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "address",
+          "type": "text",
+          "label": "Home Address",
+          "required": true
+        },
+        {
+          "id": "plate",
+          "type": "text",
+          "label": "License Plate",
+          "required": true
+        },
+        {
+          "id": "vehicleMake",
+          "type": "text",
+          "label": "Vehicle Make"
+        },
+        {
+          "id": "proofOfResidence",
+          "type": "radio",
+          "label": "Proof of Residence Type",
+          "required": true,
+          "options": [
+            {
+              "value": "utility-bill",
+              "label": "Utility bill"
+            },
+            {
+              "value": "lease",
+              "label": "Lease"
+            },
+            {
+              "value": "tax-statement",
+              "label": "Tax statement"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-072",
+    "domain": "government",
+    "prompt": "Community meeting public comment signup",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Public Comment Signup",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "topic",
+          "type": "text",
+          "label": "Agenda Item",
+          "required": true
+        },
+        {
+          "id": "position",
+          "type": "radio",
+          "label": "Your Position",
+          "options": [
+            {
+              "value": "for",
+              "label": "For"
+            },
+            {
+              "value": "against",
+              "label": "Against"
+            },
+            {
+              "value": "neutral",
+              "label": "Neutral"
+            }
+          ]
+        },
+        {
+          "id": "minutes",
+          "type": "number",
+          "label": "Minutes Requested"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-073",
+    "domain": "restaurants",
+    "prompt": "Table reservation form for a restaurant",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Reserve a Table",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "phone",
+          "type": "text",
+          "label": "Phone Number"
+        },
+        {
+          "id": "date",
+          "type": "date",
+          "label": "Date",
+          "required": true
+        },
+        {
+          "id": "partySize",
+          "type": "number",
+          "label": "Party Size",
+          "required": true
+        },
+        {
+          "id": "seating",
+          "type": "radio",
+          "label": "Seating Preference",
+          "options": [
+            {
+              "value": "indoor",
+              "label": "Indoor"
+            },
+            {
+              "value": "outdoor",
+              "label": "Outdoor"
+            },
+            {
+              "value": "bar",
+              "label": "Bar"
+            }
+          ]
+        },
+        {
+          "id": "occasion",
+          "type": "select",
+          "label": "Occasion",
+          "options": [
+            {
+              "value": "birthday",
+              "label": "Birthday"
+            },
+            {
+              "value": "anniversary",
+              "label": "Anniversary"
+            },
+            {
+              "value": "business",
+              "label": "Business"
+            },
+            {
+              "value": "none",
+              "label": "None"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-074",
+    "domain": "restaurants",
+    "prompt": "Catering order request",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Catering Request",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "eventDate",
+          "type": "date",
+          "label": "Event Date",
+          "required": true
+        },
+        {
+          "id": "guests",
+          "type": "number",
+          "label": "Number of Guests",
+          "required": true
+        },
+        {
+          "id": "menu",
+          "type": "select",
+          "label": "Menu",
+          "required": true,
+          "options": [
+            {
+              "value": "buffet",
+              "label": "Buffet"
+            },
+            {
+              "value": "plated",
+              "label": "Plated"
+            },
+            {
+              "value": "cocktail",
+              "label": "Cocktail"
+            },
+            {
+              "value": "custom",
+              "label": "Custom"
+            }
+          ]
+        },
+        {
+          "id": "dietary",
+          "type": "textarea",
+          "label": "Dietary Restrictions"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-075",
+    "domain": "restaurants",
+    "prompt": "Customer dining feedback",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Dining Feedback",
+      "fields": [
+        {
+          "id": "visitDate",
+          "type": "date",
+          "label": "Date of Visit",
+          "required": true
+        },
+        {
+          "id": "food",
+          "type": "select",
+          "label": "Food Quality",
+          "required": true,
+          "options": [
+            {
+              "value": "poor",
+              "label": "Poor"
+            },
+            {
+              "value": "fair",
+              "label": "Fair"
+            },
+            {
+              "value": "good",
+              "label": "Good"
+            },
+            {
+              "value": "excellent",
+              "label": "Excellent"
+            }
+          ]
+        },
+        {
+          "id": "service",
+          "type": "select",
+          "label": "Service",
+          "required": true,
+          "options": [
+            {
+              "value": "poor",
+              "label": "Poor"
+            },
+            {
+              "value": "fair",
+              "label": "Fair"
+            },
+            {
+              "value": "good",
+              "label": "Good"
+            },
+            {
+              "value": "excellent",
+              "label": "Excellent"
+            }
+          ]
+        },
+        {
+          "id": "comments",
+          "type": "textarea",
+          "label": "Comments"
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-076",
+    "domain": "restaurants",
+    "prompt": "Food truck event booking",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Book the Food Truck",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "eventType",
+          "type": "text",
+          "label": "Event Type",
+          "required": true
+        },
+        {
+          "id": "eventDate",
+          "type": "date",
+          "label": "Event Date",
+          "required": true
+        },
+        {
+          "id": "location",
+          "type": "text",
+          "label": "Location",
+          "required": true
+        },
+        {
+          "id": "attendees",
+          "type": "number",
+          "label": "Expected Attendees"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-077",
+    "domain": "restaurants",
+    "prompt": "Cafe job application for baristas",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Barista Application",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "phone",
+          "type": "text",
+          "label": "Phone Number"
+        },
+        {
+          "id": "availability",
+          "type": "select",
+          "label": "Availability",
+          "required": true,
+          "options": [
+            {
+              "value": "weekdays",
+              "label": "Weekdays"
+            },
+            {
+              "value": "weekends",
+              "label": "Weekends"
+            },
+            {
+              "value": "both",
+              "label": "Both"
+            }
+          ]
+        },
+        {
+          "id": "experience",
+          "type": "textarea",
+          "label": "Previous Experience"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-078",
+    "domain": "restaurants",
+    "prompt": "Online takeout order form",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Takeout Order",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "phone",
+          "type": "text",
+          "label": "Phone Number"
+        },
+        {
+          "id": "items",
+          "type": "textarea",
+          "label": "Order Items",
+          "required": true
+        },
+        {
+          "id": "pickupTime",
+          "type": "text",
+          "label": "Pickup Time",
+          "required": true
+        },
+        {
+          "id": "payment",
+          "type": "radio",
+          "label": "Payment Method",
+          "required": true,
+          "options": [
+            {
+              "value": "pay-at-pickup",
+              "label": "Pay at pickup"
+            },
+            {
+              "value": "card",
+              "label": "Card"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-079",
+    "domain": "fitness",
+    "prompt": "Gym membership signup",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Join the Gym",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "plan",
+          "type": "radio",
+          "label": "Membership Plan",
+          "required": true,
+          "options": [
+            {
+              "value": "monthly",
+              "label": "Monthly"
+            },
+            {
+              "value": "annual",
+              "label": "Annual"
+            },
+            {
+              "value": "day-pass",
+              "label": "Day pass"
+            }
+          ]
+        },
+        {
+          "id": "startDate",
+          "type": "date",
+          "label": "Start Date",
+          "required": true
+        },
+        {
+          "id": "goals",
+          "type": "select",
+          "label": "Primary Goal",
+          "options": [
+            {
+              "value": "lose-weight",
+              "label": "Lose weight"
+            },
+            {
+              "value": "build-muscle",
+              "label": "Build muscle"
+            },
+            {
+              "value": "endurance",
+              "label": "Endurance"
+            },
+            {
+              "value": "general-health",
+              "label": "General health"
+            }
+          ]
+        },
+        {
+          "id": "waiver",
+          "type": "checkbox",
+          "label": "I accept the liability waiver",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-080",
+    "domain": "fitness",
+    "prompt": "Personal training consultation request",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Training Consultation",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "age",
+          "type": "number",
+          "label": "Age",
+          "required": true
+        },
+        {
+          "id": "fitnessLevel",
+          "type": "select",
+          "label": "Fitness Level",
+          "required": true,
+          "options": [
+            {
+              "value": "beginner",
+              "label": "Beginner"
+            },
+            {
+              "value": "intermediate",
+              "label": "Intermediate"
+            },
+            {
+              "value": "advanced",
+              "label": "Advanced"
+            }
+          ]
+        },
+        {
+          "id": "injuries",
+          "type": "textarea",
+          "label": "Injuries or Limitations"
+        },
+        {
+          "id": "sessionsPerWeek",
+          "type": "number",
+          "label": "Sessions per Week"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-081",
+    "domain": "fitness",
+    "prompt": "Yoga class booking",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Book a Yoga Class",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "classType",
+          "type": "select",
+          "label": "Class Type",
+          "required": true,
+          "options": [
+            {
+              "value": "vinyasa",
+              "label": "Vinyasa"
+            },
+            {
+              "value": "hatha",
+              "label": "Hatha"
+            },
+            {
+              "value": "yin",
+              "label": "Yin"
+            },
+            {
+              "value": "restorative",
+              "label": "Restorative"
+            }
+          ]
+        },
+        {
+          "id": "date",
+          "type": "date",
+          "label": "Class Date",
+          "required": true
+        },
+        {
+          "id": "firstTime",
+          "type": "checkbox",
+          "label": "This is my first class"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-082",
+    "domain": "fitness",
+    "prompt": "Marathon race registration",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Marathon Registration",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "dob",
+          "type": "date",
+          "label": "Date of Birth",
+          "required": true
+        },
+        {
+          "id": "distance",
+          "type": "radio",
+          "label": "Distance",
+          "required": true,
+          "options": [
+            {
+              "value": "5k",
+              "label": "5K"
+            },
+            {
+              "value": "10k",
+              "label": "10K"
+            },
+            {
+              "value": "half-marathon",
+              "label": "Half Marathon"
+            },
+            {
+              "value": "full-marathon",
+              "label": "Full Marathon"
+            }
+          ]
+        },
+        {
+          "id": "finishTime",
+          "type": "text",
+          "label": "Estimated Finish Time"
+        },
+        {
+          "id": "emergencyContact",
+          "type": "text",
+          "label": "Emergency Contact",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-083",
+    "domain": "fitness",
+    "prompt": "Nutrition coaching intake",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Nutrition Intake",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "weight",
+          "type": "number",
+          "label": "Current Weight in kg",
+          "required": true
+        },
+        {
+          "id": "diet",
+          "type": "select",
+          "label": "Current Diet",
+          "options": [
+            {
+              "value": "omnivore",
+              "label": "Omnivore"
+            },
+            {
+              "value": "vegetarian",
+              "label": "Vegetarian"
+            },
+            {
+              "value": "vegan",
+              "label": "Vegan"
+            },
+            {
+              "value": "keto",
+              "label": "Keto"
+            }
+          ]
+        },
+        {
+          "id": "allergies",
+          "type": "textarea",
+          "label": "Food Allergies"
+        },
+        {
+          "id": "goal",
+          "type": "textarea",
+          "label": "Your Goal",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-084",
+    "domain": "fitness",
+    "prompt": "Youth sports league registration",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Youth League Registration",
+      "fields": [
+        {
+          "id": "playerName",
+          "type": "text",
+          "label": "Player Name",
+          "required": true
+        },
+        {
+          "id": "dob",
+          "type": "date",
+          "label": "Date of Birth",
+          "required": true
+        },
+        {
+          "id": "sport",
+          "type": "select",
+          "label": "Sport",
+          "required": true,
+          "options": [
+            {
+              "value": "soccer",
+              "label": "Soccer"
+            },
+            {
+              "value": "basketball",
+              "label": "Basketball"
+            },
+            {
+              "value": "baseball",
+              "label": "Baseball"
+            }
+          ]
+        },
+        {
+          "id": "guardianEmail",
+          "type": "email",
+          "label": "Guardian Email",
+          "required": true
+        },
+        {
+          "id": "medical",
+          "type": "textarea",
+          "label": "Medical Conditions"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-085",
+    "domain": "support",
+    "prompt": "Customer support ticket form",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Contact Support",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "category",
+          "type": "select",
+          "label": "Category",
+          "required": true,
+          "options": [
+            {
+              "value": "billing",
+              "label": "Billing"
+            },
+            {
+              "value": "technical",
+              "label": "Technical"
+            },
+            {
+              "value": "account",
+              "label": "Account"
+            },
+            {
+              "value": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "id": "subject",
+          "type": "text",
+          "label": "Subject",
+          "required": true
+        },
+        {
+          "id": "message",
+          "type": "textarea",
+          "label": "How can we help?",
+          "required": true
+        },
+        {
+          "id": "orderId",
+          "type": "text",
+          "label": "Order ID"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-086",
+    "domain": "support",
+    "prompt": "Warranty claim registration",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Warranty Claim",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "serialNumber",
+          "type": "text",
+          "label": "Serial Number",
+          "required": true
+        },
+        {
+          "id": "purchaseDate",
+          "type": "date",
+          "label": "Purchase Date",
+          "required": true
+        },
+        {
+          "id": "problem",
+          "type": "textarea",
+          "label": "Describe the Problem",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-087",
+    "domain": "support",
+    "prompt": "Net promoter score survey",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "How Did We Do?",
+      "fields": [
+        {
+          "id": "score",
+          "type": "select",
+          "label": "How likely are you to recommend us?",
+          "required": true,
+          "options": [
+            {
+              "value": "0",
+              "label": "0"
+            },
+            {
+              "value": "1",
+              "label": "1"
+            },
+            {
+              "value": "2",
+              "label": "2"
+            },
+            {
+              "value": "3",
+              "label": "3"
+            },
+            {
+              "value": "4",
+              "label": "4"
+            },
+            {
+              "value": "5",
+              "label": "5"
+            },
+            {
+              "value": "6",
+              "label": "6"
+            },
+            {
+              "value": "7",
+              "label": "7"
+            },
+            {
+              "value": "8",
+              "label": "8"
+            },
+            {
+              "value": "9",
+              "label": "9"
+            },
+            {
+              "value": "10",
+              "label": "10"
+            }
+          ]
+        },
+        {
+          "id": "reason",
+          "type": "textarea",
+          "label": "What is the main reason for your score?"
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "followUp",
+          "type": "checkbox",
+          "label": "You may contact me about my feedback"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-088",
+    "domain": "support",
+    "prompt": "Complaint escalation form",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Escalate a Complaint",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "ticketId",
+          "type": "text",
+          "label": "Original Ticket ID",
+          "required": true
+        },
+        {
+          "id": "details",
+          "type": "textarea",
+          "label": "Why are you escalating?",
+          "required": true
+        },
+        {
+          "id": "desiredOutcome",
+          "type": "select",
+          "label": "Desired Outcome",
+          "required": true,
+          "options": [
+            {
+              "value": "refund",
+              "label": "Refund"
+            },
+            {
+              "value": "replacement",
+              "label": "Replacement"
+            },
+            {
+              "value": "apology",
+              "label": "Apology"
+            },
+            {
+              "value": "other",
+              "label": "Other"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-089",
+    "domain": "support",
+    "prompt": "Accessibility feedback for a website",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Accessibility Feedback",
+      "fields": [
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "pageUrl",
+          "type": "text",
+          "label": "Page URL",
+          "required": true
+        },
+        {
+          "id": "assistiveTech",
+          "type": "text",
+          "label": "Assistive Technology Used"
+        },
+        {
+          "id": "issue",
+          "type": "textarea",
+          "label": "Describe the Barrier",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-090",
+    "domain": "support",
+    "prompt": "Delivery issue report",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Report a Delivery Problem",
+      "fields": [
+        {
+          "id": "orderNumber",
+          "type": "text",
+          "label": "Order Number",
+          "required": true
+        },
+        {
+          "id": "issue",
+          "type": "radio",
+          "label": "What happened?",
+          "required": true,
+          "options": [
+            {
+              "value": "late",
+              "label": "Late"
+            },
+            {
+              "value": "damaged",
+              "label": "Damaged"
+            },
+            {
+              "value": "missing-items",
+              "label": "Missing items"
+            },
+            {
+              "value": "wrong-address",
+              "label": "Wrong address"
+            }
+          ]
+        },
+        {
+          "id": "details",
+          "type": "textarea",
+          "label": "Details"
+        },
+        {
+          "id": "phone",
+          "type": "text",
+          "label": "Phone Number"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-091",
+    "domain": "research",
+    "prompt": "Consent and demographics for a psychology study",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Study Participation",
+      "fields": [
+        {
+          "id": "participantId",
+          "type": "text",
+          "label": "Participant ID",
+          "required": true
+        },
+        {
+          "id": "age",
+          "type": "number",
+          "label": "Age",
+          "required": true
+        },
+        {
+          "id": "gender",
+          "type": "select",
+          "label": "Gender",
+          "options": [
+            {
+              "value": "female",
+              "label": "Female"
+            },
+            {
+              "value": "male",
+              "label": "Male"
+            },
+            {
+              "value": "non-binary",
+              "label": "Non-binary"
+            },
+            {
+              "value": "prefer-not-to-say",
+              "label": "Prefer not to say"
+            }
+          ]
+        },
+        {
+          "id": "education",
+          "type": "select",
+          "label": "Highest Education",
+          "options": [
+            {
+              "value": "high-school",
+              "label": "High school"
+            },
+            {
+              "value": "bachelor",
+              "label": "Bachelor"
+            },
+            {
+              "value": "master",
+              "label": "Master"
+            },
+            {
+              "value": "doctorate",
+              "label": "Doctorate"
+            }
+          ]
+        },
+        {
+          "id": "consent",
+          "type": "checkbox",
+          "label": "I give informed consent",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-092",
+    "domain": "research",
+    "prompt": "Usability test screener survey",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Usability Study Screener",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "usage",
+          "type": "radio",
+          "label": "How often do you use our product?",
+          "required": true,
+          "options": [
+            {
+              "value": "daily",
+              "label": "Daily"
+            },
+            {
+              "value": "weekly",
+              "label": "Weekly"
+            },
+            {
+              "value": "monthly",
+              "label": "Monthly"
+            },
+            {
+              "value": "never",
+              "label": "Never"
+            }
+          ]
+        },
+        {
+          "id": "device",
+          "type": "select",
+          "label": "Primary Device",
+          "required": true,
+          "options": [
+            {
+              "value": "desktop",
+              "label": "Desktop"
+            },
+            {
+              "value": "laptop",
+              "label": "Laptop"
+            },
+            {
+              "value": "tablet",
+              "label": "Tablet"
+            },
+            {
+              "value": "phone",
+              "label": "Phone"
+            }
+          ]
+        },
+        {
+          "id": "availability",
+          "type": "textarea",
+          "label": "Your Availability"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-093",
+    "domain": "research",
+    "prompt": "Lab equipment booking",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Equipment Booking",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "equipment",
+          "type": "select",
+          "label": "Equipment",
+          "required": true,
+          "options": [
+            {
+              "value": "microscope",
+              "label": "Microscope"
+            },
+            {
+              "value": "centrifuge",
+              "label": "Centrifuge"
+            },
+            {
+              "value": "spectrometer",
+              "label": "Spectrometer"
+            }
+          ]
+        },
+        {
+          "id": "date",
+          "type": "date",
+          "label": "Date",
+          "required": true
+        },
+        {
+          "id": "hours",
+          "type": "number",
+          "label": "Hours Needed",
+          "required": true
+        },
+        {
+          "id": "projectCode",
+          "type": "text",
+          "label": "Project Code",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-094",
+    "domain": "research",
+    "prompt": "Conference paper submission",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Paper Submission",
+      "fields": [
+        {
+          "id": "title",
+          "type": "text",
+          "label": "Paper Title",
+          "required": true
+        },
+        {
+          "id": "authors",
+          "type": "text",
+          "label": "Authors",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "abstract",
+          "type": "textarea",
+          "label": "Abstract",
+          "required": true
+        },
+        {
+          "id": "track",
+          "type": "select",
+          "label": "Track",
+          "required": true,
+          "options": [
+            {
+              "value": "machine-learning",
+              "label": "Machine Learning"
+            },
+            {
+              "value": "systems",
+              "label": "Systems"
+            },
+            {
+              "value": "security",
+              "label": "Security"
+            },
+            {
+              "value": "hci",
+              "label": "HCI"
+            }
+          ]
+        },
+        {
+          "id": "originalWork",
+          "type": "checkbox",
+          "label": "This work is original",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-095",
+    "domain": "research",
+    "prompt": "Peer review assignment response",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Reviewer Response",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "paperId",
+          "type": "text",
+          "label": "Paper ID",
+          "required": true
+        },
+        {
+          "id": "decision",
+          "type": "radio",
+          "label": "Will you review?",
+          "required": true,
+          "options": [
+            {
+              "value": "accept",
+              "label": "Accept"
+            },
+            {
+              "value": "decline",
+              "label": "Decline"
+            }
+          ]
+        },
+        {
+          "id": "conflict",
+          "type": "checkbox",
+          "label": "I have a conflict of interest"
+        },
+        {
+          "id": "comments",
+          "type": "textarea",
+          "label": "Comments"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-096",
+    "domain": "research",
+    "prompt": "Field survey on local biodiversity",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Biodiversity Field Survey",
+      "fields": [
+        {
+          "id": "observer",
+          "type": "text",
+          "label": "Observer",
+          "required": true
+        },
+        {
+          "id": "date",
+          "type": "date",
+          "label": "Date",
+          "required": true
+        },
+        {
+          "id": "location",
+          "type": "text",
+          "label": "Location",
+          "required": true
+        },
+        {
+          "id": "species",
+          "type": "text",
+          "label": "Species Observed",
+          "required": true
+        },
+        {
+          "id": "count",
+          "type": "number",
+          "label": "Count",
+          "required": true
+        },
+        {
+          "id": "notes",
+          "type": "textarea",
+          "label": "Habitat Notes"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-097",
+    "domain": "it",
+    "prompt": "IT helpdesk request for new hardware",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Hardware Request",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "department",
+          "type": "text",
+          "label": "Department",
+          "required": true
+        },
+        {
+          "id": "device",
+          "type": "select",
+          "label": "Device",
+          "required": true,
+          "options": [
+            {
+              "value": "laptop",
+              "label": "Laptop"
+            },
+            {
+              "value": "monitor",
+              "label": "Monitor"
+            },
+            {
+              "value": "keyboard",
+              "label": "Keyboard"
+            },
+            {
+              "value": "headset",
+              "label": "Headset"
+            }
+          ]
+        },
+        {
+          "id": "justification",
+          "type": "textarea",
+          "label": "Business Justification",
+          "required": true
+        },
+        {
+          "id": "manager",
+          "type": "text",
+          "label": "Manager Name",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-098",
+    "domain": "it",
+    "prompt": "Access request for a production system",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Production Access Request",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "system",
+          "type": "text",
+          "label": "System",
+          "required": true
+        },
+        {
+          "id": "accessLevel",
+          "type": "radio",
+          "label": "Access Level",
+          "required": true,
+          "options": [
+            {
+              "value": "read-only",
+              "label": "Read-only"
+            },
+            {
+              "value": "read-write",
+              "label": "Read-write"
+            },
+            {
+              "value": "admin",
+              "label": "Admin"
+            }
+          ]
+        },
+        {
+          "id": "duration",
+          "type": "select",
+          "label": "Duration",
+          "required": true,
+          "options": [
+            {
+              "value": "1-day",
+              "label": "1 day"
+            },
+            {
+              "value": "1-week",
+              "label": "1 week"
+            },
+            {
+              "value": "1-month",
+              "label": "1 month"
+            },
+            {
+              "value": "permanent",
+              "label": "Permanent"
+            }
+          ]
+        },
+        {
+          "id": "reason",
+          "type": "textarea",
+          "label": "Reason",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-099",
+    "domain": "it",
+    "prompt": "Security incident report",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Security Incident Report",
+      "fields": [
+        {
+          "id": "reporter",
+          "type": "text",
+          "label": "Reporter",
+          "required": true
+        },
+        {
+          "id": "incidentType",
+          "type": "select",
+          "label": "Incident Type",
+          "required": true,
+          "options": [
+            {
+              "value": "phishing",
+              "label": "Phishing"
+            },
+            {
+              "value": "malware",
+              "label": "Malware"
+            },
+            {
+              "value": "data-leak",
+              "label": "Data leak"
+            },
+            {
+              "value": "lost-device",
+              "label": "Lost device"
+            },
+            {
+              "value": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "id": "detectedAt",
+          "type": "date",
+          "label": "Date Detected",
+          "required": true
+        },
+        {
+          "id": "description",
+          "type": "textarea",
+          "label": "What happened?",
+          "required": true
+        },
+        {
+          "id": "dataInvolved",
+          "type": "checkbox",
+          "label": "Sensitive data may be involved"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-100",
+    "domain": "it",
+    "prompt": "Change request for deployment",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Change Request",
+      "fields": [
+        {
+          "id": "title",
+          "type": "text",
+          "label": "Change Title",
+          "required": true
+        },
+        {
+          "id": "environment",
+          "type": "radio",
+          "label": "Environment",
+          "required": true,
+          "options": [
+            {
+              "value": "staging",
+              "label": "Staging"
+            },
+            {
+              "value": "production",
+              "label": "Production"
+            }
+          ]
+        },
+        {
+          "id": "riskLevel",
+          "type": "select",
+          "label": "Risk Level",
+          "required": true,
+          "options": [
+            {
+              "value": "low",
+              "label": "Low"
+            },
+            {
+              "value": "medium",
+              "label": "Medium"
+            },
+            {
+              "value": "high",
+              "label": "High"
+            }
+          ]
+        },
+        {
+          "id": "rollbackPlan",
+          "type": "textarea",
+          "label": "Rollback Plan",
+          "required": true
+        },
+        {
+          "id": "scheduledFor",
+          "type": "date",
+          "label": "Scheduled Date",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-101",
+    "domain": "it",
+    "prompt": "Software license request",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "License Request",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "software",
+          "type": "text",
+          "label": "Software Name",
+          "required": true
+        },
+        {
+          "id": "seats",
+          "type": "number",
+          "label": "Number of Seats",
+          "required": true
+        },
+        {
+          "id": "costCenter",
+          "type": "text",
+          "label": "Cost Center"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-102",
+    "domain": "it",
+    "prompt": "Open source project contributor onboarding",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Contributor Onboarding",
+      "fields": [
+        {
+          "id": "githubHandle",
+          "type": "text",
+          "label": "GitHub Handle",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "areas",
+          "type": "select",
+          "label": "Area of Interest",
+          "options": [
+            {
+              "value": "docs",
+              "label": "Docs"
+            },
+            {
+              "value": "frontend",
+              "label": "Frontend"
+            },
+            {
+              "value": "backend",
+              "label": "Backend"
+            },
+            {
+              "value": "testing",
+              "label": "Testing"
+            }
+          ]
+        },
+        {
+          "id": "cla",
+          "type": "checkbox",
+          "label": "I agree to the contributor license agreement",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-103",
+    "domain": "marketing",
+    "prompt": "Newsletter signup",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Subscribe to Our Newsletter",
+      "fields": [
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "firstName",
+          "type": "text",
+          "label": "First Name"
+        },
+        {
+          "id": "frequency",
+          "type": "radio",
+          "label": "Frequency",
+          "required": true,
+          "options": [
+            {
+              "value": "daily",
+              "label": "Daily"
+            },
+            {
+              "value": "weekly",
+              "label": "Weekly"
+            },
+            {
+              "value": "monthly",
+              "label": "Monthly"
+            }
+          ]
+        },
+        {
+          "id": "topics",
+          "type": "select",
+          "label": "Favorite Topic",
+          "options": [
+            {
+              "value": "tech",
+              "label": "Tech"
+            },
+            {
+              "value": "design",
+              "label": "Design"
+            },
+            {
+              "value": "business",
+              "label": "Business"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-104",
+    "domain": "marketing",
+    "prompt": "Webinar registration",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Webinar Registration",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "workEmail",
+          "type": "email",
+          "label": "Work Email",
+          "required": true
+        },
+        {
+          "id": "company",
+          "type": "text",
+          "label": "Company"
+        },
+        {
+          "id": "role",
+          "type": "text",
+          "label": "Job Role"
+        },
+        {
+          "id": "questions",
+          "type": "textarea",
+          "label": "Questions for the Speakers"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-105",
+    "domain": "marketing",
+    "prompt": "Influencer collaboration application",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Creator Collaboration",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "platform",
+          "type": "select",
+          "label": "Main Platform",
+          "required": true,
+          "options": [
+            {
+              "value": "instagram",
+              "label": "Instagram"
+            },
+            {
+              "value": "youtube",
+              "label": "YouTube"
+            },
+            {
+              "value": "tiktok",
+              "label": "TikTok"
+            },
+            {
+              "value": "twitch",
+              "label": "Twitch"
+            }
+          ]
+        },
+        {
+          "id": "followers",
+          "type": "number",
+          "label": "Follower Count",
+          "required": true
+        },
+        {
+          "id": "handle",
+          "type": "text",
+          "label": "Profile Link",
+          "required": true
+        },
+        {
+          "id": "pitch",
+          "type": "textarea",
+          "label": "Collaboration Idea"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-106",
+    "domain": "marketing",
+    "prompt": "Contest entry form",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Giveaway Entry",
+      "fields": [
+        {
+          "id": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "favorite",
+          "type": "text",
+          "label": "Favorite Product"
+        },
+        {
+          "id": "age18",
+          "type": "checkbox",
+          "label": "I am 18 or older",
+          "required": true
+        },
+        {
+          "id": "rules",
+          "type": "checkbox",
+          "label": "I accept the contest rules",
+          "required": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-107",
+    "domain": "marketing",
+    "prompt": "Brand survey on awareness",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Brand Awareness Survey",
+      "fields": [
+        {
+          "id": "heardOf",
+          "type": "radio",
+          "label": "Have you heard of our brand?",
+          "required": true,
+          "options": [
+            {
+              "value": "yes",
+              "label": "Yes"
+            },
+            {
+              "value": "no",
+              "label": "No"
+            }
+          ]
+        },
+        {
+          "id": "source",
+          "type": "select",
+          "label": "Where did you hear about us?",
+          "options": [
+            {
+              "value": "search",
+              "label": "Search"
+            },
+            {
+              "value": "social",
+              "label": "Social"
+            },
+            {
+              "value": "friend",
+              "label": "Friend"
+            },
+            {
+              "value": "ad",
+              "label": "Ad"
+            }
+          ]
+        },
+        {
+          "id": "opinion",
+          "type": "select",
+          "label": "Overall Opinion",
+          "options": [
+            {
+              "value": "negative",
+              "label": "Negative"
+            },
+            {
+              "value": "neutral",
+              "label": "Neutral"
+            },
+            {
+              "value": "positive",
+              "label": "Positive"
+            }
+          ]
+        },
+        {
+          "id": "age",
+          "type": "number",
+          "label": "Age"
+        }
+      ]
+    }
+  },
+  {
+    "id": "seed-108",
+    "domain": "marketing",
+    "prompt": "Partner program application",
+    "gold": {
+      "schemaVersion": 1,
+      "formTitle": "Partner Program Application",
+      "fields": [
+        {
+          "id": "company",
+          "type": "text",
+          "label": "Company Name",
+          "required": true
+        },
+        {
+          "id": "website",
+          "type": "text",
+          "label": "Website",
+          "required": true
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true
+        },
+        {
+          "id": "partnerType",
+          "type": "select",
+          "label": "Partner Type",
+          "required": true,
+          "options": [
+            {
+              "value": "reseller",
+              "label": "Reseller"
+            },
+            {
+              "value": "referral",
+              "label": "Referral"
+            },
+            {
+              "value": "integration",
+              "label": "Integration"
+            }
+          ]
+        },
+        {
+          "id": "clients",
+          "type": "number",
+          "label": "Number of Clients"
+        }
+      ]
+    }
+  }
+]

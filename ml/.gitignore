@@ -1,0 +1,7 @@
+eval/reports/
+data/out/
+train/outputs/
+__pycache__/
+.pytest_cache/
+*.pyc
+.venv/

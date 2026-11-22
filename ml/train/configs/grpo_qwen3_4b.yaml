@@ -1,0 +1,36 @@
+# OPTIONAL stage 2: GRPO with the verifiable reward in ml/formify_ml/rewards.py, starting from the SFT LoRA adapter.
+# Only worth running if SFT leaves measurable invalid-schema or rubric failures on the eval harness.
+# UNTUNED and UNTESTED: reward weights and hyperparameters are placeholders to iterate on.
+model:
+  name: Qwen/Qwen3-4B
+  revision: null
+  trust_remote_code: false
+  sft_adapter: ml/train/outputs/formify-schema-4b-sft   # LoRA adapter directory from sft.py
+  chat_template_kwargs:
+    enable_thinking: false
+
+data:
+  train: ml/data/out/dataset/train.jsonl
+  tasks: [generate]            # reward needs a gold schema; the edit task is not rewarded here
+  max_prompt_length: 1024
+
+quantization:
+  load_in_4bit: true
+  quant_type: nf4
+  double_quant: true
+  compute_dtype: bfloat16
+
+training:
+  output_dir: ml/train/outputs/formify-schema-4b-grpo
+  num_generations: 8
+  max_completion_length: 1024
+  per_device_train_batch_size: 8   # must be divisible by num_generations
+  gradient_accumulation_steps: 2
+  learning_rate: 5.0e-6
+  num_train_epochs: 1
+  bf16: true
+  gradient_checkpointing: true
+  logging_steps: 5
+  save_steps: 100
+  seed: 42
+  report_to: none

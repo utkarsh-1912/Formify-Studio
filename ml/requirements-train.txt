@@ -1,0 +1,11 @@
+-r requirements.txt
+# GPU training stack. Versions are intentionally unpinned here because none were run in this repo.
+# After your first successful run, pin the exact versions (pip freeze) so results are reproducible.
+torch
+transformers
+datasets
+accelerate
+peft
+trl            # SFTConfig.chat_template_kwargs / GRPOTrainer need a recent release
+bitsandbytes   # CUDA only; on Windows use WSL2 or a recent bitsandbytes wheel with Windows support
+# Export (optional): llama.cpp (build from source) and `mlc-llm` (see https://llm.mlc.ai/docs/)
