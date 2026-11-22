@@ -1,0 +1,31 @@
+{
+  "name": "formify-server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Optional self-hostable Formify backend: auth, submissions, webhooks, Yjs sync relay.",
+  "scripts": {
+    "start": "node --import tsx src/index.ts",
+    "dev": "node --import tsx --watch src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.13.7",
+    "better-sqlite3": "^11.7.0",
+    "hono": "^4.6.14",
+    "jose": "^5.9.6",
+    "lib0": "^0.2.99",
+    "tsx": "^4.19.2",
+    "ws": "^8.18.0",
+    "y-protocols": "^1.0.6",
+    "yjs": "^13.6.20"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^20.11.0",
+    "@types/ws": "^8.5.13",
+    "typescript": "^5.3.3",
+    "vitest": "^3.0.0"
+  }
+}

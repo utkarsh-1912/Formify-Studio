@@ -1,37 +1,35 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { SyncSession, PeerPresence, SyncStatus } from "../sync/session";
+import { resolveSyncConfig, SyncConfig } from "../sync/config";
+
+/**
+ * Collaboration hook backed by Yjs (CRDT).
+ *
+ * Backwards compatible with the previous PeerJS hook: same arguments, same returned
+ * fields (status / peerId / errorMessage / connectedPeers / initPeerJS / disconnect /
+ * push / submitForm). Differences worth knowing:
+ *  - There is no "host" any more. `status` is "hosting" for a connected editor and
+ *    "joined" for a connected guest, purely so existing UI keeps working.
+ *  - Edits merge per field (concurrent edits to different fields no longer overwrite
+ *    each other). Guests (isGuest) are strictly read-only and never write.
+ *  - Extra returned fields: undo/redo/canUndo/canRedo, peers (presence), canWrite.
+ *  - Optional 6th argument selects the transport (webrtc | websocket) and token.
+ */
 
 export type P2PStatus = "disconnected" | "connecting" | "hosting" | "joined" | "error";
 
-const loadPeerLibrary = async (): Promise<any> => {
-  try {
-    const module = await import("peerjs");
-    return module.default;
-  } catch (err) {
-    console.warn("Formify P2P: Dynamic chunk load failed. Falling back to CDN load...", err);
-    return new Promise((resolve, reject) => {
-      if (typeof window === "undefined") {
-        reject(new Error("Cannot load PeerJS on server"));
-        return;
-      }
-      if ((window as any).Peer) {
-        resolve((window as any).Peer);
-        return;
-      }
-      const script = document.createElement("script");
-      script.src = "https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js";
-      script.async = true;
-      script.onload = () => {
-        if ((window as any).Peer) {
-          resolve((window as any).Peer);
-        } else {
-          reject(new Error("PeerJS not found on window"));
-        }
-      };
-      script.onerror = (e) => {
-        reject(new Error("Failed to load PeerJS from CDN"));
-      };
-      document.body.appendChild(script);
-    });
+export interface UseP2PSyncOptions extends Partial<SyncConfig> {}
+
+const mapStatus = (s: SyncStatus, isGuest: boolean): P2PStatus => {
+  switch (s) {
+    case "connected":
+      return isGuest ? "joined" : "hosting";
+    case "connecting":
+      return "connecting";
+    case "error":
+      return "error";
+    default:
+      return "disconnected";
   }
 };
 
@@ -40,272 +38,105 @@ export function useP2PSync(
   localSchema: any,
   onRemoteSchema: (schema: any) => void,
   onRemoteSubmission?: (submission: any) => void,
-  isGuest = false
+  isGuest = false,
+  options: UseP2PSyncOptions = {}
 ) {
   const [status, setStatus] = useState<P2PStatus>("disconnected");
   const [peerId, setPeerId] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [connectedPeers, setConnectedPeers] = useState<string[]>([]);
+  const [peers, setPeers] = useState<PeerPresence[]>([]);
+  const [undoState, setUndoState] = useState({ canUndo: false, canRedo: false });
 
-  const peerRef = useRef<any>(null);
-  const connectionsRef = useRef<any[]>([]);
-  const isUpdatingRef = useRef(false);
+  const sessionRef = useRef<SyncSession | null>(null);
+  const readyRef = useRef(false);
 
-  // Helper to dynamically load PeerJS on the client side only (prevents Next.js SSR build errors)
-  const initPeerJS = async () => {
-    try {
-      setStatus("connecting");
-      const PeerClass = await loadPeerLibrary();
-      
-      // Determine unique Peer ID based on role
-      const myId = `formify-ws-${workspaceId}-${Math.random().toString(36).substring(2, 6)}`;
-      setPeerId(myId);
+  // Always call the latest callbacks / state without re-creating the session.
+  const latest = useRef({ localSchema, onRemoteSchema, onRemoteSubmission, isGuest, options });
+  latest.current = { localSchema, onRemoteSchema, onRemoteSubmission, isGuest, options };
 
-      const peer = new PeerClass(myId, {
-        host: "0.peerjs.com",
-        secure: true,
-        port: 443,
-        config: {
-          iceServers: [
-            { urls: "stun:stun.l.google.com:19302" },
-            { urls: "stun:stun1.l.google.com:19302" },
-            { urls: "stun:stun2.l.google.com:19302" },
-            { urls: "stun:stun3.l.google.com:19302" },
-            { urls: "stun:stun4.l.google.com:19302" }
-          ]
-        }
-      });
-
-      peerRef.current = peer;
-
-      peer.on("open", (id: string) => {
-        console.log("PeerJS Connection Open. ID:", id);
-        // Try to connect to other existing hosts/peers in the same workspace automatically
-        autoConnectToPeers(id);
-      });
-
-      peer.on("connection", (conn: any) => {
-        console.log("Received P2P connection request from:", conn.peer);
-        setupConnectionEvents(conn);
-      });
-
-      peer.on("disconnected", () => {
-        console.log("PeerJS disconnected from signaling server. Reconnecting...");
-        peer.reconnect();
-      });
-
-      peer.on("error", (err: any) => {
-        console.error("PeerJS Client Error:", err);
-        
-        // SELF-HEALING: If host peer is offline/unavailable, promote myself to host
-        if (err.type === "peer-unavailable") {
-          if (isGuest) {
-            console.log("P2P Host unavailable. Guest cannot promote to host.");
-            setErrorMessage("Form host is currently offline.");
-            setStatus("disconnected");
-            return;
-          }
-          console.log("P2P Host unavailable. Recreating client as workspace host.");
-          const hostId = `formify-ws-${workspaceId}-host`;
-          recreateAsHost(hostId);
-          return;
-        }
-
-        setErrorMessage(err.type || "Peer connection error");
-        setStatus("error");
-      });
-    } catch (e) {
-      console.error("Failed to initialize PeerJS:", e);
-      setErrorMessage("Failed to load P2P sync libraries.");
-      setStatus("error");
-    }
-  };
-
-  const setupConnectionEvents = (conn: any) => {
-    if (!connectionsRef.current.some((c) => c.peer === conn.peer)) {
-      connectionsRef.current.push(conn);
-      setConnectedPeers((prev) => Array.from(new Set([...prev, conn.peer])));
-    }
-
-    // Ping interval to keep connection alive
-    const pingInterval = setInterval(() => {
-      if (conn.open) {
-        conn.send({ type: "PING" });
-      }
-    }, 15000);
-
-    conn.on("open", () => {
-      console.log("Data connection established with:", conn.peer);
-      // Immediately send current schema state to newly connected peer
-      conn.send({ type: "SYNC_SCHEMA", schema: localSchema?.schema || localSchema, state: localSchema });
-    });
-
-    conn.on("data", (data: any) => {
-      if (!data || typeof data !== "object") return;
-      if (data.type === "PING") return; // ignore keep-alive heartbeats
-
-      if (data.type === "SYNC_SCHEMA") {
-        console.log("P2P Schema Sync payload received from:", conn.peer);
-        isUpdatingRef.current = true;
-        if (data.state) {
-          onRemoteSchema(data.state);
-        } else if (data.schema) {
-          onRemoteSchema(data.schema);
-        }
-        setTimeout(() => {
-          isUpdatingRef.current = false;
-        }, 100);
-      } else if (data.type === "SUBMIT_FORM") {
-        console.log("P2P Submission received from:", conn.peer);
-        if (onRemoteSubmission) {
-          onRemoteSubmission(data.submission);
-        }
-      }
-    });
-
-    conn.on("error", (err: any) => {
-      console.error("Connection error with peer:", conn.peer, err);
-      clearInterval(pingInterval);
-    });
-
-    conn.on("close", () => {
-      console.log("Connection closed with:", conn.peer);
-      clearInterval(pingInterval);
-      connectionsRef.current = connectionsRef.current.filter((c) => c.peer !== conn.peer);
-      setConnectedPeers((prev) => prev.filter((p) => p !== conn.peer));
-    });
-  };
-
-  const autoConnectToPeers = async (myId: string) => {
-    if (!peerRef.current) return;
-    
-    const hostId = `formify-ws-${workspaceId}-host`;
-    if (myId === hostId) {
-      setStatus("hosting");
-      return;
-    }
-
-    console.log("Attempting auto-connection to workspace host:", hostId);
-    const conn = peerRef.current.connect(hostId, {
-      reliable: true
-    });
-    
-    conn.on("open", () => {
-      setupConnectionEvents(conn);
-      setStatus("joined");
-    });
-  };
-
-  const recreateAsHost = async (hostId: string) => {
-    if (peerRef.current) {
-      peerRef.current.destroy();
-    }
-    
-    try {
-      const PeerClass = await loadPeerLibrary();
-      const peer = new PeerClass(hostId, {
-        host: "0.peerjs.com",
-        secure: true,
-        port: 443,
-        config: {
-          iceServers: [
-            { urls: "stun:stun.l.google.com:19302" },
-            { urls: "stun:stun1.l.google.com:19302" },
-            { urls: "stun:stun2.l.google.com:19302" },
-            { urls: "stun:stun3.l.google.com:19302" },
-            { urls: "stun:stun4.l.google.com:19302" }
-          ]
-        }
-      });
-
-      peerRef.current = peer;
-      setPeerId(hostId);
-
-      peer.on("open", () => {
-        setStatus("hosting");
-        console.log("Acting as workspace host peer at ID:", hostId);
-      });
-
-      peer.on("connection", (conn: any) => {
-        setupConnectionEvents(conn);
-      });
-
-      peer.on("disconnected", () => {
-        console.log("Host PeerJS disconnected from signaling server. Reconnecting...");
-        peer.reconnect();
-      });
-
-      peer.on("error", (err: any) => {
-        console.error("PeerJS Host Error:", err);
-        // If host ID is taken, another peer has registered it. Re-initialize as client.
-        if (err.type === "unavailable-id") {
-          console.log("Host ID taken. Falling back to client peer connection.");
-          setTimeout(() => {
-            initPeerJS();
-          }, 500);
-        } else {
-          setErrorMessage(err.type || "Host socket error");
-          setStatus("error");
-        }
-      });
-    } catch (e) {
-      console.error("Failed to recreate peer as host:", e);
-      setStatus("error");
-    }
-  };
-
-  const broadcastSchema = (updatedSchema: any) => {
-    if (isUpdatingRef.current) return;
-    if (connectionsRef.current.length === 0) return;
-
-    connectionsRef.current.forEach((conn) => {
-      if (conn.open) {
-        conn.send({ type: "SYNC_SCHEMA", schema: updatedSchema?.schema || updatedSchema, state: updatedSchema });
-      }
-    });
-  };
-
-  const disconnect = () => {
-    if (peerRef.current) {
-      peerRef.current.destroy();
-      peerRef.current = null;
-    }
-    connectionsRef.current = [];
-    setConnectedPeers([]);
+  const disconnect = useCallback(() => {
+    sessionRef.current?.destroy();
+    sessionRef.current = null;
+    readyRef.current = false;
+    setPeers([]);
     setStatus("disconnected");
-  };
-
-  useEffect(() => {
-    if (status === "hosting" || status === "joined") {
-      broadcastSchema(localSchema);
-    }
-  }, [localSchema]);
-
-  useEffect(() => {
-    return () => {
-      if (peerRef.current) {
-        peerRef.current.destroy();
-      }
-    };
   }, []);
 
-  const submitForm = (submissionData: any) => {
-    if (connectionsRef.current.length === 0) return;
-    connectionsRef.current.forEach((conn) => {
-      if (conn.open) {
-        conn.send({ type: "SUBMIT_FORM", submission: submissionData });
-      }
+  const connect = useCallback(() => {
+    if (sessionRef.current) return;
+    const guest = latest.current.isGuest;
+    setErrorMessage("");
+    setStatus("connecting");
+
+    const session = new SyncSession({
+      room: workspaceId,
+      config: resolveSyncConfig(latest.current.options),
+      onRemoteState: (state) => latest.current.onRemoteSchema(state),
+      onRemoteSubmission: (sub) => latest.current.onRemoteSubmission?.(sub),
+      onReady: (shared, isEmpty) => {
+        readyRef.current = true;
+        if (isEmpty) {
+          // Fresh room: the first editor seeds it. Guests never write.
+          const local = latest.current.localSchema;
+          if (!latest.current.isGuest && local && Object.keys(local).length > 0) session.setState(local);
+        } else {
+          // Existing room: adopt shared state rather than clobbering it with our local copy.
+          latest.current.onRemoteSchema(shared);
+        }
+      },
+      onStatus: (s, detail) => {
+        setStatus(mapStatus(s, guest));
+        if (s === "error") setErrorMessage(detail || "Sync connection error");
+      },
+      onPeers: setPeers
     });
-  };
+    session.undoManager.on("stack-item-added", () =>
+      setUndoState({ canUndo: session.undoManager.canUndo(), canRedo: session.undoManager.canRedo() })
+    );
+    session.undoManager.on("stack-item-popped", () =>
+      setUndoState({ canUndo: session.undoManager.canUndo(), canRedo: session.undoManager.canRedo() })
+    );
+    sessionRef.current = session;
+    setPeerId(String(session.doc.clientID));
+    session.connect();
+  }, [workspaceId]);
+
+  // Publish local edits (editors only, and only after the initial sync decided who seeds).
+  useEffect(() => {
+    const session = sessionRef.current;
+    if (!session || !readyRef.current || isGuest) return;
+    if (!localSchema || Object.keys(localSchema).length === 0) return;
+    session.setState(localSchema);
+  }, [localSchema, isGuest]);
+
+  useEffect(() => () => disconnect(), [disconnect]);
+
+  const push = useCallback(() => {
+    const { localSchema: s, isGuest: g } = latest.current;
+    if (!g && s && Object.keys(s).length > 0) sessionRef.current?.setState(s);
+  }, []);
+
+  const submitForm = useCallback((submissionData: any) => {
+    sessionRef.current?.publishSubmission(submissionData);
+  }, []);
 
   return {
     status,
     peerId,
     errorMessage,
-    connectedPeers,
-    initPeerJS,
+    /** Remote peers only (previous versions returned peer id strings). */
+    connectedPeers: peers.filter((p) => !p.isLocal).map((p) => String(p.clientId)),
+    initPeerJS: connect, // legacy name
+    connect,
     disconnect,
-    push: () => broadcastSchema(localSchema),
-    submitForm
+    push,
+    submitForm,
+    // --- new in the Yjs layer ---
+    peers,
+    canWrite: !isGuest,
+    undo: () => sessionRef.current?.undo(),
+    redo: () => sessionRef.current?.redo(),
+    canUndo: undoState.canUndo,
+    canRedo: undoState.canRedo
   };
 }
