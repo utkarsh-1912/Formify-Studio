@@ -34,7 +34,7 @@ const mockTheme = {
 const mockThemeTokens = themeMap.light;
 
 describe("FormGenerator Component", () => {
-  const mockOnSubmit = jest.fn();
+  const mockOnSubmit = vi.fn();
 
   test("renders form title and description", () => {
     render(

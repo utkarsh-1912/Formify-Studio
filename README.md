@@ -11,7 +11,7 @@ Formify Studio is an enterprise-grade, local-first visual form engine and genera
 - **Bi-Directional Live Sync**: Modify schemas visually via the drag-and-drop property builder, or code directly in the advanced JSON editor (powered by CodeMirror) with real-time validation.
 - **WebRTC Serverless Collaboration**: Connect and sync workspace schemas in real-time directly between browsers without any intermediate database lag.
 - **Tailwind & CSS Variable Styling**: Customize borders, layout grids, shadows, button sizes, and typography weights on the fly.
-- **Role-Based Cryptographic Access Tokens**:
+- **Role-Based Edit Links (client-side, not a security boundary)**:
   - **Edit Mode**: Access workspaces with `?token=tok_xxxx` to unlock builders, customizations, templates, and settings.
   - **View-Only Mode**: Access workspaces securely without tokens to share layouts or review designs. Switches and edit bypasses are locked out for guest safety.
 - **Redesigned Submission Details Modal**:
@@ -59,7 +59,12 @@ Formify Studio is an enterprise-grade, local-first visual form engine and genera
    npm install
    ```
 
-3. **Start the local development server**:
+3. **Run checks** (typecheck, tests, build):
+   ```bash
+   npm run typecheck && npm test && npm run build
+   ```
+
+4. **Start the local development server**:
    ```bash
    npm run dev
    ```
@@ -85,6 +90,8 @@ To compile the application into an optimized, production-ready static bundle:
 ---
 
 ## 📄 Example JSON Schema
+
+The format is formally described by a versioned JSON Schema in `src/utils/formifySchema.ts` (current: v1, optional `"schemaVersion": 1`). Older documents are upgraded with `migrateSchema`.
 
 Formify schemas use a highly structured, validatable JSON configuration layout. 
 
@@ -134,4 +141,5 @@ Formify Studio values user privacy. By prioritizing a **local-first** approach:
 - All form configuration and builder data is kept in the user's browser sandbox.
 - WebRTC peer connections are direct browser-to-browser channels without standard backend log pipelines.
 - Data export configurations (JSON/CSV) run strictly client-side.
-- Share permissions are cryptographic: sharing a View-Only link protects editing credentials by hiding edit tokens and option dialogs.
+- Edit/View links are a **UI convenience, not access control**. Tokens live in the browser and are checked client-side, so anyone with the edit link (or who can open devtools) can edit. Enforceable permissions require a server with signed tokens, which is on the roadmap (see `OVERHAUL_PLAN.md`, Phase 4).
+- P2P sync uses the public PeerJS broker and public STUN servers for connection setup; schema content flows peer-to-peer, but peer IPs are visible to those services.

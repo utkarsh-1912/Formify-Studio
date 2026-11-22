@@ -6,7 +6,7 @@ import { themeMap } from "../utils/appTheme";
 const mockThemeTokens = themeMap.light;
 
 describe("JsonEditor Component", () => {
-  const mockOnChange = jest.fn();
+  const mockOnChange = vi.fn();
 
   test("renders JSON editor with initial value", () => {
     render(
@@ -32,6 +32,8 @@ describe("JsonEditor Component", () => {
     );
     const textarea = screen.getByRole("textbox");
     fireEvent.change(textarea, { target: { value: '{"newKey": "newValue"}' } });
+    // The editor commits changes on blur, not on every keystroke.
+    fireEvent.blur(textarea);
     expect(mockOnChange).toHaveBeenCalledWith('{"newKey": "newValue"}');
   });
 
