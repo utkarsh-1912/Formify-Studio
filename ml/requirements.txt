@@ -1,0 +1,4 @@
+# Runtime deps for the data pipeline, rewards and tests (no GPU needed).
+jsonschema>=4.18
+pyyaml>=6.0
+pytest>=8.0

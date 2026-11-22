@@ -1,0 +1,104 @@
+{
+  "$id": "https://formify.dev/schema/v1.json",
+  "type": "object",
+  "required": [
+    "formTitle",
+    "fields"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "formTitle": {
+      "type": "string",
+      "minLength": 1
+    },
+    "formDescription": {
+      "type": "string"
+    },
+    "fields": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "label"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "enum": [
+              "text",
+              "email",
+              "number",
+              "select",
+              "radio",
+              "checkbox",
+              "textarea",
+              "date"
+            ]
+          },
+          "label": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "placeholder": {
+            "type": "string"
+          },
+          "options": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "value",
+                "label"
+              ],
+              "properties": {
+                "label": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "validation": {
+            "type": "object",
+            "properties": {
+              "pattern": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "if": {
+          "properties": {
+            "type": {
+              "enum": [
+                "select",
+                "radio"
+              ]
+            }
+          },
+          "required": [
+            "type"
+          ]
+        },
+        "then": {
+          "required": [
+            "options"
+          ]
+        }
+      }
+    }
+  }
+}
