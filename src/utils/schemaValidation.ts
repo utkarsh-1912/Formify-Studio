@@ -1,3 +1,5 @@
+import { collectSchemaIssues } from "./formifySchema";
+
 const validateSchema = (schema: any): void => {
   if (!schema || typeof schema !== "object" || Array.isArray(schema)) {
     throw new Error("Schema must be a valid JSON object.");
@@ -115,6 +117,12 @@ const validateSchema = (schema: any): void => {
       }
     }
   });
+
+  // Backstop: formal JSON Schema check catches anything the friendly checks above missed.
+  const issues = collectSchemaIssues(schema);
+  if (issues.length > 0) {
+    throw new Error(`Schema failed validation at ${issues[0].path}: ${issues[0].message}.`);
+  }
 };
 
 export default validateSchema;
