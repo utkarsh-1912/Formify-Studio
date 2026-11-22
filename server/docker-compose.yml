@@ -1,0 +1,20 @@
+# From the repo root:  docker compose -f server/docker-compose.yml up --build
+# Provide secrets via a .env file next to this one (see .env.example); never commit it.
+services:
+  formify:
+    build:
+      context: ..
+      dockerfile: server/Dockerfile
+    env_file: .env
+    ports:
+      - "8787:8787"
+    volumes:
+      - formify-data:/data
+    restart: unless-stopped
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+
+volumes:
+  formify-data:

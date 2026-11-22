@@ -187,7 +187,7 @@ export function createApp({ config, db, webhookPolicy, now = Date.now }: AppDeps
       JSON.stringify(result.data),
       createdAt
     );
-    enqueueDeliveries(db, id, { id: subId, data: result.data, createdAt });
+    enqueueDeliveries(db, id, { id: subId, data: result.data, createdAt }, createdAt);
     return c.json({ id: subId }, 201);
   });
 

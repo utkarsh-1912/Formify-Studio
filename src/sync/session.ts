@@ -38,6 +38,8 @@ export interface SyncSessionOptions {
   onReady?: (sharedState: any, isEmpty: boolean) => void;
   onStatus?: (status: SyncStatus, detail?: string) => void;
   onPeers?: (peers: PeerPresence[]) => void;
+  /** Edits closer together than this are undone as one step (default 500 ms). */
+  undoCaptureMs?: number;
   /** Test seam: inject a provider instead of creating a network one. */
   providerFactory?: (doc: Y.Doc, opts: SyncSessionOptions) => ProviderLike;
 }
@@ -79,7 +81,10 @@ export class SyncSession {
     this.opts = opts;
     this.state = this.doc.getMap("state");
     this.submissions = this.doc.getArray("submissions");
-    this.undoManager = new Y.UndoManager(this.state, { trackedOrigins: new Set([LOCAL_ORIGIN]) });
+    this.undoManager = new Y.UndoManager(this.state, {
+      trackedOrigins: new Set([LOCAL_ORIGIN]),
+      captureTimeout: opts.undoCaptureMs ?? 500
+    });
 
     this.state.observeDeep((_events, tx) => {
       if (tx.origin === LOCAL_ORIGIN) return;

@@ -73,7 +73,7 @@ export async function assertSafeWebhookUrl(raw: string, policy: WebhookPolicy): 
   return url;
 }
 
-export function enqueueDeliveries(db: DB, workspaceId: string, submission: { id: string; data: unknown; createdAt: number }) {
+export function enqueueDeliveries(db: DB, workspaceId: string, submission: { id: string; data: unknown; createdAt: number }, now = Date.now()) {
   const hooks = db.prepare("SELECT id FROM webhooks WHERE workspace_id = ? AND active = 1").all(workspaceId) as { id: string }[];
   const insert = db.prepare(
     "INSERT INTO deliveries (id, webhook_id, submission_id, payload, status, attempts, next_attempt_at, created_at) VALUES (?, ?, ?, ?, 'pending', 0, ?, ?)"
@@ -83,7 +83,6 @@ export function enqueueDeliveries(db: DB, workspaceId: string, submission: { id:
     workspaceId,
     submission: { id: submission.id, createdAt: submission.createdAt, data: submission.data }
   });
-  const now = Date.now();
   for (const h of hooks) insert.run(randomUUID(), h.id, submission.id, payload, now, now);
 }
 
