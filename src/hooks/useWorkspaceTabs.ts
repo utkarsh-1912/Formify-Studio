@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export type LeftTab = "visual" | "json" | "theme" | "templates";
+export type LeftTab = "visual" | "json" | "theme" | "templates" | "ai";
 export type RightTab = "preview" | "submissions" | "code";
 export type MobileView = LeftTab | RightTab;
 

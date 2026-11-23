@@ -4,7 +4,7 @@ import { AppThemeTokens } from "../../utils/appTheme";
 import { APP_VERSION } from "../../utils/version";
 import { P2PStatus } from "../../utils/p2pSync";
 import P2PStatusBadge from "../share/P2PStatusBadge";
-import { Code, Share2, Check, Settings, ArrowLeft, AlertCircle, MoreVertical, Lock, Unlock, ExternalLink, BarChart3 } from "lucide-react";
+import { Code, Share2, Check, Settings, ArrowLeft, AlertCircle, MoreVertical, Lock, Unlock, ExternalLink, BarChart3, Workflow } from "lucide-react";
 
 interface WorkspaceHeaderProps {
   workspaceId?: string;
@@ -177,6 +177,17 @@ const WorkspaceHeader: React.FC<WorkspaceHeaderProps> = ({
                     >
                       <BarChart3 className="h-3.5 w-3.5 text-purple-500" />
                       <span>Open Analytics</span>
+                    </a>
+
+                    <a
+                      href={`/ws/${workspaceId || "default"}/workflows`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`w-full text-left px-4 py-2 text-xs font-semibold flex items-center space-x-2 hover:bg-black/5 transition-colors cursor-pointer block ${themeTokens.text}`}
+                      onClick={() => setIsHeaderMenuOpen(false)}
+                    >
+                      <Workflow className="h-3.5 w-3.5 text-pink-500" />
+                      <span>Workflows (beta)</span>
                     </a>
 
                     <a

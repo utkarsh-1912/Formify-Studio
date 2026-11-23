@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+import { isAiEnabled } from "../../ai";
 import JsonEditor from "../../components/JsonEditor";
 import VisualBuilder from "../../components/VisualBuilder";
 import ThemeCustomizer from "../../components/ThemeCustomizer";
@@ -7,7 +9,10 @@ import { ThemeSettings } from "../../utils/codeGenerators";
 import { AppThemeTokens, GlobalThemeMode } from "../../utils/appTheme";
 import { WorkspaceTabs } from "../../hooks/useWorkspaceTabs";
 import { tabBtnClass } from "../workspace/tabBtnClass";
-import { Code, Wrench, Paintbrush, Layers } from "lucide-react";
+import { Code, Wrench, Paintbrush, Layers, Sparkles } from "lucide-react";
+
+// Lazy + client-only: keeps the on-device model code out of the main bundle.
+const AiChatPanel = dynamic(() => import("../../components/ai/AiChatPanel"), { ssr: false });
 
 interface BuilderPanelProps {
   tabs: WorkspaceTabs;
@@ -41,10 +46,13 @@ const BuilderPanel: React.FC<BuilderPanelProps> = ({
   onLoadTemplate
 }) => {
   const { leftTab, setLeftTab, mobileView, setMobileView } = tabs;
+  // Read the feature flag after mount so server and client markup match.
+  const [aiEnabled, setAiEnabled] = useState(false);
+  useEffect(() => setAiEnabled(isAiEnabled()), []);
 
   return (
         <div className={`w-full md:w-[55%] flex flex-col border-r overflow-hidden ${themeTokens.sidebar} ${
-          ["visual", "json", "theme", "templates"].includes(mobileView) ? "flex" : "hidden md:flex"
+          ["visual", "json", "theme", "templates", "ai"].includes(mobileView) ? "flex" : "hidden md:flex"
         }`}>
           {/* Mobile sub-tab toggle for Build */}
           {["visual", "json"].includes(mobileView) && (
@@ -86,7 +94,8 @@ const BuilderPanel: React.FC<BuilderPanelProps> = ({
               { id: "visual", name: "Visual Builder", icon: Wrench },
               { id: "json", name: "JSON Editor", icon: Code },
               { id: "theme", name: "Theme Customizer", icon: Paintbrush },
-              { id: "templates", name: "Templates Gallery", icon: Layers }
+              { id: "templates", name: "Templates Gallery", icon: Layers },
+              ...(aiEnabled ? [{ id: "ai", name: "AI Assistant", icon: Sparkles }] : [])
             ].map((tab) => {
               const Icon = tab.icon;
               return (
@@ -122,6 +131,9 @@ const BuilderPanel: React.FC<BuilderPanelProps> = ({
             )}
             {leftTab === "templates" && (
               <TemplatesGallery themeTokens={themeTokens} onSelectTemplate={onLoadTemplate} readOnly={!hasEditPermission} />
+            )}
+            {leftTab === "ai" && aiEnabled && (
+              <AiChatPanel schema={schema} themeTokens={themeTokens} readOnly={!hasEditPermission} onApply={onVisualChange} />
             )}
           </div>
         </div>
