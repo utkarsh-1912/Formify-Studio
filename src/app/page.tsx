@@ -1,645 +1,398 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import {
-  Wrench,
-  Code,
-  Paintbrush,
   ArrowRight,
-  Users,
-  Shield,
-  Zap,
-  Lock,
-  Terminal,
-  ServerOff,
-  Plus,
-  RotateCcw,
+  Blocks,
+  Braces,
+  Check,
   FileJson,
+  GitBranch,
   Eye,
-  Activity,
-  CheckCircle2,
-  Sparkles
+  Minus,
+  Share2,
+  ShieldCheck,
+  Sparkles,
+  Workflow,
+  Zap
 } from "lucide-react";
+import MarketingShell, { REPO_URL, useCreateWorkspace } from "../components/marketing/MarketingShell";
 import { APP_VERSION } from "../utils/version";
 
-interface MockField {
-  id: string;
-  label: string;
-  type: string;
-  placeholder?: string;
-  options?: string[];
+const ACCENTS = {
+  indigo: { label: "Indigo", value: "#4f46e5" },
+  emerald: { label: "Emerald", value: "#059669" },
+  rose: { label: "Rose", value: "#e11d48" },
+  amber: { label: "Amber", value: "#d97706" }
+} as const;
+type AccentKey = keyof typeof ACCENTS;
+type Radius = "sm" | "lg" | "2xl";
+const RADIUS_PX: Record<Radius, string> = { sm: "4px", lg: "10px", "2xl": "18px" };
+
+const FEATURES = [
+  {
+    icon: Braces,
+    title: "One schema, two editors",
+    body: "Edit visually or as JSON and watch both stay in sync. The schema is versioned and validated, so what you write is what renders.",
+    tag: null
+  },
+  {
+    icon: GitBranch,
+    title: "Logic without code",
+    body: "Show, hide or require fields with expressions. Add calculated fields, multi-step pages and typed values (numbers stay numbers).",
+    tag: null
+  },
+  {
+    icon: Blocks,
+    title: "Export anywhere",
+    body: "Get standalone HTML, a React component or a <formify-form> web component. The exports run the same logic as the studio.",
+    tag: null
+  },
+  {
+    icon: Sparkles,
+    title: "AI that proposes, you decide",
+    body: "Describe a form in plain English and review the changes as a diff before anything is applied. Can run on-device with WebGPU, or use your own model endpoint.",
+    tag: "Beta · off by default"
+  },
+  {
+    icon: Workflow,
+    title: "Workflows after submit",
+    body: "Branch, call webhooks, wait for approval and notify teammates on a node canvas. Test runs use mocks, so nothing is sent while you build.",
+    tag: "Beta · experimental"
+  },
+  {
+    icon: Share2,
+    title: "Live collaboration",
+    body: "Edit together over peer-to-peer connections with conflict-free merging, or point to your own self-hosted server for shared storage.",
+    tag: null
+  }
+];
+
+const STEPS = [
+  { n: "1", title: "Describe", body: "Start from a template, drag fields in, paste JSON, or ask the AI assistant for a first draft." },
+  { n: "2", title: "Refine", body: "Add conditions, calculations and steps. Style it live with themes, spacing and accent colors." },
+  { n: "3", title: "Ship", body: "Export code, share a live link, or wire a workflow that routes each submission where it should go." }
+];
+
+const COMPARE = [
+  { row: "Form definition", hosted: "Stored in the vendor's app", library: "JSON or code you maintain", formify: "Open, versioned JSON schema" },
+  { row: "Visual builder", hosted: "Yes", library: "Usually separate or paid", formify: "Built in, synced with JSON" },
+  { row: "Where data lives", hosted: "Vendor's cloud", library: "Your app", formify: "Your browser by default; self-host optional" },
+  { row: "AI assistance", hosted: "Vendor-hosted", library: "Not included", formify: "On-device or your endpoint (beta)" },
+  { row: "Workflows", hosted: "Integrations marketplace", library: "You build it", formify: "Node canvas, same schema (beta)" },
+  { row: "Code export", hosted: "Embed only", library: "Native", formify: "HTML, React, web component" }
+];
+
+function Sandbox() {
+  const [accent, setAccent] = useState<AccentKey>("indigo");
+  const [radius, setRadius] = useState<Radius>("lg");
+  const [isTeam, setIsTeam] = useState(false);
+  const [tab, setTab] = useState<"preview" | "schema">("preview");
+  const color = ACCENTS[accent].value;
+  const r = RADIUS_PX[radius];
+
+  const schema = {
+    schemaVersion: 1,
+    formTitle: "Request a demo",
+    fields: [
+      { id: "email", type: "email", label: "Work email", required: true },
+      { id: "isTeam", type: "checkbox", label: "I'm requesting for a team" },
+      { id: "seats", type: "number", label: "Team size", visibleIf: "isTeam == true", requiredIf: "isTeam == true" }
+    ]
+  };
+
+  const inputStyle: React.CSSProperties = { borderRadius: r };
+  const inputCls =
+    "w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm focus-visible:outline-2 focus-visible:outline-offset-1";
+
+  return (
+    <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl overflow-hidden">
+      <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 px-4 py-3">
+        <span className="text-xs font-semibold text-slate-500">Try it: tick the box</span>
+        <div role="tablist" aria-label="Demo view" className="flex rounded-lg bg-slate-100 dark:bg-slate-800 p-0.5 text-xs font-semibold">
+          {(
+            [
+              ["preview", "Preview", Eye],
+              ["schema", "Schema", FileJson]
+            ] as const
+          ).map(([id, label, Icon]) => (
+            <button
+              key={id}
+              role="tab"
+              aria-selected={tab === id}
+              onClick={() => setTab(id)}
+              className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 cursor-pointer ${
+                tab === id ? "bg-white dark:bg-slate-950 shadow-sm text-slate-900 dark:text-white" : "text-slate-500"
+              }`}
+            >
+              <Icon className="h-3.5 w-3.5" aria-hidden="true" />
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="p-5 min-h-[330px]">
+        {tab === "preview" ? (
+          <form className="space-y-4" onSubmit={(e) => e.preventDefault()} aria-label="Demo form">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Request a demo</h3>
+            <div>
+              <label htmlFor="demo-email" className="mb-1 block text-sm font-medium">Work email</label>
+              <input id="demo-email" type="email" placeholder="you@company.com" className={inputCls} style={{ ...inputStyle, outlineColor: color }} />
+            </div>
+            <label className="flex items-center gap-2 text-sm">
+              <input type="checkbox" checked={isTeam} onChange={(e) => setIsTeam(e.target.checked)} style={{ accentColor: color }} className="h-4 w-4" />
+              I'm requesting for a team
+            </label>
+            {isTeam && (
+              <div>
+                <label htmlFor="demo-seats" className="mb-1 block text-sm font-medium">Team size</label>
+                <input id="demo-seats" type="number" min={1} placeholder="12" className={inputCls} style={{ ...inputStyle, outlineColor: color }} />
+              </div>
+            )}
+            <button type="submit" className="px-4 py-2 text-sm font-semibold text-white cursor-pointer" style={{ background: color, borderRadius: r }}>
+              Submit
+            </button>
+          </form>
+        ) : (
+          <pre className="overflow-x-auto rounded-lg bg-slate-950 p-4 text-xs leading-relaxed text-slate-200" aria-label="Schema JSON">
+            <code>{JSON.stringify(schema, null, 2)}</code>
+          </pre>
+        )}
+      </div>
+
+      <div className="flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 px-5 py-3">
+        <fieldset className="flex items-center gap-2">
+          <legend className="sr-only">Accent color</legend>
+          <span className="text-xs font-semibold text-slate-500" aria-hidden="true">Accent</span>
+          {(Object.keys(ACCENTS) as AccentKey[]).map((k) => (
+            <button
+              key={k}
+              type="button"
+              aria-label={ACCENTS[k].label}
+              aria-pressed={accent === k}
+              onClick={() => setAccent(k)}
+              className={`h-6 w-6 rounded-full cursor-pointer ring-offset-2 ring-offset-slate-50 dark:ring-offset-slate-900 ${accent === k ? "ring-2 ring-slate-900 dark:ring-white" : ""}`}
+              style={{ background: ACCENTS[k].value }}
+            />
+          ))}
+        </fieldset>
+        <fieldset className="flex items-center gap-2">
+          <legend className="sr-only">Corner radius</legend>
+          <span className="text-xs font-semibold text-slate-500" aria-hidden="true">Corners</span>
+          {(["sm", "lg", "2xl"] as Radius[]).map((k) => (
+            <button
+              key={k}
+              type="button"
+              aria-pressed={radius === k}
+              onClick={() => setRadius(k)}
+              className={`rounded-md border px-2.5 py-1 text-xs font-semibold cursor-pointer ${
+                radius === k ? "border-slate-900 dark:border-white text-slate-900 dark:text-white" : "border-slate-300 dark:border-slate-700 text-slate-500"
+              }`}
+            >
+              {k === "sm" ? "Sharp" : k === "lg" ? "Soft" : "Round"}
+            </button>
+          ))}
+        </fieldset>
+      </div>
+    </div>
+  );
 }
 
 export default function LandingPage() {
   const router = useRouter();
-  const [workspaceInput, setWorkspaceInput] = useState("");
-  const [mounted, setMounted] = useState(false);
+  const createWorkspace = useCreateWorkspace();
+  const [room, setRoom] = useState("");
 
-  // Live Sandbox interactive states
-  const [previewAccent, setPreviewAccent] = useState<"blue" | "violet" | "emerald" | "amber" | "rose">("blue");
-  const [previewRadius, setPreviewRadius] = useState<"none" | "md" | "xl" | "full">("xl");
-  const [previewShadow, setPreviewShadow] = useState<"none" | "md" | "lg">("md");
-  const [mockFields, setMockFields] = useState<MockField[]>([
-    { id: "fullName", label: "Full Name", type: "text", placeholder: "Jane Doe" },
-    { id: "email", label: "Email Address", type: "email", placeholder: "jane.doe@example.com" }
-  ]);
-  const [demoActiveTab, setDemoActiveTab] = useState<"preview" | "schema">("preview");
-
-  useEffect(() => {
-    setMounted(true);
-    if (typeof window !== "undefined") {
-      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-      const updateTheme = (isDarkTheme: boolean) => {
-        if (isDarkTheme) {
-          document.documentElement.classList.add("dark");
-        } else {
-          document.documentElement.classList.remove("dark");
-        }
-      };
-
-      updateTheme(mediaQuery.matches);
-
-      const handler = (e: MediaQueryListEvent) => {
-        updateTheme(e.matches);
-      };
-
-      mediaQuery.addEventListener("change", handler);
-      return () => {
-        mediaQuery.removeEventListener("change", handler);
-        document.documentElement.classList.remove("dark");
-      };
-    }
-  }, []);
-
-  const handleCreateWorkspace = () => {
-    const randomId = Math.random().toString(36).substring(2, 10);
-    const newToken = "tok_" + Math.random().toString(36).substring(2, 15);
-    router.push(`/ws/${randomId}?token=${newToken}`);
-  };
-
-  const handleJoinWorkspace = (e: React.FormEvent) => {
+  const join = (e: React.FormEvent) => {
     e.preventDefault();
-    if (workspaceInput.trim()) {
-      router.push(`/ws/${workspaceInput.trim().toLowerCase()}`);
-    }
+    const id = room.trim().toLowerCase();
+    if (/^[a-z0-9]+$/.test(id)) router.push(`/ws/${id}`);
   };
-
-  // Live Sandbox interactions
-  const handleAddMockField = () => {
-    if (mockFields.length >= 4) return;
-    const additionalFields = [
-      { id: "role", label: "Target Role", type: "select", options: ["Frontend Dev", "Backend Dev", "UI Designer"] },
-      { id: "newsletter", label: "Subscribe to key updates", type: "checkbox" }
-    ];
-    const nextField = additionalFields[mockFields.length - 2];
-    if (nextField) {
-      setMockFields([...mockFields, nextField]);
-    }
-  };
-
-  const handleResetMockDemo = () => {
-    setMockFields([
-      { id: "fullName", label: "Full Name", type: "text", placeholder: "Jane Doe" },
-      { id: "email", label: "Email Address", type: "email", placeholder: "jane.doe@example.com" }
-    ]);
-    setPreviewAccent("blue");
-    setPreviewRadius("xl");
-    setPreviewShadow("md");
-  };
-
-  // Sandbox dynamic classes mapping
-  const accentClasses = {
-    blue: "bg-blue-600 border-blue-500 text-blue-600 focus:border-blue-500 focus:ring-blue-500/20",
-    violet: "bg-violet-600 border-violet-500 text-violet-600 focus:border-violet-500 focus:ring-violet-500/20",
-    emerald: "bg-emerald-600 border-emerald-500 text-emerald-600 focus:border-emerald-500 focus:ring-emerald-500/20",
-    amber: "bg-amber-500 border-amber-500 text-amber-500 focus:border-amber-500 focus:ring-amber-500/20",
-    rose: "bg-rose-600 border-rose-500 text-rose-600 focus:border-rose-500 focus:ring-rose-500/20"
-  };
-
-  const buttonAccentClasses = {
-    blue: "bg-blue-600 hover:bg-blue-700 text-white shadow-blue-500/25",
-    violet: "bg-violet-600 hover:bg-violet-700 text-white shadow-violet-500/25",
-    emerald: "bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-500/25",
-    amber: "bg-amber-500 hover:bg-amber-600 text-white shadow-amber-500/25",
-    rose: "bg-rose-600 hover:bg-rose-700 text-white shadow-rose-500/25"
-  };
-
-  const textAccentClasses = {
-    blue: "text-blue-600 dark:text-blue-400",
-    violet: "text-violet-600 dark:text-violet-400",
-    emerald: "text-emerald-600 dark:text-emerald-400",
-    amber: "text-amber-500 dark:text-amber-400",
-    rose: "text-rose-600 dark:text-rose-400"
-  };
-
-  const radiusClasses = {
-    none: "rounded-none",
-    md: "rounded-md",
-    xl: "rounded-xl",
-    full: "rounded-3xl"
-  };
-
-  const inputRadiusClasses = {
-    none: "rounded-none",
-    md: "rounded-lg",
-    xl: "rounded-xl",
-    full: "rounded-full"
-  };
-
-  const shadowClasses = {
-    none: "shadow-none border-slate-200 dark:border-slate-800",
-    md: "shadow-md border-slate-200/80 dark:border-slate-800/80",
-    lg: "shadow-xl border-slate-200/50 dark:border-slate-700/50"
-  };
-
-  const mockSchemaJson = JSON.stringify(
-    {
-      formTitle: "Live Sandbox Form",
-      theme: {
-        accent: previewAccent,
-        borderRadius: previewRadius,
-        shadowDensity: previewShadow
-      },
-      fields: mockFields.map(f => ({
-        id: f.id,
-        label: f.label,
-        type: f.type,
-        required: true,
-        placeholder: f.placeholder,
-        options: f.options
-      }))
-    },
-    null,
-    2
-  );
+  const roomValid = room.trim() === "" || /^[a-z0-9]+$/i.test(room.trim());
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 flex flex-col justify-between font-sans selection:bg-blue-600 selection:text-white overflow-x-hidden relative w-full">
-      {/* Decorative Grid Overlay */}
-      <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] dark:bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none opacity-50 z-0" />
-
-      {/* Dynamic Background Blurs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 w-full">
-        <div className="absolute top-[-10%] left-[-5%] w-[60%] h-[50%] bg-blue-500/5 dark:bg-blue-900/10 rounded-full blur-[140px] animate-pulse" style={{ animationDuration: '8s' }} />
-        <div className="absolute top-[25%] right-[-10%] w-[50%] h-[50%] bg-indigo-500/5 dark:bg-indigo-900/10 rounded-full blur-[140px] animate-pulse" style={{ animationDuration: '12s' }} />
-        <div className="absolute bottom-[-10%] left-[10%] w-[60%] h-[40%] bg-purple-500/5 dark:bg-purple-900/10 rounded-full blur-[140px] animate-pulse" style={{ animationDuration: '10s' }} />
-      </div>
-
-      {/* Sticky Premium Navbar */}
-      <header className="w-full px-4 sm:px-8 md:px-12 py-4 flex justify-between items-center z-20 border-b border-slate-200 dark:border-slate-900 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md sticky top-0 shadow-sm">
-        <div className="flex items-center space-x-10">
-          <Link href="/" className="flex items-center focus:outline-none">
-            <img src="/logo-long.png" alt="Formify Logo" className="h-8 md:h-9 object-contain" />
-          </Link>
-          <nav className="hidden lg:flex items-center space-x-8 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-            <a href="#workspace-hub" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Workspace Hub</a>
-            <a href="#features-bento" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Platform Features</a>
-          </nav>
-        </div>
-        <div className="flex items-center space-x-5">
-          <span className="hidden md:inline text-xs font-mono font-semibold text-slate-600 dark:text-slate-500 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-2.5 py-0.5 rounded">v{APP_VERSION}</span>
-          <button
-            onClick={handleCreateWorkspace}
-            className="py-2.5 px-5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold rounded-xl cursor-pointer transition-all shadow-md shadow-blue-500/10 dark:shadow-blue-900/20 focus:outline-none hover:scale-[1.02] active:scale-[0.98]"
-          >
-            Launch Studio
-          </button>
-        </div>
-      </header>
-
-      {/* Hero Section */}
-      <main className="w-full flex-1 z-10 flex flex-col">
-        <section className="w-full px-4 sm:px-8 md:px-12 py-16 lg:py-24 border-b border-slate-200 dark:border-slate-900/60 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative">
-          
-          {/* Hero Left Content */}
-          <div className="lg:col-span-6 space-y-8 text-left">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 bg-indigo-500/10 border border-indigo-500/20 rounded-full text-[10px] font-extrabold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">
-              <span className="h-1.5 w-1.5 rounded-full bg-indigo-500 dark:bg-indigo-400 animate-ping mr-1" />
-              <span>Real-Time P2P WebRTC Dynamic IDE</span>
-            </div>
-            
-            <h1 className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.08]">
-              Form Generation <br className="hidden sm:inline" />
-              <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">
-                IDE & Stylist
-              </span>
-            </h1>
-            
-            <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base md:text-lg leading-relaxed max-w-xl">
-              An enterprise-grade visual workspace. Build bidirectional schemas, customize themes live, collaborate instantly via WebRTC signaling, and export React+Tailwind code immediately.
+    <MarketingShell>
+      {/* Hero */}
+      <section className="relative overflow-hidden border-b border-slate-200 dark:border-slate-800">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-60 dark:opacity-40 [background:radial-gradient(60%_50%_at_20%_0%,rgba(99,102,241,.18),transparent),radial-gradient(40%_40%_at_90%_10%,rgba(14,165,233,.14),transparent)]"
+        />
+        <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:py-24">
+          <div className="space-y-7">
+            <p className="inline-flex items-center gap-2 rounded-full border border-indigo-200 dark:border-indigo-900 bg-indigo-50 dark:bg-indigo-950/50 px-3 py-1 text-xs font-semibold text-indigo-700 dark:text-indigo-300">
+              <Zap className="h-3.5 w-3.5" aria-hidden="true" />
+              Local-first · Open schema · v{APP_VERSION}
             </p>
-
-             <div className="flex flex-wrap gap-4 pt-2">
+            <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-5xl lg:text-6xl [text-wrap:balance]">
+              Build forms and workflows from one JSON schema.
+            </h1>
+            <p className="max-w-xl text-lg leading-relaxed text-slate-600 dark:text-slate-400">
+              Design visually or in code, add logic, draft with optional on-device AI, and automate what happens after submit. Your data stays in your browser unless you choose otherwise.
+            </p>
+            <div className="flex flex-wrap gap-3">
               <button
-                onClick={handleCreateWorkspace}
-                className="p-2 md:py-4 md:px-8 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white text-sm font-bold rounded-2xl cursor-pointer flex items-center space-x-3 transition-all shadow-lg shadow-blue-500/15 dark:shadow-blue-900/25 hover:shadow-blue-500/35 focus:outline-none hover:scale-[1.02] active:scale-[0.98]"
+                type="button"
+                onClick={createWorkspace}
+                className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-indigo-600/20 hover:bg-indigo-500 cursor-pointer"
               >
-                <span>Create Workspace</span>
-                <ArrowRight className="h-4.5 w-4.5" />
+                Create a workspace <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </button>
               <a
-                href="#workspace-hub"
-                className="p-2 md:py-4 md:px-8 bg-white hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:text-blue-600 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-700 text-sm font-bold rounded-2xl cursor-pointer transition-all focus:outline-none text-center hover:scale-[1.02] active:scale-[0.98]"
+                href={REPO_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center rounded-xl border border-slate-300 dark:border-slate-700 px-6 py-3.5 text-sm font-bold hover:bg-slate-100 dark:hover:bg-slate-900"
               >
-                Join Collaborative Room
+                View source
               </a>
             </div>
-
-            {/* Micro Stats (Refined Typography) */}
-            <div className="grid grid-cols-3 gap-6 pt-6 border-t border-slate-200 dark:border-slate-900/60 max-w-lg">
-              <div>
-                <span className="block text-2xl font-extrabold text-slate-900 dark:text-white">
-                  <span className="font-mono">0</span>
-                  <span className="text-sm font-semibold text-slate-500 dark:text-slate-400 ml-0.5">ms</span>
-                </span>
-                <span className="text-[10px] uppercase font-extrabold text-slate-500 dark:text-slate-400 tracking-wider">Database Lag</span>
+            <form onSubmit={join} className="flex max-w-md items-start gap-2" aria-label="Join an existing workspace">
+              <div className="flex-1">
+                <label htmlFor="room" className="sr-only">Workspace ID</label>
+                <input
+                  id="room"
+                  value={room}
+                  onChange={(e) => setRoom(e.target.value)}
+                  placeholder="Have a workspace ID? Join it"
+                  autoComplete="off"
+                  aria-invalid={!roomValid}
+                  aria-describedby={roomValid ? undefined : "room-err"}
+                  className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2.5 text-sm"
+                />
+                {!roomValid && (
+                  <p id="room-err" role="alert" className="mt-1 text-xs text-rose-600">Use letters and numbers only.</p>
+                )}
               </div>
-              <div>
-                <span className="block text-2xl font-extrabold text-slate-900 dark:text-white">
-                  <span className="font-mono">100</span>
-                  <span className="text-sm font-semibold text-slate-500 dark:text-slate-400 ml-0.5">%</span>
-                </span>
-                <span className="text-[10px] uppercase font-extrabold text-slate-500 dark:text-slate-400 tracking-wider">Client-Side</span>
-              </div>
-              <div>
-                <span className="block text-2xl font-extrabold text-slate-900 dark:text-white">
-                  <span className="font-mono">5</span>
-                  <span className="text-sm font-semibold text-slate-500 dark:text-slate-400 ml-1">Presets</span>
-                </span>
-                <span className="text-[10px] uppercase font-extrabold text-slate-500 dark:text-slate-400 tracking-wider">Visual Themes</span>
-              </div>
-            </div>
+              <button type="submit" className="rounded-lg border border-slate-300 dark:border-slate-700 px-4 py-2.5 text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-900 cursor-pointer">
+                Join
+              </button>
+            </form>
           </div>
+          <Sandbox />
+        </div>
+      </section>
 
-          {/* Interactive Live Sandbox Demo (Right) */}
-          <div className="lg:col-span-6 w-full flex flex-col justify-center">
-            <div className="w-full bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 rounded-3xl shadow-xl dark:shadow-2xl overflow-hidden relative backdrop-blur-md">
-              
-              {/* Sandbox Top Tab Bar */}
-              <div className="flex justify-between items-center px-6 py-4 bg-slate-100/50 dark:bg-slate-950/40 border-b border-slate-200 dark:border-slate-900">
-                <div className="flex items-center space-x-2">
-                  <span className="h-3 w-3 rounded-full bg-red-400" />
-                  <span className="h-3 w-3 rounded-full bg-yellow-400" />
-                  <span className="h-3 w-3 rounded-full bg-green-400" />
-                  <span className="hidden md:inline text-xs font-mono font-semibold ml-2 text-slate-500 dark:text-slate-400">interactive_sandbox.js</span>
-                </div>
-                <div className="flex bg-slate-200/60 dark:bg-slate-900 rounded-lg p-0.5">
-                  <button
-                    onClick={() => setDemoActiveTab("preview")}
-                    className={`flex items-center space-x-1.5 px-3 py-1 text-[11px] font-bold rounded-md transition-all focus:outline-none ${
-                      demoActiveTab === "preview"
-                        ? "bg-white dark:bg-slate-800 text-blue-600 dark:text-white shadow-sm"
-                        : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-                    }`}
-                  >
-                    <Eye className="h-3 w-3" />
-                    <span>Live Preview</span>
-                  </button>
-                  <button
-                    onClick={() => setDemoActiveTab("schema")}
-                    className={`flex items-center space-x-1.5 px-3 py-1 text-[11px] font-bold rounded-md transition-all focus:outline-none ${
-                      demoActiveTab === "schema"
-                        ? "bg-white dark:bg-slate-800 text-blue-600 dark:text-white shadow-sm"
-                        : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-                    }`}
-                  >
-                    <FileJson className="h-3 w-3" />
-                    <span>Schema JSON</span>
-                  </button>
-                </div>
-              </div>
-
-              <div className="p-6 grid grid-cols-1 md:grid-cols-12 gap-6 min-h-[380px]">
-                
-                {/* Sandbox Controls (Left inside card) */}
-                <div className="md:col-span-5 space-y-5 text-left border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-800 pb-5 md:pb-0 md:pr-6">
-                  {/* Accent Selector */}
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center">
-                      <Sparkles className={`h-3 w-3 mr-1 ${textAccentClasses[previewAccent]}`} />
-                      <span>Form Theme Color</span>
-                    </label>
-                    <div className="flex flex-wrap gap-1.5">
-                      {(["blue", "violet", "emerald", "amber", "rose"] as const).map(color => (
-                        <button
-                          key={color}
-                          onClick={() => setPreviewAccent(color)}
-                          className={`h-6 w-6 rounded-full cursor-pointer focus:outline-none border-2 transition-all ${
-                            previewAccent === color
-                              ? "scale-110 border-slate-600 dark:border-white ring-2 ring-blue-500/20"
-                              : "border-transparent"
-                          } ${
-                            color === "blue"
-                              ? "bg-blue-600"
-                              : color === "violet"
-                              ? "bg-violet-600"
-                              : color === "emerald"
-                              ? "bg-emerald-600"
-                              : color === "amber"
-                              ? "bg-amber-500"
-                              : "bg-rose-600"
-                          }`}
-                          title={`Select ${color} accent`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Corners Selector */}
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                      Border Corner Radius
-                    </label>
-                    <div className="grid grid-cols-3 gap-1 bg-slate-100 dark:bg-slate-950 p-0.5 rounded-lg">
-                      {(["none", "md", "xl"] as const).map(r => (
-                        <button
-                          key={r}
-                          onClick={() => setPreviewRadius(r)}
-                          className={`text-[9px] font-bold py-1 px-1.5 rounded-md uppercase tracking-wider focus:outline-none transition-all ${
-                            previewRadius === r
-                              ? "bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm"
-                              : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-300"
-                          }`}
-                        >
-                          {r}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Action Demo Buttons */}
-                  <div className="space-y-2 pt-2">
-                    <button
-                      onClick={handleAddMockField}
-                      disabled={mockFields.length >= 4}
-                      className="w-full flex items-center justify-center space-x-1.5 py-2 px-3 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/80 dark:hover:bg-slate-800 text-[10px] font-bold rounded-lg border border-slate-200 dark:border-slate-700 disabled:opacity-40 disabled:hover:bg-slate-100 dark:disabled:hover:bg-slate-800 transition-colors cursor-pointer text-slate-700 dark:text-white"
-                    >
-                      <Plus className="h-3 w-3" />
-                      <span>Add Form Input</span>
-                    </button>
-
-                    <button
-                      onClick={handleResetMockDemo}
-                      className="w-full flex items-center justify-center space-x-1.5 py-2 px-3 bg-transparent hover:bg-slate-100 dark:hover:bg-slate-950 text-[10px] font-bold rounded-lg border border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 transition-colors cursor-pointer"
-                    >
-                      <RotateCcw className="h-3 w-3" />
-                      <span>Reset Sandbox</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Sandbox Display (Right inside card) */}
-                <div className="md:col-span-7 flex flex-col justify-center text-left">
-                  {demoActiveTab === "preview" ? (
-                    <div className={`w-full bg-slate-50 dark:bg-slate-950 p-5 border ${shadowClasses[previewShadow]} ${radiusClasses[previewRadius]} transition-all duration-300 relative`}>
-                      <h4 className="text-xs font-bold text-slate-900 dark:text-white mb-4 flex items-center justify-between">
-                        <span>Demo Dynamic Form</span>
-                        <span className={`h-1.5 w-1.5 rounded-full ${previewAccent === 'amber' ? 'bg-amber-500' : previewAccent === 'emerald' ? 'bg-emerald-600' : previewAccent === 'violet' ? 'bg-violet-600' : previewAccent === 'rose' ? 'bg-rose-600' : 'bg-blue-600'} animate-pulse`} />
-                      </h4>
-                      <form className="space-y-3.5" onSubmit={(e) => e.preventDefault()}>
-                        {mockFields.map(f => (
-                          <div key={f.id} className="space-y-1">
-                            <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400">{f.label}</label>
-                            {f.type === "text" || f.type === "email" ? (
-                              <input
-                                type={f.type}
-                                placeholder={f.placeholder}
-                                className={`w-full px-3 py-2 text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-0 transition-all ${inputRadiusClasses[previewRadius]} ${
-                                  previewAccent === "blue"
-                                    ? "focus:border-blue-500 focus:ring-blue-500/20"
-                                    : previewAccent === "violet"
-                                    ? "focus:border-violet-500 focus:ring-violet-500/20"
-                                    : previewAccent === "emerald"
-                                    ? "focus:border-emerald-500 focus:ring-emerald-500/20"
-                                    : previewAccent === "amber"
-                                    ? "focus:border-amber-500 focus:ring-amber-500/20"
-                                    : "focus:border-rose-500 focus:ring-rose-500/20"
-                                }`}
-                                disabled
-                              />
-                            ) : f.type === "select" ? (
-                              <select
-                                className={`w-full px-3 py-2 text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 transition-all ${inputRadiusClasses[previewRadius]} ${
-                                  previewAccent === "blue"
-                                    ? "focus:border-blue-500 focus:ring-blue-500/20"
-                                    : previewAccent === "violet"
-                                    ? "focus:border-violet-500 focus:ring-violet-500/20"
-                                    : previewAccent === "emerald"
-                                    ? "focus:border-emerald-500 focus:ring-emerald-500/20"
-                                    : previewAccent === "amber"
-                                    ? "focus:border-amber-500 focus:ring-amber-500/20"
-                                    : "focus:border-rose-500 focus:ring-rose-500/20"
-                                }`}
-                                disabled
-                              >
-                                {f.options?.map(opt => <option key={opt}>{opt}</option>)}
-                              </select>
-                            ) : (
-                              <div className="flex items-center space-x-2 pt-1">
-                                <input
-                                  type="checkbox"
-                                  className={`h-4.5 w-4.5 border-slate-300 dark:border-slate-800 focus:ring-0 ${
-                                    previewAccent === "blue"
-                                      ? "text-blue-600 focus:ring-blue-500/20"
-                                      : previewAccent === "violet"
-                                      ? "text-violet-600 focus:ring-violet-500/20"
-                                      : previewAccent === "emerald"
-                                      ? "text-emerald-600 focus:ring-emerald-500/20"
-                                      : previewAccent === "amber"
-                                      ? "text-amber-500 focus:ring-amber-500/20"
-                                      : "text-rose-600 focus:ring-rose-500/20"
-                                  }`}
-                                  disabled
-                                  checked
-                                />
-                                <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300">{f.label}</span>
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                        
-                        <button
-                          className={`w-full py-2.5 px-4 text-xs font-bold transition-all shadow-md mt-4 cursor-pointer focus:outline-none flex items-center justify-center space-x-1.5 ${inputRadiusClasses[previewRadius]} ${buttonAccentClasses[previewAccent]}`}
-                          disabled
-                        >
-                          <span>Submit Registration</span>
-                          <CheckCircle2 className="h-3.5 w-3.5" />
-                        </button>
-                      </form>
-                    </div>
-                  ) : (
-                    <div className="w-full h-full bg-slate-900/90 dark:bg-slate-950 p-4 border border-slate-800 rounded-xl overflow-hidden flex flex-col relative group">
-                      <div className="text-[10px] font-mono text-slate-500 absolute top-2 right-3 uppercase select-none">Read-Only View</div>
-                      <pre className="font-mono text-[10px] text-emerald-400 overflow-y-auto max-h-[300px] leading-relaxed flex-1 w-full select-all">
-                        <code>{mockSchemaJson}</code>
-                      </pre>
-                    </div>
+      {/* Features */}
+      <section id="features" className="scroll-mt-20 mx-auto max-w-6xl px-4 py-20 sm:px-6">
+        <div className="max-w-2xl">
+          <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-4xl">Everything a form needs, nothing it doesn't</h2>
+          <p className="mt-3 text-slate-600 dark:text-slate-400">A solid builder at the core, with newer capabilities clearly marked while they mature.</p>
+        </div>
+        <ul className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {FEATURES.map((f) => {
+            const Icon = f.icon;
+            return (
+              <li key={f.title} className="reveal rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-6">
+                <div className="flex items-start justify-between gap-3">
+                  <span className="grid h-10 w-10 place-items-center rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-300">
+                    <Icon className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                  {f.tag && (
+                    <span className="rounded-full bg-amber-100 dark:bg-amber-950/60 px-2.5 py-0.5 text-[11px] font-semibold text-amber-800 dark:text-amber-300">
+                      {f.tag}
+                    </span>
                   )}
                 </div>
+                <h3 className="mt-4 text-base font-bold text-slate-900 dark:text-white">{f.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{f.body}</p>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
 
-              </div>
-
-            </div>
-          </div>
-        </section>
-
-        {/* Row 2: Hub controls (Create/Join Workspace) */}
-        <section id="workspace-hub" className="w-full px-4 sm:px-8 md:px-12 py-20 border-b border-slate-200 dark:border-slate-900/60 bg-slate-100/20 dark:bg-slate-950/20 relative">
-          <div className="max-w-xl text-left space-y-3 mb-12">
-            <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Workspace Hub</h2>
-            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-              Launch a decentralized layout project in browser localstorage, or establish an instant WebRTC sync room with a teammate.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
-            
-            {/* Visual Canvas Builder Card */}
-            <div className="bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-900/80 p-8 sm:p-10 rounded-3xl flex flex-col justify-between hover:border-blue-500/40 dark:hover:border-blue-500/40 transition-all duration-300 group shadow-sm hover:shadow-md">
-              <div className="space-y-5">
-                <div className="p-3 bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-2xl w-fit group-hover:scale-110 transition-transform">
-                  <Wrench className="h-7 w-7" />
-                </div>
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white">Fresh Dynamic Workspace</h3>
-                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                  Start mapping components in a sandboxed visual grid editor. Modify CSS variables (gaps, colors, corners, shadow profiles), organize fields, validate layouts, and copy React outputs immediately.
-                </p>
-              </div>
-              <button
-                onClick={handleCreateWorkspace}
-                className="mt-8 py-3.5 px-6 bg-slate-50 hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-xs font-bold rounded-xl cursor-pointer flex items-center justify-center space-x-2 transition-all text-slate-700 dark:text-white focus:outline-none hover:scale-[1.01] active:scale-[0.99]"
-              >
-                <span>Create Workspace</span>
-                <ArrowRight className="h-4 w-4 text-slate-500 dark:text-slate-400" />
-              </button>
-            </div>
-
-            {/* Multiplayer Join Card */}
-            <div className="bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-900/80 p-8 sm:p-10 rounded-3xl flex flex-col justify-between hover:border-purple-500/40 dark:hover:border-purple-500/40 transition-all duration-300 group shadow-sm hover:shadow-md">
-              <div className="space-y-5">
-                <div className="p-3 bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-2xl w-fit group-hover:scale-110 transition-transform">
-                  <Users className="h-7 w-7" />
-                </div>
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white">Multiplayer / Live Sync</h3>
-                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                  Connect straight to a teammate's active editor room. Visual settings, layout schemas, and custom inputs are synchronized directly between browsers using PeerJS WebRTC Data Channels.
-                </p>
-              </div>
-              <form onSubmit={handleJoinWorkspace} className="mt-8 flex flex-col sm:flex-row gap-3">
-                <input
-                  type="text"
-                  value={workspaceInput}
-                  onChange={(e) => setWorkspaceInput(e.target.value)}
-                  placeholder="Enter Room Code (e.g. z9h1f)"
-                  className="px-4 py-3.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-purple-500 rounded-xl text-xs font-semibold focus:outline-none placeholder-slate-400 dark:placeholder-slate-500 text-purple-600 dark:text-purple-300 font-mono text-center uppercase tracking-widest flex-1 focus:ring-1 focus:ring-purple-500/20"
-                />
-                <button
-                  type="submit"
-                  disabled={!workspaceInput.trim()}
-                  className="py-3.5 px-6 bg-purple-600 hover:bg-purple-500 dark:bg-purple-600 dark:hover:bg-purple-500 disabled:opacity-45 text-xs font-bold rounded-xl cursor-pointer text-white focus:outline-none transition-colors hover:scale-[1.01] active:scale-[0.99] disabled:hover:scale-100"
-                >
-                  Join Room
-                </button>
-              </form>
-            </div>
-
-          </div>
-        </section>
-
-        {/* Row 3: Bento grid features */}
-        <section id="features-bento" className="w-full px-4 sm:px-8 md:px-12 py-20 lg:py-24 relative">
-          <div className="max-w-xl text-left space-y-3 mb-16">
-            <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Platform Capabilities</h2>
-            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-              Accelerate developer workflows with zero servers. Drag fields, style responsive layouts, and download output components instantly.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Bento item 1 */}
-            <div className="bg-white dark:bg-slate-900/30 border border-slate-200 dark:border-slate-900/80 p-8 rounded-3xl space-y-5 hover:border-slate-300 dark:hover:border-slate-800 transition-all duration-300 shadow-sm hover:shadow-md group">
-              <div className="text-blue-600 dark:text-blue-400 bg-blue-500/10 p-3 rounded-2xl w-fit group-hover:scale-105 transition-transform">
-                <Shield className="h-6 w-6" />
-              </div>
-              <h4 className="text-base font-bold text-slate-900 dark:text-white">Local-First Sandbox</h4>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                Zero data resides on remote databases. Everything stays on the client, utilizing sandboxed browser LocalStorage settings for complete compliance and absolute privacy.
-              </p>
-            </div>
-
-            {/* Bento item 2 */}
-            <div className="bg-white dark:bg-slate-900/30 border border-slate-200 dark:border-slate-900/80 p-8 rounded-3xl space-y-5 hover:border-slate-300 dark:hover:border-slate-800 transition-all duration-300 shadow-sm hover:shadow-md group">
-              <div className="text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 p-3 rounded-2xl w-fit group-hover:scale-105 transition-transform">
-                <Zap className="h-6 w-6" />
-              </div>
-              <h4 className="text-base font-bold text-slate-900 dark:text-white">Instant WebRTC Sync</h4>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                Stream edits directly peer-to-peer. Perfect for pair-programming custom dynamic forms, coordinating visual variables, and reviewing schemas instantly.
-              </p>
-            </div>
-
-            {/* Bento item 3 */}
-            <div className="bg-white dark:bg-slate-900/30 border border-slate-200 dark:border-slate-900/80 p-8 rounded-3xl space-y-5 hover:border-slate-300 dark:hover:border-slate-800 transition-all duration-300 shadow-sm hover:shadow-md group">
-              <div className="text-purple-600 dark:text-purple-400 bg-purple-500/10 p-3 rounded-2xl w-fit group-hover:scale-105 transition-transform">
-                <Code className="h-6 w-6" />
-              </div>
-              <h4 className="text-base font-bold text-slate-900 dark:text-white">CSS Vars & Tailwind</h4>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                Compiles interactive layout changes into standard CSS styles or clean React+Tailwind component code blocks. One-click copy, zero configuration lag.
-              </p>
-            </div>
-
-            {/* Bento item 4 */}
-            <div className="bg-white dark:bg-slate-900/30 border border-slate-200 dark:border-slate-900/80 p-8 rounded-3xl space-y-5 hover:border-slate-300 dark:hover:border-slate-800 transition-all duration-300 shadow-sm hover:shadow-md group">
-              <div className="text-pink-600 dark:text-pink-400 bg-pink-500/10 p-3 rounded-2xl w-fit group-hover:scale-105 transition-transform">
-                <Paintbrush className="h-6 w-6" />
-              </div>
-              <h4 className="text-base font-bold text-slate-900 dark:text-white">5 Visual Preset Layouts</h4>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                Toggle your workspaces seamlessly. Choose between crisp Light mode, dark coder theme, Matrix Green, Midnight Navy, and Corporate Gray style settings.
-              </p>
-            </div>
-
-            {/* Bento item 5 */}
-            <div className="bg-white dark:bg-slate-900/30 border border-slate-200 dark:border-slate-900/80 p-8 rounded-3xl space-y-5 hover:border-slate-300 dark:hover:border-slate-800 transition-all duration-300 shadow-sm hover:shadow-md group">
-              <div className="text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 p-3 rounded-2xl w-fit group-hover:scale-105 transition-transform">
-                <Terminal className="h-6 w-6" />
-              </div>
-              <h4 className="text-base font-bold text-slate-900 dark:text-white font-mono">Dynamic JSON Sync</h4>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                Visual card modifications sync in real-time with the schema editor. Build fields visually, tweak the JSON schema directly, and see layout changes update live.
-              </p>
-            </div>
-
-            {/* Bento item 6 */}
-            <div className="bg-white dark:bg-slate-900/30 border border-slate-200 dark:border-slate-900/80 p-8 rounded-3xl space-y-5 hover:border-slate-300 dark:hover:border-slate-800 transition-all duration-300 shadow-sm hover:shadow-md group">
-              <div className="text-amber-600 dark:text-amber-400 bg-amber-500/10 p-3 rounded-2xl w-fit group-hover:scale-105 transition-transform">
-                <ServerOff className="h-6 w-6" />
-              </div>
-              <h4 className="text-base font-bold text-slate-900 dark:text-white font-mono">Local CSV/JSON Exporter</h4>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                Record submissions locally in browser memory. View dynamic log tables, clear data logs, or download CSV files for analytical modeling and databases.
-              </p>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      {/* Full-width Footer */}
-      <footer className="w-full px-4 sm:px-8 md:px-12 py-12 border-t border-slate-200 dark:border-slate-900 bg-white/60 dark:bg-slate-950/40 z-10">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-6 text-xs text-slate-500">
-          <div>
-            &copy; {new Date().getFullYear()} Formify Studio Pro. Decentralized client-side developer utility.
-          </div>
-          <div className="flex space-x-8 font-semibold text-slate-600 dark:text-slate-400">
-            <Link href="/about" className="hover:text-blue-600 dark:hover:text-white transition-colors">About Us</Link>
-            <Link href="/privacy" className="hover:text-blue-600 dark:hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href="/contact" className="hover:text-blue-600 dark:hover:text-white transition-colors">Contact Details</Link>
-          </div>
+      {/* How it works */}
+      <section id="how" className="scroll-mt-20 border-y border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/30">
+        <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
+          <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-4xl">From idea to live form in three steps</h2>
+          <ol className="mt-12 grid gap-6 md:grid-cols-3">
+            {STEPS.map((s) => (
+              <li key={s.n} className="reveal">
+                <span className="grid h-10 w-10 place-items-center rounded-full bg-indigo-600 text-sm font-bold text-white" aria-hidden="true">{s.n}</span>
+                <h3 className="mt-4 text-lg font-bold text-slate-900 dark:text-white">{s.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{s.body}</p>
+              </li>
+            ))}
+          </ol>
         </div>
-      </footer>
-    </div>
+      </section>
+
+      {/* Compare */}
+      <section id="compare" className="scroll-mt-20 mx-auto max-w-6xl px-4 py-20 sm:px-6">
+        <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-4xl">Where Formify fits</h2>
+        <p className="mt-3 max-w-2xl text-slate-600 dark:text-slate-400">
+          General differences between product categories, not a claim about any single product.
+        </p>
+        <div className="mt-10 overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800">
+          <table className="w-full min-w-[640px] text-left text-sm">
+            <caption className="sr-only">Comparison of hosted form builders, form libraries and Formify Studio</caption>
+            <thead className="bg-slate-50 dark:bg-slate-900 text-xs uppercase tracking-wider text-slate-500">
+              <tr>
+                <th scope="col" className="px-4 py-3 font-semibold">&nbsp;</th>
+                <th scope="col" className="px-4 py-3 font-semibold">Hosted form builders</th>
+                <th scope="col" className="px-4 py-3 font-semibold">Form libraries</th>
+                <th scope="col" className="px-4 py-3 font-semibold text-indigo-600 dark:text-indigo-300">Formify Studio</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+              {COMPARE.map((c) => (
+                <tr key={c.row}>
+                  <th scope="row" className="px-4 py-3 font-semibold text-slate-900 dark:text-white">{c.row}</th>
+                  <td className="px-4 py-3 text-slate-600 dark:text-slate-400">{c.hosted}</td>
+                  <td className="px-4 py-3 text-slate-600 dark:text-slate-400">{c.library}</td>
+                  <td className="px-4 py-3 font-medium text-slate-900 dark:text-white">{c.formify}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      {/* Trust */}
+      <section className="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
+        <div className="grid gap-8 rounded-3xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40 p-8 md:grid-cols-2 md:p-12">
+          <div>
+            <ShieldCheck className="h-8 w-8 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
+            <h2 className="mt-4 text-2xl font-extrabold text-slate-900 dark:text-white">Private by default, honest about the edges</h2>
+            <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+              Forms and submissions are stored in your browser. Some optional features reach the network, and we say exactly which in the privacy page.
+            </p>
+            <a href="/privacy" className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-indigo-600 dark:text-indigo-300 hover:underline">
+              Read what leaves your device <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </a>
+          </div>
+          <ul className="space-y-3 text-sm">
+            {[
+              ["Stored locally", "Schemas and submissions live in IndexedDB on your device."],
+              ["Edit links are not security", "They are a convenience in the browser. Enforced roles need the optional server."],
+              ["AI is opt-in", "Off until you enable it. On-device generation downloads a model first."]
+            ].map(([t, d]) => (
+              <li key={t} className="flex gap-3">
+                <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
+                <span><strong className="text-slate-900 dark:text-white">{t}.</strong> <span className="text-slate-600 dark:text-slate-400">{d}</span></span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="border-t border-slate-200 dark:border-slate-800 bg-indigo-600">
+        <div className="mx-auto flex max-w-6xl flex-col items-center gap-5 px-4 py-16 text-center sm:px-6">
+          <h2 className="text-3xl font-extrabold text-white sm:text-4xl [text-wrap:balance]">Start with a blank schema or a template</h2>
+          <p className="max-w-xl text-indigo-100">No account, no install. Create a workspace and have a working form in a minute.</p>
+          <button
+            type="button"
+            onClick={createWorkspace}
+            className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3.5 text-sm font-bold text-indigo-700 hover:bg-indigo-50 cursor-pointer"
+          >
+            Create a workspace <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </button>
+        </div>
+      </section>
+    </MarketingShell>
   );
 }

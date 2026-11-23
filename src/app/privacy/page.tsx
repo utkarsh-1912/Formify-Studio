@@ -1,127 +1,94 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { ShieldCheck, Database, Network, Cookie, ArrowLeft, Lock } from "lucide-react";
+import React from "react";
+import MarketingShell from "../../components/marketing/MarketingShell";
+
+const SECTIONS: { title: string; body: React.ReactNode }[] = [
+  {
+    title: "What stays on your device",
+    body: (
+      <>
+        Your workspaces, form schemas, theme settings and test submissions are stored in your browser using IndexedDB, with a copy in <code>localStorage</code> for compatibility with the share and analytics pages. We do not operate a database that receives this data. Clearing site data removes it, so export your JSON first if you want to keep it.
+      </>
+    )
+  },
+  {
+    title: "Live collaboration",
+    body: (
+      <>
+        When you connect to a room, browsers find each other through a signaling server and then exchange edits directly over WebRTC. The default signaling server is the public one at <code>signaling.yjs.dev</code>, which can see connection metadata such as IP addresses and room names, and STUN servers are used for NAT traversal. You can point the app at your own signaling server, or at the optional self-hosted Formify server. Do not put secrets in forms you edit with people you do not trust: anyone with a room link can join it.
+      </>
+    )
+  },
+  {
+    title: "AI assistant (optional, off by default)",
+    body: (
+      <>
+        The assistant only runs if you turn it on. On-device generation downloads model files from the provider's host the first time, then runs locally in your browser. A local model server such as Ollama keeps requests on your machine. If you configure a remote endpoint with your own API key, the text of your request and the relevant form schema are sent to that provider and are governed by their terms. The key is kept in memory for the session, optionally in session storage, and is never written to logs.
+      </>
+    )
+  },
+  {
+    title: "Workflows (experimental)",
+    body: (
+      <>
+        Test runs use mock services, so nothing leaves your browser while you build. A workflow that you configure to call a webhook or send email will contact the destinations you specify.
+      </>
+    )
+  },
+  {
+    title: "Analytics and tracking",
+    body: <>We do not use advertising tags, tracking pixels or third-party analytics cookies in the app.</>
+  },
+  {
+    title: "Third-party resources",
+    body: (
+      <>
+        The site loads the Inter typeface from Google Fonts, which means Google receives your IP address and browser details when a page loads. The hosting provider may also keep standard server logs.
+      </>
+    )
+  },
+  {
+    title: "Access links are not a security boundary",
+    body: (
+      <>
+        Edit and view-only links work entirely in your browser. They help you avoid accidental edits but do not prevent someone who has the link from editing. Enforced roles require the optional self-hosted server.
+      </>
+    )
+  }
+];
 
 export default function PrivacyPage() {
-  const router = useRouter();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    if (typeof window !== "undefined") {
-      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-      const updateTheme = (isDarkTheme: boolean) => {
-        if (isDarkTheme) {
-          document.documentElement.classList.add("dark");
-        } else {
-          document.documentElement.classList.remove("dark");
-        }
-      };
-
-      updateTheme(mediaQuery.matches);
-
-      const handler = (e: MediaQueryListEvent) => {
-        updateTheme(e.matches);
-      };
-
-      mediaQuery.addEventListener("change", handler);
-      return () => {
-        mediaQuery.removeEventListener("change", handler);
-        document.documentElement.classList.remove("dark");
-      };
-    }
-  }, []);
-
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 flex flex-col justify-between font-sans selection:bg-blue-600 selection:text-white overflow-y-auto relative">
-      {/* Background gradients */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-500/5 dark:bg-blue-900/10 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-500/5 dark:bg-purple-900/10 rounded-full blur-[120px]" />
+    <MarketingShell>
+      <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20">
+        <p className="text-sm font-semibold text-indigo-600 dark:text-indigo-300">Privacy</p>
+        <h1 className="mt-2 text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-5xl">Privacy policy</h1>
+        <p className="mt-5 text-lg leading-relaxed text-slate-600 dark:text-slate-400">
+          Formify Studio is local-first: by default your forms and submissions never leave your browser. This page lists the optional features that do use the network.
+        </p>
+
+        <div className="mt-8 rounded-xl border border-emerald-200 dark:border-emerald-900 bg-emerald-50 dark:bg-emerald-950/30 p-4 text-sm text-emerald-900 dark:text-emerald-200">
+          <strong>In short:</strong> we do not collect your form data. Features that talk to other servers are optional and described below.
+        </div>
+
+        <div className="mt-12 space-y-10">
+          {SECTIONS.map((s, i) => (
+            <section key={s.title} aria-labelledby={`p-${i}`}>
+              <h2 id={`p-${i}`} className="text-lg font-bold text-slate-900 dark:text-white">
+                {i + 1}. {s.title}
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400 [&_code]:rounded [&_code]:bg-slate-100 dark:[&_code]:bg-slate-800 [&_code]:px-1 [&_code]:py-0.5 [&_code]:text-xs">
+                {s.body}
+              </p>
+            </section>
+          ))}
+        </div>
+
+        <p className="mt-12 border-t border-slate-200 dark:border-slate-800 pt-6 text-xs text-slate-500">
+          Last revised: November 2026. This page describes the behavior of the open-source code; if you self-host or modify it, your own deployment's behavior is yours to document.
+        </p>
       </div>
-
-      {/* Header */}
-      <header className="max-w-6xl w-full mx-auto px-4 py-4 sm:px-6 sm:py-6 flex justify-between items-center z-10 border-b border-slate-200 dark:border-slate-900">
-        <button
-          onClick={() => router.push("/")}
-          className="flex items-center space-x-2 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-white transition-all focus:outline-none cursor-pointer"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          <span>Back to Home</span>
-        </button>
-        <div className="flex items-center space-x-3">
-          <img src="/logo-long.png" alt="Formify Logo" className="h-7 sm:h-8" />
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="max-w-3xl w-full mx-auto px-4 py-10 sm:px-6 sm:py-16 z-10 flex-1 space-y-10 sm:space-y-12">
-        <div className="space-y-3 sm:space-y-4 text-center">
-          <div className="inline-flex items-center justify-center p-2.5 bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-2xl mb-1 sm:mb-2">
-            <Lock className="h-6 w-6 sm:h-7 sm:w-7" />
-          </div>
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">Privacy Policy</h2>
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
-            Formify Studio Pro is a decentralized, local-first utility. Your privacy is protected by design: we literally cannot see your data.
-          </p>
-        </div>
-
-        {/* Overview Alert */}
-        <div className="bg-emerald-500/5 dark:bg-emerald-950/20 border border-emerald-500/20 rounded-2xl p-5 text-xs text-emerald-800 dark:text-emerald-400 leading-relaxed flex items-start space-x-3 shadow-sm">
-          <ShieldCheck className="h-5 w-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" />
-          <div>
-            <span className="font-bold text-emerald-800 dark:text-emerald-400 block mb-1">Our Privacy Commitment</span>
-            We collect, store, and process zero user-generated form schemas or form submission values on remote servers. All operations happen entirely within your local browser.
-          </div>
-        </div>
-
-        {/* Policy Sections */}
-        <div className="space-y-8">
-          {/* Section 1 */}
-          <div className="space-y-2.5">
-            <div className="flex items-center space-x-2.5 text-blue-600 dark:text-blue-400">
-              <Database className="h-5 w-5 flex-shrink-0" />
-              <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">1. Local-First Browser Storage</h3>
-            </div>
-            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed pl-7">
-              All form templates, schemas, customization variables, and test submission entries are stored directly in your browser's local sandbox (utilizing the <code>localStorage</code> API). This data remains on your physical hardware. Clearing your browser cookies/data will permanently delete this information unless you export/download the JSON file beforehand.
-            </p>
-          </div>
-
-          {/* Section 2 */}
-          <div className="space-y-2.5">
-            <div className="flex items-center space-x-2.5 text-purple-600 dark:text-purple-400">
-              <Network className="h-5 w-5 flex-shrink-0" />
-              <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">2. Peer-to-Peer Collaborative Sync</h3>
-            </div>
-            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed pl-7">
-              When utilizing the Live multiplayer synchronization features, Formify Studio coordinates peer discovery via PeerJS servers. However, once connected, all form modifications and edits stream directly between browser peers via decentralized <strong>WebRTC Data Channels</strong>. No collaborative data payloads are parsed, monitored, or persisted on our signaling infrastructure.
-            </p>
-          </div>
-
-          {/* Section 3 */}
-          <div className="space-y-2.5">
-            <div className="flex items-center space-x-2.5 text-pink-600 dark:text-pink-400">
-              <Cookie className="h-5 w-5 flex-shrink-0" />
-              <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">3. Third-Party Analytics & Tracking</h3>
-            </div>
-            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed pl-7">
-              We employ no tracking pixels, advertising tags, Google Analytics, or third-party identifier cookies. Our utility operates independently, ensuring a distraction-free, privacy-respecting workflow environment for developers.
-            </p>
-          </div>
-        </div>
-
-        <div className="border-t border-slate-200 dark:border-slate-900 pt-6 text-center text-xs text-slate-500 dark:text-slate-500">
-          Last revised: June 20, 2026. Have questions about client-side sandboxing? Feel free to build your own copy of Formify.
-        </div>
-      </main>
-
-      {/* Footer */}
-      <footer className="max-w-6xl w-full mx-auto px-4 py-4 sm:px-6 sm:py-6 text-center text-xs text-slate-500 dark:text-slate-500 border-t border-slate-200 dark:border-slate-900/60 z-10">
-        &copy; {new Date().getFullYear()} Formify Studio.
-      </footer>
-    </div>
+    </MarketingShell>
   );
 }

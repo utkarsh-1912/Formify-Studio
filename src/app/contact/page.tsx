@@ -1,157 +1,70 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { Mail, Phone, MapPin, MessageSquare, ArrowLeft, Building2 } from "lucide-react";
+import React from "react";
+import { Bug, GitPullRequest, Lightbulb } from "lucide-react";
+import MarketingShell, { REPO_URL } from "../../components/marketing/MarketingShell";
+
+const CHANNELS = [
+  {
+    icon: Bug,
+    title: "Report a bug",
+    body: "Include the steps to reproduce, your browser, and the schema JSON if it is involved.",
+    href: `${REPO_URL}/issues/new`,
+    cta: "Open an issue"
+  },
+  {
+    icon: Lightbulb,
+    title: "Suggest a feature",
+    body: "Describe the problem you are trying to solve before the solution you have in mind.",
+    href: `${REPO_URL}/issues/new`,
+    cta: "Start a request"
+  },
+  {
+    icon: GitPullRequest,
+    title: "Contribute",
+    body: "Pull requests are welcome. Run the typecheck and tests before you open one.",
+    href: REPO_URL,
+    cta: "View the repository"
+  }
+];
 
 export default function ContactPage() {
-  const router = useRouter();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    if (typeof window !== "undefined") {
-      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-      const updateTheme = (isDarkTheme: boolean) => {
-        if (isDarkTheme) {
-          document.documentElement.classList.add("dark");
-        } else {
-          document.documentElement.classList.remove("dark");
-        }
-      };
-
-      updateTheme(mediaQuery.matches);
-
-      const handler = (e: MediaQueryListEvent) => {
-        updateTheme(e.matches);
-      };
-
-      mediaQuery.addEventListener("change", handler);
-      return () => {
-        mediaQuery.removeEventListener("change", handler);
-        document.documentElement.classList.remove("dark");
-      };
-    }
-  }, []);
-
-  if (!mounted) return null;
-
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 flex flex-col justify-between font-sans selection:bg-blue-600 selection:text-white overflow-y-auto relative">
-      {/* Background gradients */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-500/5 dark:bg-blue-900/10 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-500/5 dark:bg-purple-900/10 rounded-full blur-[120px]" />
+    <MarketingShell>
+      <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-20">
+        <p className="text-sm font-semibold text-indigo-600 dark:text-indigo-300">Contact</p>
+        <h1 className="mt-2 text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-5xl">Get in touch</h1>
+        <p className="mt-5 max-w-2xl text-lg leading-relaxed text-slate-600 dark:text-slate-400">
+          Formify Studio is an open-source project. The best way to reach us is on GitHub, where questions and fixes stay visible to everyone who hits the same problem.
+        </p>
+
+        <ul className="mt-12 grid gap-5 sm:grid-cols-3">
+          {CHANNELS.map((c) => {
+            const Icon = c.icon;
+            return (
+              <li key={c.title} className="flex flex-col rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-6">
+                <span className="grid h-10 w-10 place-items-center rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-300">
+                  <Icon className="h-5 w-5" aria-hidden="true" />
+                </span>
+                <h2 className="mt-4 text-base font-bold text-slate-900 dark:text-white">{c.title}</h2>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{c.body}</p>
+                <a
+                  href={c.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-5 inline-flex w-fit text-sm font-semibold text-indigo-600 dark:text-indigo-300 hover:underline"
+                >
+                  {c.cta} <span aria-hidden="true">&nbsp;&rarr;</span>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+
+        <p className="mt-10 rounded-xl border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-950/30 p-4 text-sm text-amber-900 dark:text-amber-200">
+          Please do not post private data, API keys or real submissions in public issues.
+        </p>
       </div>
-
-      {/* Header */}
-      <header className="max-w-6xl w-full mx-auto px-4 py-4 sm:px-6 sm:py-6 flex justify-between items-center z-10 border-b border-slate-200 dark:border-slate-900">
-        <button
-          onClick={() => router.push("/")}
-          className="flex items-center space-x-2 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-white transition-all focus:outline-none cursor-pointer"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          <span>Back to Home</span>
-        </button>
-        <div className="flex items-center space-x-3">
-          <img src="/logo-long.png" alt="Formify Logo" className="h-7 sm:h-8" />
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="max-w-3xl w-full mx-auto px-4 py-10 sm:px-6 sm:py-16 z-10 flex-1 flex flex-col justify-center space-y-10 sm:space-y-12">
-        <div className="space-y-3 sm:space-y-4 text-center">
-          <div className="inline-flex items-center justify-center p-2.5 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-2xl mb-1 sm:mb-2">
-            <Building2 className="h-6 w-6 sm:h-7 sm:w-7" />
-          </div>
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">Contact Formify Studio</h2>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
-            Reach out to our core team for enterprise licensing, technical support, or partnership inquiries.
-          </p>
-        </div>
-
-        {/* Contact Details Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 pt-2">
-          {/* Card 1: General Enquiries */}
-          <a
-            href="mailto:hello@formify-studio.com"
-            className="bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-900 p-5 sm:p-6 rounded-2xl hover:border-blue-500/40 dark:hover:border-blue-500/40 hover:bg-slate-50 dark:hover:bg-slate-900/60 transition-all flex items-start space-x-4 group cursor-pointer focus:outline-none shadow-sm"
-          >
-            <div className="p-3 bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors">
-              <Mail className="h-5 w-5" />
-            </div>
-            <div>
-              <span className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">General Enquiries</span>
-              <span className="block text-sm font-semibold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                hello@formify-studio.com
-              </span>
-              <span className="block text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Reach out for billing, general support, or licensing.
-              </span>
-            </div>
-          </a>
-
-          {/* Card 2: Support */}
-          <a
-            href="mailto:support@formify-studio.com"
-            className="bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-900 p-5 sm:p-6 rounded-2xl hover:border-purple-500/40 dark:hover:border-purple-500/40 hover:bg-slate-50 dark:hover:bg-slate-900/60 transition-all flex items-start space-x-4 group cursor-pointer focus:outline-none shadow-sm"
-          >
-            <div className="p-3 bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-xl group-hover:bg-purple-600 group-hover:text-white transition-colors">
-              <MessageSquare className="h-5 w-5" />
-            </div>
-            <div>
-              <span className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Technical Support</span>
-              <span className="block text-sm font-semibold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
-                support@formify-studio.com
-              </span>
-              <span className="block text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Get assistance regarding custom schema validations or WebRTC.
-              </span>
-            </div>
-          </a>
-
-          {/* Card 3: Location */}
-          <div className="bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-900 p-5 sm:p-6 rounded-2xl flex items-start space-x-4 shadow-sm">
-            <div className="p-3 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl">
-              <MapPin className="h-5 w-5" />
-            </div>
-            <div>
-              <span className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Corporate HQ</span>
-              <span className="block text-sm font-semibold text-slate-900 dark:text-white">
-                Formify Studio Inc.
-              </span>
-              <span className="block text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-                100 Pine Street, Suite 1200,<br />
-                San Francisco, CA 94111
-              </span>
-            </div>
-          </div>
-
-          {/* Card 4: Phone */}
-          <a
-            href="tel:+14155550199"
-            className="bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-900 p-5 sm:p-6 rounded-2xl hover:border-pink-500/40 dark:hover:border-pink-500/40 hover:bg-slate-50 dark:hover:bg-slate-900/60 transition-all flex items-start space-x-4 group cursor-pointer focus:outline-none shadow-sm"
-          >
-            <div className="p-3 bg-pink-500/10 text-pink-600 dark:text-pink-400 rounded-xl group-hover:bg-pink-600 group-hover:text-white transition-colors">
-              <Phone className="h-5 w-5" />
-            </div>
-            <div>
-              <span className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Call Us</span>
-              <span className="block text-sm font-semibold text-slate-900 dark:text-white group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors">
-                +1 (415) 555-0199
-              </span>
-              <span className="block text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Available Monday - Friday, 9:00 AM - 5:00 PM PST.
-              </span>
-            </div>
-          </a>
-        </div>
-      </main>
-
-      {/* Footer */}
-      <footer className="max-w-6xl w-full mx-auto px-4 py-4 sm:px-6 sm:py-6 text-center text-xs text-slate-500 dark:text-slate-400 border-t border-slate-200 dark:border-slate-900/60 z-10">
-        &copy; {new Date().getFullYear()} Formify Studio.
-      </footer>
-    </div>
+    </MarketingShell>
   );
 }

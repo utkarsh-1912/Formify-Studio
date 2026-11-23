@@ -1,145 +1,129 @@
-# Formify Studio ✦ Visual & Code Dynamic Form Builder
+<div align="center">
 
-Formify Studio is an enterprise-grade, local-first visual form engine and generation IDE built on Next.js 15. It bridges the gap between visual layout designers and raw JSON configurations, allowing developers and designers to build, theme, and synchronize responsive form components in real-time.
+<img src="public/logo-long.png" alt="Formify Studio" height="56" />
 
-![Formify Studio Cover](https://github.com/user-attachments/assets/81d1e147-b1f3-4b98-9e0b-4abe9427a6f0)
+# Formify Studio
 
----
+**Build forms and workflows from one open JSON schema.**
+Local-first. Visual and code editing in sync. Optional on-device AI.
 
-## 🚀 Key Features
+[Source](https://github.com/utkarsh-1912/Formify-Studio) · [Roadmap](OVERHAUL_PLAN.md) · [Server docs](server/README.md) · [ML docs](ml/README.md)
 
-- **Bi-Directional Live Sync**: Modify schemas visually via the drag-and-drop property builder, or code directly in the advanced JSON editor (powered by CodeMirror) with real-time validation.
-- **WebRTC Serverless Collaboration**: Connect and sync workspace schemas in real-time directly between browsers without any intermediate database lag.
-- **Tailwind & CSS Variable Styling**: Customize borders, layout grids, shadows, button sizes, and typography weights on the fly.
-- **Role-Based Edit Links (client-side, not a security boundary)**:
-  - **Edit Mode**: Access workspaces with `?token=tok_xxxx` to unlock builders, customizations, templates, and settings.
-  - **View-Only Mode**: Access workspaces securely without tokens to share layouts or review designs. Switches and edit bypasses are locked out for guest safety.
-- **Redesigned Submission Details Modal**:
-  - Structured fields view formatting check-boxes, text, and keys into premium list cards.
-  - Live toggles between formatted structured data lists and raw JSON schemas.
-  - Date & time logging info grid with calendar & clock iconography.
-  - Dynamic copy confirmations for raw JSON payloads.
-- **5 Workspace Layout Themes**:
-  - **Light**: Crisp, clean, high-contrast.
-  - **Dark**: Low-light slate mode.
-  - **Corporate**: Sleek professional layout.
-  - **Midnight**: Elegant deep blue space tone.
-  - **Matrix**: Developer terminal green font interface.
-- **Local-First Data Sandbox**: Form schema changes and submissions log entries are persisted privately in the browser's LocalStorage. Export logs directly to CSV or JSON formats.
+</div>
 
 ---
 
-## 🛠️ Technology Stack
+## What it is
 
-- **Core Framework**: [Next.js 15 (App Router)](https://nextjs.org/)
-- **UI & Iconography**: [Tailwind CSS](https://tailwindcss.com/) & [Lucide React](https://lucide.dev/)
-- **State Management**: React Hooks (Local-First Sync)
-- **Collaborative Sync**: [PeerJS](https://peerjs.com/) (WebRTC Data Channels)
-- **Schema Validation**: AJV Schema Validator
+Formify Studio is a form and workflow studio built on Next.js 15 and React 19. A form is a versioned JSON document; the visual builder, the renderer, the code exports and the workflow engine all read that same document. Your forms and submissions live in your browser unless you opt into a server.
 
----
+## Feature status
 
-## 💻 Setup & Installation
+| Area | What you get | Status |
+|---|---|---|
+| **Builder** | Visual builder and CodeMirror JSON editor, kept in sync; templates gallery; 5 themes | Stable |
+| **Form engine** | 17 field types (text, email, number, select, radio, checkbox, textarea, date, multiselect, rating, slider, file, phone, section, pagebreak, hidden, calculated), `visibleIf`/`requiredIf` expressions, calculated fields, multi-step forms, typed values, accessible renderer | Stable |
+| **Validation** | Formal JSON Schema (v1, revision 1.1) checked with AJV, friendly error messages, `migrateSchema` for future versions | Stable |
+| **Exports** | Standalone HTML, React + Tailwind, and a `<formify-form>` web component, all running the same logic as the studio | Stable |
+| **Submissions** | Local log with structured and raw views, CSV/JSON export, analytics page | Stable |
+| **Collaboration** | Yjs-based peer-to-peer sync (y-webrtc), per-field merging, presence, grouped undo | Beta |
+| **AI assistant** | Plain-English requests become a reviewable JSON Patch diff; providers: WebLLM (on-device), Ollama, OpenAI-compatible endpoint | Beta, off by default |
+| **Workflows** | Node canvas, branching, loops, webhooks with domain allowlist, approval pauses, test runs with mocks | Experimental |
+| **Self-hosted server** | Hono + SQLite, JWT roles, validated submissions, signed webhooks, role-enforcing sync relay | Beta, see [server/README.md](server/README.md) |
+| **Model pipeline** | Eval harness, dataset scripts, QLoRA/GRPO configs | Scripts only, nothing trained yet, see [ml/README.md](ml/README.md) |
 
-### Prerequisites
+## Quick start
 
-- **Node.js** (>= 18.x)
-- **NPM** (>= 7.x)
+Requires **Node.js 22** and npm.
 
-### Installation Guide
+```bash
+git clone https://github.com/utkarsh-1912/Formify-Studio.git
+cd Formify-Studio
+npm install
+npm run dev
+```
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/utkarsh-1912/formify-json.git
-   cd formify-json
-   ```
+Open <http://localhost:3000> and create a workspace.
 
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
+### Scripts
 
-3. **Run checks** (typecheck, tests, build):
-   ```bash
-   npm run typecheck && npm test && npm run build
-   ```
+| Command | What it does |
+|---|---|
+| `npm run dev` | Start the dev server |
+| `npm run build` / `npm start` | Production build and server |
+| `npm run typecheck` | `tsc --noEmit` |
+| `npm test` | Run the Vitest suite (jsdom) |
+| `npm run test:coverage` | Tests with coverage for `src/utils` |
+| `npm run gen:runtime` | Regenerate the embedded engine used by HTML/React exports. Run it after editing `src/engine/core.ts`; a test fails if it is stale |
 
-4. **Start the local development server**:
-   ```bash
-   npm run dev
-   ```
-   Open your browser and visit `http://localhost:3000/`.
+## Feature flags
 
----
+Experimental features are hidden until enabled.
 
-## 📦 Production Deployment
+| Feature | Enable with |
+|---|---|
+| AI assistant tab | `NEXT_PUBLIC_FORMIFY_AI=1` at build time, or `localStorage.setItem("formify_ai", "1")` in the browser |
+| Workflows page (`/ws/<id>/workflows`) | `NEXT_PUBLIC_FORMIFY_WORKFLOWS=1`, or the enable button on the page |
 
-To compile the application into an optimized, production-ready static bundle:
+Collaboration can be pointed at your own infrastructure with `NEXT_PUBLIC_FORMIFY_SIGNALING` (comma-separated `wss://` signaling servers) and `NEXT_PUBLIC_FORMIFY_WS_URL` (y-websocket relay). See `src/sync/config.ts`.
 
-1. **Build the production build**:
-   ```bash
-   npm run build
-   ```
-
-2. **Serve the production bundle**:
-   You can run the build server locally using a static server:
-   ```bash
-   npm run start
-   ```
-
----
-
-## 📄 Example JSON Schema
-
-The format is formally described by a versioned JSON Schema in `src/utils/formifySchema.ts` (current: v1, optional `"schemaVersion": 1`). Older documents are upgraded with `migrateSchema`.
-
-Formify schemas use a highly structured, validatable JSON configuration layout. 
+## Example schema
 
 ```json
 {
-  "formTitle": "Project Requirements Survey",
-  "formDescription": "Please fill out this survey about your project needs",
+  "schemaVersion": 1,
+  "formTitle": "Request a demo",
   "fields": [
+    { "id": "email", "type": "email", "label": "Work email", "required": true },
+    { "id": "isTeam", "type": "checkbox", "label": "I'm requesting for a team" },
     {
-      "id": "name",
-      "type": "text",
-      "label": "Full Name",
-      "required": true,
-      "placeholder": "Enter your full name"
-    },
-    {
-      "id": "email",
-      "type": "email",
-      "label": "Email Address",
-      "required": true,
-      "placeholder": "you@example.com",
-      "validation": {
-        "pattern": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
-        "message": "Please enter a valid email address"
-      }
-    },
-    {
-      "id": "companySize",
-      "type": "select",
-      "label": "Company Size",
-      "required": true,
-      "options": [
-        { "value": "1-50", "label": "1-50 employees" },
-        { "value": "51-200", "label": "51-200 employees" },
-        { "value": "201-1000", "label": "201-1000 employees" }
-      ]
+      "id": "seats",
+      "type": "number",
+      "label": "Team size",
+      "visibleIf": "isTeam == true",
+      "requiredIf": "isTeam == true"
     }
   ]
 }
 ```
 
----
+The schema is defined in [`src/utils/formifySchema.ts`](src/utils/formifySchema.ts). Expressions are parsed by a hand-written evaluator in `src/engine/`; no `eval` or `new Function` is used.
 
-## 🔒 Security & Privacy
+## Project layout
 
-Formify Studio values user privacy. By prioritizing a **local-first** approach:
-- All form configuration and builder data is kept in the user's browser sandbox.
-- WebRTC peer connections are direct browser-to-browser channels without standard backend log pipelines.
-- Data export configurations (JSON/CSV) run strictly client-side.
-- Edit/View links are a **UI convenience, not access control**. Tokens live in the browser and are checked client-side, so anyone with the edit link (or who can open devtools) can edit. Enforceable permissions require a server with signed tokens, which is on the roadmap (see `OVERHAUL_PLAN.md`, Phase 4).
-- P2P sync uses the public PeerJS broker and public STUN servers for connection setup; schema content flows peer-to-peer, but peer IPs are visible to those services.
+```
+src/app/            Next.js routes: marketing pages and /ws/[id]/*
+src/features/       Workspace UI by area (builder, submissions, share, settings)
+src/store/          Zustand store + IndexedDB persistence (migrates old localStorage data)
+src/engine/         Logic, validation and typed-value engine
+src/sync/           Yjs collaboration layer
+src/ai/             Providers, multi-agent pipeline, JSON Patch utilities
+src/flow/           Workflow schema, executor and Web Worker wrapper
+src/components/     Shared UI (renderer, editors, marketing, AI chat, flow canvas)
+server/             Optional self-hostable backend
+ml/                 Evaluation harness and training scripts
+```
+
+## Privacy and security
+
+- Forms, themes and submissions are stored in your browser (IndexedDB, mirrored to `localStorage`). We do not run a database that receives them.
+- Collaboration uses WebRTC after peers find each other through a signaling server. The default is the public `wss://signaling.yjs.dev`; configure your own for sensitive work.
+- On-device AI downloads model files the first time. A remote AI endpoint receives your request and schema; your API key stays in memory for the session.
+- **Edit and view-only links are a convenience, not access control.** Tokens live in the browser and are checked client-side. Enforced roles need the optional server.
+- The server's threat model, including known gaps, is in [server/README.md](server/README.md). It has not been independently audited.
+
+Full details: the in-app [privacy page](src/app/privacy/page.tsx).
+
+## Contributing
+
+Issues and pull requests are welcome. Before opening one:
+
+```bash
+npm run typecheck && npm test && npm run build
+```
+
+CI runs the same three checks on every push and pull request.
+
+## License
+
+No license file is included yet. Add one before accepting outside contributions or distributing builds.
