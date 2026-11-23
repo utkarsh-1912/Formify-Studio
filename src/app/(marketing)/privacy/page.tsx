@@ -1,7 +1,5 @@
-"use client";
-
 import React from "react";
-import MarketingShell from "../../components/marketing/MarketingShell";
+
 
 const SECTIONS: { title: string; body: React.ReactNode }[] = [
   {
@@ -58,9 +56,11 @@ const SECTIONS: { title: string; body: React.ReactNode }[] = [
   }
 ];
 
+export const metadata = { title: "Privacy", description: "What Formify Studio stores locally and which optional features use the network." };
+
 export default function PrivacyPage() {
   return (
-    <MarketingShell>
+    <>
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20">
         <p className="text-sm font-semibold text-indigo-600 dark:text-indigo-300">Privacy</p>
         <h1 className="mt-2 text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-5xl">Privacy policy</h1>
@@ -89,6 +89,6 @@ export default function PrivacyPage() {
           Last revised: November 2026. This page describes the behavior of the open-source code; if you self-host or modify it, your own deployment's behavior is yours to document.
         </p>
       </div>
-    </MarketingShell>
+    </>
   );
 }

@@ -1,8 +1,6 @@
-"use client";
-
 import React from "react";
 import { Bug, GitPullRequest, Lightbulb } from "lucide-react";
-import MarketingShell, { REPO_URL } from "../../components/marketing/MarketingShell";
+import { REPO_URL } from "../../../components/marketing/MarketingShell";
 
 const CHANNELS = [
   {
@@ -28,9 +26,11 @@ const CHANNELS = [
   }
 ];
 
+export const metadata = { title: "Contact", description: "Report a bug, suggest a feature or contribute to Formify Studio." };
+
 export default function ContactPage() {
   return (
-    <MarketingShell>
+    <>
       <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-20">
         <p className="text-sm font-semibold text-indigo-600 dark:text-indigo-300">Contact</p>
         <h1 className="mt-2 text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-5xl">Get in touch</h1>
@@ -65,6 +65,6 @@ export default function ContactPage() {
           Please do not post private data, API keys or real submissions in public issues.
         </p>
       </div>
-    </MarketingShell>
+    </>
   );
 }

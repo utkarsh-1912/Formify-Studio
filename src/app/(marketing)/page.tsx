@@ -10,15 +10,15 @@ import {
   FileJson,
   GitBranch,
   Eye,
-  Minus,
+  Plus,
   Share2,
   ShieldCheck,
   Sparkles,
   Workflow,
   Zap
 } from "lucide-react";
-import MarketingShell, { REPO_URL, useCreateWorkspace } from "../components/marketing/MarketingShell";
-import { APP_VERSION } from "../utils/version";
+import { REPO_URL, useCreateWorkspace } from "../../components/marketing/MarketingShell";
+import { APP_VERSION } from "../../utils/version";
 
 const ACCENTS = {
   indigo: { label: "Indigo", value: "#4f46e5" },
@@ -73,6 +73,33 @@ const STEPS = [
   { n: "1", title: "Describe", body: "Start from a template, drag fields in, paste JSON, or ask the AI assistant for a first draft." },
   { n: "2", title: "Refine", body: "Add conditions, calculations and steps. Style it live with themes, spacing and accent colors." },
   { n: "3", title: "Ship", body: "Export code, share a live link, or wire a workflow that routes each submission where it should go." }
+];
+
+const USE_CASES = [
+  {
+    title: "Product and engineering",
+    who: "Developers",
+    body: "Define a form once as JSON, validate it in CI, and export a React component or web component that behaves the same as the preview."
+  },
+  {
+    title: "Lead capture and intake",
+    who: "Ops and growth teams",
+    body: "Show follow-up questions only when they matter, then route each submission with a workflow instead of copying rows by hand."
+  },
+  {
+    title: "Sensitive data",
+    who: "Privacy-minded teams",
+    body: "Keep drafts and test submissions on your own device, and self-host the optional server when you need shared storage."
+  }
+];
+
+const FAQS = [
+  { q: "Do I need an account?", a: "No. Create a workspace and start building. Everything is stored in your browser." },
+  { q: "Where is my data stored?", a: "In your browser (IndexedDB). Nothing is sent to a Formify database. Optional features such as live collaboration, remote AI and webhooks contact the services you configure; the privacy page lists each one." },
+  { q: "Are edit links secure?", a: "No. Edit and view links are a browser-side convenience and do not enforce permissions. Use the optional self-hosted server if you need enforced roles." },
+  { q: "Does the AI assistant send my forms anywhere?", a: "Not unless you point it at a remote endpoint. It is off by default, can run on-device after a one-time model download, and always shows a diff for you to accept or reject." },
+  { q: "Can I export what I build?", a: "Yes. Export standalone HTML, a React component or a web component, or just keep the JSON schema." },
+  { q: "Is it free?", a: "The source is public on GitHub. A license file has not been added yet, so check the repository for the current terms." }
 ];
 
 const COMPARE = [
@@ -213,7 +240,7 @@ export default function LandingPage() {
   const roomValid = room.trim() === "" || /^[a-z0-9]+$/i.test(room.trim());
 
   return (
-    <MarketingShell>
+    <>
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-slate-200 dark:border-slate-800">
         <div
@@ -304,6 +331,22 @@ export default function LandingPage() {
         </ul>
       </section>
 
+      {/* Use cases */}
+      <section className="border-y border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/30">
+        <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
+          <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-4xl">Made for the forms you actually ship</h2>
+          <ul className="mt-12 grid gap-5 md:grid-cols-3">
+            {USE_CASES.map((u) => (
+              <li key={u.title} className="reveal rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-6">
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">{u.title}</h3>
+                <p className="mt-1 text-xs font-semibold text-indigo-600 dark:text-indigo-300">{u.who}</p>
+                <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{u.body}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
       {/* How it works */}
       <section id="how" className="scroll-mt-20 border-y border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/30">
         <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
@@ -351,6 +394,22 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* FAQ */}
+      <section id="faq" className="scroll-mt-20 mx-auto max-w-3xl px-4 pb-20 sm:px-6">
+        <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-4xl">Questions, answered plainly</h2>
+        <div className="mt-8 divide-y divide-slate-200 dark:divide-slate-800 rounded-2xl border border-slate-200 dark:border-slate-800">
+          {FAQS.map((f) => (
+            <details key={f.q} className="group px-5 py-4">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-semibold text-slate-900 dark:text-white [&::-webkit-details-marker]:hidden">
+                {f.q}
+                <Plus className="h-4 w-4 flex-shrink-0 transition-transform group-open:rotate-45" aria-hidden="true" />
+              </summary>
+              <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
       {/* Trust */}
       <section className="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
         <div className="grid gap-8 rounded-3xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40 p-8 md:grid-cols-2 md:p-12">
@@ -393,6 +452,6 @@ export default function LandingPage() {
           </button>
         </div>
       </section>
-    </MarketingShell>
+    </>
   );
 }

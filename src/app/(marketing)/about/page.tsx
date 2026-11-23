@@ -1,8 +1,6 @@
-"use client";
-
 import React from "react";
 import { Braces, Cpu, GitBranch, HardDrive } from "lucide-react";
-import MarketingShell, { REPO_URL } from "../../components/marketing/MarketingShell";
+import { REPO_URL } from "../../../components/marketing/MarketingShell";
 
 const PRINCIPLES = [
   {
@@ -27,9 +25,11 @@ const PRINCIPLES = [
   }
 ];
 
+export const metadata = { title: "About", description: "Why Formify Studio exists and the principles behind it." };
+
 export default function AboutPage() {
   return (
-    <MarketingShell>
+    <>
       <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-20">
         <p className="text-sm font-semibold text-indigo-600 dark:text-indigo-300">About</p>
         <h1 className="mt-2 text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-5xl [text-wrap:balance]">
@@ -69,6 +69,6 @@ export default function AboutPage() {
           </a>
         </div>
       </div>
-    </MarketingShell>
+    </>
   );
 }
